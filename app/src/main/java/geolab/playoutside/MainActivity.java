@@ -1,5 +1,6 @@
 package geolab.playoutside;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,7 +17,13 @@ import android.view.View;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import geolab.playoutside.fragments.Action;
 import geolab.playoutside.fragments.AllGamesFragment;
+import geolab.playoutside.fragments.Ball;
+import geolab.playoutside.fragments.CardGameFragment;
+import geolab.playoutside.fragments.Computer;
+import geolab.playoutside.fragments.DialogFragment;
+import geolab.playoutside.fragments.Gun;
 import geolab.playoutside.fragments.TableGameFragment;
 
 
@@ -36,6 +43,15 @@ public class MainActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+    private int[] tabIcons = {
+            R.drawable.ball,
+            R.drawable.card,
+            R.drawable.profile,
+            R.drawable.ball,
+            R.drawable.card,
+            R.drawable.profile,
+            R.drawable.card
+    };
 
     @Bind(R.id.tabs)protected TabLayout tabLayout;
 
@@ -56,6 +72,9 @@ public class MainActivity extends AppCompatActivity {
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         tabLayout.setupWithViewPager(mViewPager);
+        setupTabIcons();
+
+
 
 
 
@@ -63,14 +82,24 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
+                DialogFragment dialogFragment = new DialogFragment();
+                dialogFragment.show( getFragmentManager(),"string" );
+
             }
         });
 
 
     }
-
+    private void setupTabIcons() {
+        tabLayout.getTabAt(0).setIcon(tabIcons[0]);
+        tabLayout.getTabAt(1).setIcon(tabIcons[1]);
+        tabLayout.getTabAt(2).setIcon(tabIcons[2]);
+        tabLayout.getTabAt(3).setIcon(tabIcons[3]);
+        tabLayout.getTabAt(4).setIcon(tabIcons[4]);
+        tabLayout.getTabAt(5).setIcon(tabIcons[5]);
+        tabLayout.getTabAt(6).setIcon(tabIcons[6]);
+    }
 
 
 
@@ -84,6 +113,12 @@ public class MainActivity extends AppCompatActivity {
         public Fragment getItem(int pos) {
             switch(pos) {
                 case 1: return TableGameFragment.newInstance("secondFragment");
+                case 2: return Action.newInstance("thirdFragment");
+                case 3: return Ball.newInstance("fourthFragment");
+                case 4: return Gun.newInstance("fivethFragment");
+                case 5: return Computer.newInstance("sixthFragment");
+                case 6: return CardGameFragment.newInstance("seventhFragment");
+
 
                 default: return AllGamesFragment.newInstance("FirstFragment");
             }
@@ -91,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 2;
+            return 7;
         }
 
 
@@ -102,27 +137,22 @@ public class MainActivity extends AppCompatActivity {
                     return "All";
                 case 1:
                     return "Table";
+                case 2:
+                    return "Action";
+                case 3:
+                    return "Ball";
+                case 4:
+                    return "Gun";
+                case 5:
+                    return "Computer";
+                case 6:
+                    return "Card";
+
             }
             return null;
         }
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
