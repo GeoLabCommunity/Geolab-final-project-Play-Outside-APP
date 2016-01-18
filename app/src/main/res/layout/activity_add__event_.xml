@@ -31,6 +31,7 @@
                 android:layout_marginTop="16dp"
                 android:orientation="horizontal">
 
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -71,9 +72,27 @@
                     android:maxEms="10"
                     android:maxLines="1"
                     android:textSize="14dp" />
-            </LinearLayout>
 
-            
+            </LinearLayout>
+            <Button
+                android:text="airchiet tarigi"
+                android:id="@+id/date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <Button
+                android:text="airchiet dro"
+                android:id="@+id/hour"
+                android:layout_below="@+id/date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:text="saati"
+                android:layout_below="@id/hour"
+                android:id="@+id/timeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+
 
 
             <ImageButton

@@ -4,8 +4,14 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.borax12.materialdaterangepicker.date.DatePickerDialog;
+import com.borax12.materialdaterangepicker.time.RadialPickerLayout;
+import com.borax12.materialdaterangepicker.time.TimePickerDialog;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -20,14 +26,18 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Arrays;
+import java.util.Calendar;
 
-public class Add_Event_Activity extends AppCompatActivity {
+public class Add_Event_Activity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     private CallbackManager callbackManager;
     private AccessToken accessToken;
     private String user_id;
     private String str_firstName;
     private String email_json;
     private String birth_day;
+    private Button date_pick;
+    private Button hour_pick;
+    private TextView timeTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +46,41 @@ public class Add_Event_Activity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
         loginToFB();
+        timeTextView = (TextView) findViewById( R.id.timeTextView );
+        date_pick = (Button) findViewById( R.id.date);
+        hour_pick = (Button) findViewById( R.id.hour );
+        date_pick.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar now = Calendar.getInstance();
+                DatePickerDialog dpd = DatePickerDialog.newInstance(
+                        Add_Event_Activity.this,
+                        now.get(Calendar.YEAR),
+                        now.get(Calendar.MONTH),
+                        now.get(Calendar.DAY_OF_MONTH)
+                );
+                dpd.show(getFragmentManager(), "Datepickerdialog");
+
+            }
+        } );
+
+        hour_pick.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Calendar now = Calendar.getInstance();
+                TimePickerDialog tpd = TimePickerDialog.newInstance(
+                        Add_Event_Activity.this,
+                        now.get(Calendar.HOUR_OF_DAY),
+                        now.get(Calendar.MINUTE),
+                        false
+                );
+                tpd.show(getFragmentManager(), "Timepickerdialog");
+
+            }
+        } );
+
+
     }
 
     public void loginToFB() {
@@ -104,4 +149,34 @@ public class Add_Event_Activity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth, int yearEnd, int monthOfYearEnd, int dayOfMonthEnd) {
+
+        String yearString = ""+year ;
+        String monthOfYearString = ""+monthOfYear ;
+        String dayOfMonthString = ""+dayOfMonth ;
+        String yearEndString = ""+yearEnd ;
+        String monthOfYearEndString = ""+monthOfYearEnd ;
+        String dayOfMonthEndString = ""+dayOfMonthEnd ;
+
+        String date = dayOfMonthString + "/" + monthOfYearString + "/" + yearString + "/" + dayOfMonthEndString + "/" + monthOfYearEndString + "/" + yearEndString;
+
+        timeTextView.setText( date );
+
+
+    }
+
+    @Override
+    public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int hourOfDayEnd, int minuteEnd) {
+
+        String hourString = hourOfDay < 10 ? "0"+hourOfDay : ""+hourOfDay;
+        String minuteString = minute < 10 ? "0"+minute : ""+minute;
+        String hourStringEnd = hourOfDayEnd < 10 ? "0"+hourOfDayEnd : ""+hourOfDayEnd;
+        String minuteStringEnd = minuteEnd < 10 ? "0"+minuteEnd : ""+minuteEnd;
+        String time = "You picked the following time: From - "+hourString+"h"+minuteString+" To - "+hourStringEnd+"h"+minuteStringEnd;
+
+        timeTextView.setText(time);
+
+
+    }
 }

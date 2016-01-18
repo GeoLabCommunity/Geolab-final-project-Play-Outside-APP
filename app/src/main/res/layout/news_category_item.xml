@@ -1,70 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    android:id="@+id/cardview"
+<android.support.v7.widget.CardView android:id="@+id/cardview"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="150dp"
+    android:layout_height="71dp"
     android:layout_margin="16dp"
     android:orientation="vertical"
-    app:cardCornerRadius="6dp"
-    app:cardElevation="6dp">
+    app:cardCornerRadius="0dp"
+    card_view:cardPreventCornerOverlap="false"
+    xmlns:card_view="http://schemas.android.com/tools">
 
 <LinearLayout
-    android:background="#44ffc7"
+    android:gravity="center"
+    android:background="#fff"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+
 
     <TextView
         android:id="@+id/time_text_id"
         android:text="16:00"
         android:gravity="center"
-        android:textSize="20sp"
+        android:textSize="11sp"
         android:layout_marginLeft="10dp"
         android:layout_gravity="center"
         android:background="@drawable/circle_drawable"
-        android:layout_width="100dp"
-        android:layout_height="100dp" />
+        android:layout_width="41dp"
+        android:layout_height="41dp" />
+
 
     <LinearLayout
+        android:layout_marginLeft="10dp"
         android:orientation="vertical"
-        android:gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+
+        android:layout_width="232dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.35">
 
         <TextView
+            android:textColor="@color/colorPrimaryDark"
             android:id="@+id/title_text_id"
             android:text="title"
-            android:paddingBottom="10dp"
+            android:textSize="14sp"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="6dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <TextView
+            android:textSize="11sp"
+            android:layout_marginBottom="6dp"
             android:id="@+id/description_text_id"
             android:text="description"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal" />
+            android:layout_height="wrap_content" />
+
+
 
         <TextView
-            android:id="@+id/player_count_id"
-            android:layout_gravity="right"
-            android:gravity="end"
-            android:layout_marginEnd="20dp"
-            android:text="5"
-            android:layout_width="20dp"
-            android:layout_height="20dp" />
-
-        <TextView
+            android:textSize="11sp"
             android:id="@+id/place_text_id"
             android:text="place"
-            android:paddingBottom="10dp"
+            android:textColor="@color/com_facebook_button_background_color_disabled"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
 
     </LinearLayout>
+
+    <ImageView
+
+        android:src="@drawable/people"
+        android:gravity="center"
+        android:layout_width="20dp"
+        android:layout_height="17dp"
+        android:layout_weight="0.1"/>
+
+
+    <TextView
+            android:gravity="center"
+            android:id="@+id/player_count_id"
+
+
+            android:text="5"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.25" />
+
 
 
 

@@ -1,6 +1,10 @@
 package geolab.playoutside;
 
+import android.app.ActionBar;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -73,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
         tabLayout.setupWithViewPager(mViewPager);
         setupTabIcons();
+        tabLayout.setSelectedTabIndicatorColor( Color.parseColor("#FFFFFF"));
 
 
 
