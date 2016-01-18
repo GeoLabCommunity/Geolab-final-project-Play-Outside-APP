@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="71dp"
+    android:layout_height="wrap_content"
     android:layout_margin="16dp"
     android:orientation="vertical"
     app:cardCornerRadius="0dp"
@@ -15,7 +15,7 @@
     android:background="#fff"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:weightSum="1">
 
 
@@ -37,7 +37,7 @@
         android:orientation="vertical"
 
         android:layout_width="232dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="0.35">
 
         <TextView

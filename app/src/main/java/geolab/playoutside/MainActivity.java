@@ -3,6 +3,7 @@ package geolab.playoutside;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -13,6 +14,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -45,7 +48,9 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * The {@link ViewPager} that will host the section contents.
+     *
      */
+
     private ViewPager mViewPager;
     private int[] tabIcons = {
             R.drawable.ball,
@@ -56,6 +61,9 @@ public class MainActivity extends AppCompatActivity {
             R.drawable.profile,
             R.drawable.card
     };
+    Toolbar toolbar;
+    DrawerLayout dlDrawer;
+    ActionBarDrawerToggle drawerToggle;
 
     @Bind(R.id.tabs)protected TabLayout tabLayout;
 
@@ -65,8 +73,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        // Find our drawer view
+         dlDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+         drawerToggle = setupDrawerToggle();
+
+        // Tie DrawerLayout events to the ActionBarToggle
+        dlDrawer.setDrawerListener(drawerToggle);
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
@@ -77,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
 
         tabLayout.setupWithViewPager(mViewPager);
         setupTabIcons();
-        tabLayout.setSelectedTabIndicatorColor( Color.parseColor("#FFFFFF"));
+        tabLayout.setSelectedTabIndicatorColor(Color.parseColor("#FFFFFF"));
 
 
 
@@ -89,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 DialogFragment dialogFragment = new DialogFragment();
-                dialogFragment.show( getFragmentManager(),"string" );
+                dialogFragment.show(getFragmentManager(), "string");
 
             }
         });
@@ -166,22 +181,30 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        drawerToggle.syncState();
+    }
+    private ActionBarDrawerToggle setupDrawerToggle() {
+        return new ActionBarDrawerToggle(this, dlDrawer, toolbar, R.string.drawer_open,  R.string.drawer_close);
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Pass any configuration change to the drawer toggles
+        drawerToggle.onConfigurationChanged(newConfig);
+    }
 
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (drawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
 }

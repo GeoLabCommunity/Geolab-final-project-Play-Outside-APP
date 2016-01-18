@@ -3,18 +3,37 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
     <group android:checkableBehavior="single">
+
         <item
             android:id="@+id/navigation_item_1"
             android:title="nav1" />
-        <item
+        <menu>
+            <item
             android:id="@+id/navigation_item_style"
             android:title="nav2" />
-        <item
+            <item
             android:id="@+id/navigation_item_2"
             android:title="nav3" />
+        </menu>
         <item
             android:id="@+id/navigation_item_3"
             android:title="nav4" />
+    </group>
 
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/navigation_item_6"
+            android:title="nav1" />
+        <menu>
+            <item
+                android:id="@+id/navigation_item_style7"
+                android:title="nav2" />
+            <item
+                android:id="@+id/navigation_item_8"
+                android:title="nav3" />
+        </menu>
+        <item
+            android:id="@+id/navigation_item_9"
+            android:title="nav4" />
     </group>
 </menu>
