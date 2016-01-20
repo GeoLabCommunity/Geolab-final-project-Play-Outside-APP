@@ -8,8 +8,9 @@ import java.io.Serializable;
 public class MyEvent implements Serializable {
     private String time,date,title, description, place, playerCount;
     private long id;
+    private int category_id;
 
-    public MyEvent(String time,String date, String title, String description, String place, String player, long id) {
+    public MyEvent(String time,String date, String title, String description, String place, String player, long id, int category_id) {
         this.time = time;
         this.title = title;
         this.description = description;
@@ -17,6 +18,7 @@ public class MyEvent implements Serializable {
         this.playerCount = player;
         this.date = date;
         this.id = id;
+        this.category_id=category_id;
     }
 
     public String getDate() {
@@ -37,6 +39,14 @@ public class MyEvent implements Serializable {
 
     public String getTime() {
         return time;
+    }
+
+    public int getCategory_id() {
+        return category_id;
+    }
+
+    public void setCategory_id(int category_id) {
+        this.category_id = category_id;
     }
 
     public void setTime(String time) {

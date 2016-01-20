@@ -8,6 +8,7 @@
     <color name="colorAccent">#FFAB40</color>
     <color name="tab_color">#4D824D</color>
     <color name="selected_tab_color">#fff</color>
+    <color name="white">#fff</color>
 
 
 </resources>

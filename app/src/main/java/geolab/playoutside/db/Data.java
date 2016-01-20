@@ -16,4 +16,10 @@ public class Data {
     public static String [] player = {"11","5","15","2","4","2","4","10","6","2","4"};
 
     public static long [] id = {1,1,1,1,5,6,7,3,3,3,5};
+
+    public static int [] category_id = {2,0,3,1,2,1,3,4,4,2,1};
+
+
+
+
 }

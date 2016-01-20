@@ -1,14 +1,10 @@
 package geolab.playoutside;
 
-import android.app.ActionBar;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -21,9 +17,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ExpandableListView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import geolab.playoutside.adapters.CustomExpAdapter;
 import geolab.playoutside.fragments.Action;
 import geolab.playoutside.fragments.AllGamesFragment;
 import geolab.playoutside.fragments.Ball;
@@ -32,6 +33,8 @@ import geolab.playoutside.fragments.Computer;
 import geolab.playoutside.fragments.DialogFragment;
 import geolab.playoutside.fragments.Gun;
 import geolab.playoutside.fragments.TableGameFragment;
+import geolab.playoutside.model.ExpMenuItem;
+import geolab.playoutside.model.SubMenu;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -45,6 +48,9 @@ public class MainActivity extends AppCompatActivity {
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
     private MyPagerAdapter mSectionsPagerAdapter;
+
+    private ArrayList<ExpMenuItem> menuItems;
+    private ArrayList<Fragment> fragments;
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -66,12 +72,21 @@ public class MainActivity extends AppCompatActivity {
     ActionBarDrawerToggle drawerToggle;
 
     @Bind(R.id.tabs)protected TabLayout tabLayout;
+    @Bind(R.id.exp_list_id) protected ExpandableListView expandableListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        fragments = new ArrayList<>();
+        fragments.add(new Action());
+        fragments.add(new AllGamesFragment());
+        fragments.add(new Ball());
+        fragments.add(new CardGameFragment());
+        fragments.add(new Gun());
+
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -96,8 +111,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,9 +122,51 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        menuItems = getData();
+        CustomExpAdapter adapter = new CustomExpAdapter(this,menuItems);
+        expandableListView.setAdapter(adapter);
+
+
+        expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                int index = (parent.getFlatListPosition(ExpandableListView.getPackedPositionForChild(groupPosition, childPosition))) -1;
+
+                parent.setItemChecked(index, true);
+                SubMenu subMenu = menuItems.get(groupPosition).getSubMenus().get(childPosition);
+                Toast.makeText(getApplicationContext(),subMenu.getMenuName(),Toast.LENGTH_SHORT).show();
+
+                mViewPager.setCurrentItem(groupPosition);
+                dlDrawer.closeDrawers();
+                return true;
+            }
+        });
+
 
     }
+
+
+    private ArrayList<ExpMenuItem> getData(){
+
+        ArrayList<ExpMenuItem> items = new ArrayList<>();
+        ArrayList<SubMenu> subMenus = new ArrayList<>();
+
+        subMenus.add(new SubMenu("hah",R.drawable.card));
+        for (int i = 0; i < 5; i++) {
+            for (int g = 0; g < 3; g++) {
+                subMenus.add(new SubMenu("opa",R.drawable.ball));
+            }
+            items.add(new ExpMenuItem("mtavar",subMenus,R.drawable.rugby));
+        }
+        return items;
+    }
+
+
+
+
+
     private void setupTabIcons() {
+
         tabLayout.getTabAt(0).setIcon(tabIcons[0]);
         tabLayout.getTabAt(1).setIcon(tabIcons[1]);
         tabLayout.getTabAt(2).setIcon(tabIcons[2]);
@@ -119,6 +174,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.getTabAt(4).setIcon(tabIcons[4]);
         tabLayout.getTabAt(5).setIcon(tabIcons[5]);
         tabLayout.getTabAt(6).setIcon(tabIcons[6]);
+
     }
 
 

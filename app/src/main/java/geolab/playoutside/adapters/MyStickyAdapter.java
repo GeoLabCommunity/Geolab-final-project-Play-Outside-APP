@@ -13,6 +13,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import geolab.playoutside.R;
+import geolab.playoutside.db.Category_db;
 import geolab.playoutside.model.MyEvent;
 import geolab.playoutside.view.EventDetailActivity;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
@@ -69,6 +70,8 @@ public class MyStickyAdapter extends BaseAdapter implements StickyListHeadersAda
         }
 
         holder.timeHolder.setText(eventsList.get(position).getTime());
+        holder.timeHolder.setBackgroundResource(Category_db.category_icon[eventsList.get(position).getCategory_id()]);
+
         holder.titleHolder.setText(eventsList.get(position).getTitle());
         holder.descriptionHolder.setText(eventsList.get(position).getDescription());
         holder.placeHolder.setText(eventsList.get(position).getPlace());
