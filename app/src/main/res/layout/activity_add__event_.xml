@@ -27,7 +27,6 @@
             tools:context="geolab.playoutside.view.EventDetailActivity">
 
             <LinearLayout
-                
                 android:layout_width="match_parent"
                 android:layout_height="38dp">
                 <TextView
