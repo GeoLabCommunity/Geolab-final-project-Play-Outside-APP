@@ -63,6 +63,13 @@
         android:layout_width="fill_parent"
         android:layout_height="2dp"
         android:background="#c0c0c0"/>
+    <TextView
+        android:layout_marginTop="30dp"
+
+        android:text="Category"
+
+        android:layout_width="match_parent"
+        android:layout_height="42dp" />
 
 
 </LinearLayout>

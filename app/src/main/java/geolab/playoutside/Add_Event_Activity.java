@@ -46,39 +46,39 @@ public class Add_Event_Activity extends AppCompatActivity implements DatePickerD
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
         loginToFB();
-        timeTextView = (TextView) findViewById( R.id.timeTextView );
-        date_pick = (Button) findViewById( R.id.date);
-        hour_pick = (Button) findViewById( R.id.hour );
-        date_pick.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Calendar now = Calendar.getInstance();
-                DatePickerDialog dpd = DatePickerDialog.newInstance(
-                        Add_Event_Activity.this,
-                        now.get(Calendar.YEAR),
-                        now.get(Calendar.MONTH),
-                        now.get(Calendar.DAY_OF_MONTH)
-                );
-                dpd.show(getFragmentManager(), "Datepickerdialog");
-
-            }
-        } );
-
-        hour_pick.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Calendar now = Calendar.getInstance();
-                TimePickerDialog tpd = TimePickerDialog.newInstance(
-                        Add_Event_Activity.this,
-                        now.get(Calendar.HOUR_OF_DAY),
-                        now.get(Calendar.MINUTE),
-                        false
-                );
-                tpd.show(getFragmentManager(), "Timepickerdialog");
-
-            }
-        } );
+//        timeTextView = (TextView) findViewById( R.id.timeTextView );
+//        date_pick = (Button) findViewById( R.id.date);
+//        hour_pick = (Button) findViewById( R.id.hour );
+//        date_pick.setOnClickListener( new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Calendar now = Calendar.getInstance();
+//                DatePickerDialog dpd = DatePickerDialog.newInstance(
+//                        Add_Event_Activity.this,
+//                        now.get(Calendar.YEAR),
+//                        now.get(Calendar.MONTH),
+//                        now.get(Calendar.DAY_OF_MONTH)
+//                );
+//                dpd.show(getFragmentManager(), "Datepickerdialog");
+//
+//            }
+//        } );
+//
+//        hour_pick.setOnClickListener( new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                Calendar now = Calendar.getInstance();
+//                TimePickerDialog tpd = TimePickerDialog.newInstance(
+//                        Add_Event_Activity.this,
+//                        now.get(Calendar.HOUR_OF_DAY),
+//                        now.get(Calendar.MINUTE),
+//                        false
+//                );
+//                tpd.show(getFragmentManager(), "Timepickerdialog");
+//
+//            }
+//        } );
 
 
     }

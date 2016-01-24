@@ -37,4 +37,7 @@ dependencies {
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.jpardogo.materialtabstrip:library:1.1.0'
     compile 'com.borax12.materialdaterangepicker:library:1.2'
+    compile 'com.google.android.gms:play-services:8.4.0'
+    compile 'com.google.android.gms:play-services-maps:8.4.0'
+    compile 'com.google.android.gms:play-services-nearby:8.4.0'
 }

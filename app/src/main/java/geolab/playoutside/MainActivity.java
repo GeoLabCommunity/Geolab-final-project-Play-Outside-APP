@@ -1,6 +1,5 @@
 package geolab.playoutside;
 
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -130,13 +129,14 @@ public class MainActivity extends AppCompatActivity {
         expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                int index = (parent.getFlatListPosition(ExpandableListView.getPackedPositionForChild(groupPosition, childPosition))) -1;
+                int index = (parent.getFlatListPosition(ExpandableListView.getPackedPositionForChild(groupPosition, childPosition))) ;
+                System.out.println(index);
 
                 parent.setItemChecked(index, true);
                 SubMenu subMenu = menuItems.get(groupPosition).getSubMenus().get(childPosition);
                 Toast.makeText(getApplicationContext(),subMenu.getMenuName(),Toast.LENGTH_SHORT).show();
 
-                mViewPager.setCurrentItem(groupPosition);
+                mViewPager.setCurrentItem(groupPosition+1);
                 dlDrawer.closeDrawers();
                 return true;
             }
@@ -149,15 +149,35 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<ExpMenuItem> getData(){
 
         ArrayList<ExpMenuItem> items = new ArrayList<>();
-        ArrayList<SubMenu> subMenus = new ArrayList<>();
+        ArrayList<SubMenu> subMenus1 = new ArrayList<>();
 
-        subMenus.add(new SubMenu("hah",R.drawable.card));
-        for (int i = 0; i < 5; i++) {
-            for (int g = 0; g < 3; g++) {
-                subMenus.add(new SubMenu("opa",R.drawable.ball));
-            }
-            items.add(new ExpMenuItem("mtavar",subMenus,R.drawable.rugby));
-        }
+        subMenus1.add(new SubMenu("hah1",R.drawable.card));
+        subMenus1.add(new SubMenu("hah1",R.drawable.card));
+        subMenus1.add(new SubMenu("hah1",R.drawable.card));
+        subMenus1.add(new SubMenu("hah1",R.drawable.card));
+        subMenus1.add(new SubMenu("hah1",R.drawable.card));
+
+        ArrayList<SubMenu> subMenus2 = new ArrayList<>();
+
+        subMenus2.add(new SubMenu("hah2",R.drawable.card));
+        subMenus2.add(new SubMenu("hah2",R.drawable.card));
+        subMenus2.add(new SubMenu("hah2",R.drawable.card));
+        subMenus2.add(new SubMenu("hah2",R.drawable.card));
+        subMenus2.add(new SubMenu("hah2",R.drawable.card));
+
+        ArrayList<SubMenu> subMenus3 = new ArrayList<>();
+
+        subMenus3.add(new SubMenu("hah3",R.drawable.card));
+        subMenus3.add(new SubMenu("hah3",R.drawable.card));
+        subMenus3.add(new SubMenu("hah3",R.drawable.card));
+        subMenus3.add(new SubMenu("hah3",R.drawable.card));
+        subMenus3.add(new SubMenu("hah3",R.drawable.card));
+
+
+        items.add(new ExpMenuItem("mtavar1",subMenus1,R.drawable.rugby));
+        items.add(new ExpMenuItem("mtavar2",subMenus2,R.drawable.rugby));
+        items.add(new ExpMenuItem("mtavar3",subMenus3,R.drawable.rugby));
+
         return items;
     }
 
