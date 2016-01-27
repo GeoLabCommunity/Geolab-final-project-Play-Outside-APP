@@ -59,9 +59,6 @@ public class EventDetailActivity extends AppCompatActivity {
                 .title("title")
                 .snippet("small description")
         );
-//                .icon(BitmapDescriptorFactory
-//                        .fromResource(R.drawable.card)));
-
         // Move the camera instantly to hamburg with a zoom of 15.
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(LOCATION, 15));
 
