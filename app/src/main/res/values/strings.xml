@@ -11,6 +11,17 @@
         <string name="drawer_open">Open navigation drawer</string>
         <string name="drawer_close">Close navigation drawer</string>
 
+    <array name="country_arrays">
+        <item>test</item>
+        <item>test</item>
+        <item>test</item>
+        <item>test</item>
+        <item>test</item>
+        <item>test</item>
+        <item>test</item>
+        <item>test</item>
+        <item>test</item>
+    </array>
 
 </resources>
 
