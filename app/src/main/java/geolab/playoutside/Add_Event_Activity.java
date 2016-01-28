@@ -169,7 +169,7 @@ public class Add_Event_Activity extends AppCompatActivity implements DatePickerD
             public void onMapClick(LatLng point) {
                 // TODO Auto-generated method stub
                 map.clear();
-                System.out.println("1111 " +point.latitude + " " + point.longitude);
+                System.out.println(point.latitude + " " + point.longitude);
                 map.addMarker(new MarkerOptions().position(point));
             }
         });
