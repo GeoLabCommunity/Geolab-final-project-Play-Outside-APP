@@ -20,9 +20,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.borax12.materialdaterangepicker.date.DatePickerDialog;
-import com.borax12.materialdaterangepicker.time.RadialPickerLayout;
-import com.borax12.materialdaterangepicker.time.TimePickerDialog;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -39,6 +36,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
+import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,7 +46,7 @@ import org.json.JSONObject;
 import java.util.Arrays;
 import java.util.Calendar;
 
-public class Add_Event_Activity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, OnMapReadyCallback, TimePickerDialog.OnTimeSetListener {
+public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyCallback, TimePickerDialog.OnTimeSetListener,DatePickerDialog.OnDateSetListener {
     private CallbackManager callbackManager;
     private AccessToken accessToken;
     private String user_id;
@@ -60,6 +60,7 @@ public class Add_Event_Activity extends AppCompatActivity implements DatePickerD
 
 
     private Spinner spinner;
+    private Spinner member_spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +70,13 @@ public class Add_Event_Activity extends AppCompatActivity implements DatePickerD
         callbackManager = CallbackManager.Factory.create();
 
         spinner = (Spinner) findViewById(R.id.spinner);
-        ArrayAdapter adapter = ArrayAdapter.createFromResource(this, R.array.country_arrays, R.layout.spinner_item);
+        member_spinner = (Spinner) findViewById(R.id.member_spinner);
+
+        ArrayAdapter member_adapter = ArrayAdapter.createFromResource(this, R.array.member_array, R.layout.spinner_item);
+        member_spinner.setAdapter(member_adapter);
+        member_adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+
+        ArrayAdapter adapter = ArrayAdapter.createFromResource(this, R.array.district_array, R.layout.spinner_item);
         spinner.setAdapter(adapter);
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
 
@@ -94,6 +101,7 @@ public class Add_Event_Activity extends AppCompatActivity implements DatePickerD
                         now.get(Calendar.DAY_OF_MONTH)
                 );
                 dpd.show(getFragmentManager(), "Datepickerdialog");
+                dpd.setMinDate(Calendar.getInstance());
 
             }
         } );
@@ -110,6 +118,10 @@ public class Add_Event_Activity extends AppCompatActivity implements DatePickerD
                         false
                 );
                 tpd.show(getFragmentManager(), "Timepickerdialog");
+                tpd.setMinTime(
+                        now.get(Calendar.HOUR_OF_DAY),
+                        now.get(Calendar.MINUTE),
+                        now.get(Calendar.SECOND));
 
             }
         } );
@@ -270,33 +282,16 @@ public class Add_Event_Activity extends AppCompatActivity implements DatePickerD
 
 
     @Override
-    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth, int yearEnd, int monthOfYearEnd, int dayOfMonthEnd) {
-
-        int yearString = year ;
-        int monthOfYearString = monthOfYear +1 ;
-        int dayOfMonthString = dayOfMonth ;
-        int yearEndString = yearEnd ;
-        int monthOfYearEndString = monthOfYearEnd +1 ;
-        int dayOfMonthEndString = dayOfMonthEnd ;
-
-        String date ="(" + dayOfMonthString + "/" + monthOfYearString + "/" + yearString + ")" + " To- " + "(" +dayOfMonthEndString + "/" + monthOfYearEndString + "/" + yearEndString + ")";
-
-        dateenter.setText( date );
-
+    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+        String date = dayOfMonth+"/"+(monthOfYear+1)+"/"+year;
+        dateenter.setText(date);
 
     }
 
     @Override
-    public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int hourOfDayEnd, int minuteEnd) {
-
-        String hourString = hourOfDay < 10 ? "0"+hourOfDay : ""+hourOfDay;
-        String minuteString = minute < 10 ? "0"+minute : ""+minute;
-        String hourStringEnd = hourOfDayEnd < 10 ? "0"+hourOfDayEnd : ""+hourOfDayEnd;
-        String minuteStringEnd = minuteEnd < 10 ? "0"+minuteEnd : ""+minuteEnd;
-        String time = hourString+":"+minuteString+" To - "+hourStringEnd+":"+minuteStringEnd;
-
+    public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
+        String time = hourOfDay+":"+minute;
         timeenter.setText(time);
-
 
     }
 }

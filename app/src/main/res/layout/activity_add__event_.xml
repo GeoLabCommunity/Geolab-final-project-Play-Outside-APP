@@ -129,18 +129,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"></View>
             <LinearLayout
-                android:gravity="center_vertical"
                 android:layout_marginLeft="16dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
                 android:layout_width="match_parent"
                 android:layout_height="38dp">
 
-                <TextView
-                    android:layout_marginLeft="16dp"
-                    android:id="@+id/detail_place_text_via_map"
-                    android:text="MEMBERS"
-                    android:layout_width="wrap_content"
+
+
+                <Spinner
+                    android:layout_marginLeft="7dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="12dp"/>
+                    android:id="@+id/member_spinner"
+                    />
+
+
 
             </LinearLayout>
             <View
