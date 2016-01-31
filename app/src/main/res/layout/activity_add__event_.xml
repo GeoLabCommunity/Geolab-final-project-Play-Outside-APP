@@ -213,6 +213,7 @@
 
 
     <Button
+        android:onClick="sendServerData"
         android:id="@+id/detail_join_game"
         android:layout_alignParentBottom="true"
         android:textColor="#fff"

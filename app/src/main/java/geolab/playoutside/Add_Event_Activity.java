@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -40,13 +39,22 @@ import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
-public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyCallback, TimePickerDialog.OnTimeSetListener,DatePickerDialog.OnDateSetListener {
+public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyCallback, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
     private CallbackManager callbackManager;
     private AccessToken accessToken;
     private String user_id;
@@ -57,6 +65,12 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
     private LinearLayout dateclick;
     private TextView timeenter;
     private TextView dateenter;
+    private String gettime;
+    private String getdate;
+    private String getmember;
+    private String getplace;
+    private String latitude;
+    private String longitude;
 
 
     private Spinner spinner;
@@ -90,7 +104,7 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
                 .getMapAsync(this);
 
         //       loginToFB();
-        dateclick.setOnClickListener( new View.OnClickListener() {
+        dateclick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Calendar now = Calendar.getInstance();
@@ -104,9 +118,9 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
                 dpd.setMinDate(Calendar.getInstance());
 
             }
-        } );
+        });
 
-        timeclick.setOnClickListener( new View.OnClickListener() {
+        timeclick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -124,7 +138,7 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
                         now.get(Calendar.SECOND));
 
             }
-        } );
+        });
 
 
         //shevamowmot location manageri
@@ -139,22 +153,23 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
     /**
      * Shevamowmot location manageri
      */
-    private void checkGPSStatus(){
+    private void checkGPSStatus() {
 
         try {
-            LocationManager locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+            LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
             gps_enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
             network_enabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        } catch(Exception ex) {}
+        } catch (Exception ex) {
+        }
 
-        if(!gps_enabled && !network_enabled) {
+        if (!gps_enabled && !network_enabled) {
             // notify user
             AlertDialog.Builder dialog = new AlertDialog.Builder(this);
             dialog.setMessage("GPS სერვისი არაა გააქტიურებული");
             dialog.setPositiveButton("გააქტიურება", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                    Intent myIntent = new Intent( Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                     startActivity(myIntent);
                 }
             });
@@ -171,10 +186,27 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
 
 
     private GoogleMap map;
-    static final LatLng LOCATION = new LatLng(41.7126944502416, 44.78326041251421);
+    static  LatLng point = new LatLng(41.7126944502416, 44.78326041251421);
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
+        map.getUiSettings().setZoomControlsEnabled(true);
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            return;
+        }
+        map.setMyLocationEnabled(true);
+//        Marker marker = map.addMarker(new MarkerOptions()
+//                .position(point)
+//                .title("title")
+//                .snippet("small description")
+//                .draggable(true)
+//        );
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(point, 13));
+        map.animateCamera(CameraUpdateFactory.zoomTo(13), 1500, null);
+        map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
         map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 
             @Override
@@ -182,37 +214,13 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
                 // TODO Auto-generated method stub
                 map.clear();
                 System.out.println(point.latitude + " " + point.longitude);
+                latitude = String.valueOf(point.latitude);
+                longitude = String.valueOf(point.longitude);
                 map.addMarker(new MarkerOptions().position(point));
             }
         });
-
-
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        map.setMyLocationEnabled(true);
-        Marker marker = map.addMarker(new MarkerOptions()
-                .position(LOCATION)
-                .title("title")
-                .snippet("small description")
-                .draggable(true)
-        );
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(LOCATION, 13));
-
-        // Zoom in, animating the camera.
-        map.animateCamera(CameraUpdateFactory.zoomTo(13), 1500, null);
-        map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        map.getUiSettings().setZoomControlsEnabled(true);
-        map.getCameraPosition();
-
     }
+
 
 
     public void loginToFB() {
@@ -293,5 +301,46 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
         String time = hourOfDay+":"+minute;
         timeenter.setText(time);
 
+    }
+    private void getInfoFromActivity() {
+
+        this.gettime = timeenter.getText().toString();
+        this.getdate =  dateenter.getText().toString();
+        this.getmember =  member_spinner.getSelectedItem().toString();
+        this.getplace = spinner.getSelectedItem().toString();
+
+    }
+    public void sendServerData(View v) {
+        final HttpClient httpclient = new DefaultHttpClient();
+        final HttpPost httppost = new HttpPost("http://vanisgimnazia.ge/instagram/fileUpload.php");
+        try {
+            List<NameValuePair> nameValuePairs = new ArrayList<>(4);
+            getInfoFromActivity();
+            nameValuePairs.add(new BasicNameValuePair("time", gettime));
+            nameValuePairs.add(new BasicNameValuePair("date", getdate));
+            nameValuePairs.add(new BasicNameValuePair("member_count", getmember));
+            nameValuePairs.add(new BasicNameValuePair("place", getplace));
+            nameValuePairs.add(new BasicNameValuePair("latitude", latitude));
+            nameValuePairs.add(new BasicNameValuePair("longitude", longitude));
+            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        httpclient.execute(httppost);
+                    } catch (IOException e) {
+                        e.getCause();
+                    }
+                }
+            });
+            thread.start();
+        } catch (IOException e) {
+            e.getMessage();
+        }
+        Toast.makeText(getApplicationContext(), "Post has been uploaded",
+                Toast.LENGTH_SHORT).show();
+        finish();
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 }
