@@ -24,9 +24,9 @@
     <TextView
         android:id="@+id/time_text_id"
         android:text="16:00"
-        android:background="@drawable/ball"
+        android:background="@drawable/_football"
         android:gravity="center"
-        android:textColor="#268f26"
+        android:textColor="#fafafa"
         android:textSize="11sp"
         android:layout_marginLeft="10dp"
         android:layout_gravity="center"

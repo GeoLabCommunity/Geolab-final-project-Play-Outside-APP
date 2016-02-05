@@ -1,13 +1,17 @@
 package geolab.playoutside;
 
-import android.*;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.provider.Settings;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -33,7 +37,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
@@ -54,7 +57,10 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
-public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyCallback, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
+import geolab.playoutside.db.Category_db;
+import geolab.playoutside.fragment_categories.SubCategoryIcon;
+
+public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyCallback, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, View.OnClickListener{
     private CallbackManager callbackManager;
     private AccessToken accessToken;
     private String user_id;
@@ -72,6 +78,10 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
     private String latitude;
     private String longitude;
 
+    private MyPagerAdapter selectCategory;
+    private ViewPager category_pager;
+    private TabLayout tabLayout;
+
 
     private Spinner spinner;
     private Spinner member_spinner;
@@ -80,6 +90,13 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add__event_);
+
+        selectCategory = new MyPagerAdapter(getSupportFragmentManager());
+        category_pager = (ViewPager) findViewById(R.id.category_container);
+        category_pager.setAdapter(selectCategory);
+        tabLayout = (TabLayout) findViewById(R.id.category_tabs);
+        tabLayout.setupWithViewPager(category_pager);
+
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
 
@@ -342,5 +359,55 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
         finish();
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onClick(View view) {
+        System.out.println();
+        return;
+    }
+
+    private class MyPagerAdapter extends FragmentPagerAdapter {
+
+        public MyPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+
+        @Override
+        public Fragment getItem(int pos) {
+            switch(pos) {
+                case 0: return SubCategoryIcon.newInstance(4, Category_db.ball_icon);
+                case 1: return SubCategoryIcon.newInstance(2, Category_db.card_icon);
+                case 2: return SubCategoryIcon.newInstance(1, Category_db.table_icon);
+                case 3: return SubCategoryIcon.newInstance(1, Category_db.action_icon);
+
+                default: return SubCategoryIcon.newInstance(4, Category_db.ball_icon);
+
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return 4;
+        }
+
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+                case 0:
+                    return "BALL";
+                case 1:
+                    return "CARD";
+                case 2:
+                    return "TABLE";
+                case 3:
+                    return "ACTION";
+
+            }
+            return null;
+        }
+
     }
 }

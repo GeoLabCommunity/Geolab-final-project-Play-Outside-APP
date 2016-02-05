@@ -61,8 +61,8 @@
     </LinearLayout>
     <View
         android:layout_width="fill_parent"
-        android:layout_height="2dp"
-        android:background="#c0c0c0"/>
+        android:layout_height="1dp"
+        android:background="#e4e4e4"/>
     <TextView
         android:layout_marginTop="30dp"
 

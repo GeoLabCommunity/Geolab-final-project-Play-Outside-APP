@@ -58,13 +58,11 @@ public class MainActivity extends AppCompatActivity {
 
     private ViewPager mViewPager;
     private int[] tabIcons = {
+            R.drawable.settings,
             R.drawable.ball,
             R.drawable.card,
-            R.drawable.profile,
-            R.drawable.ball,
-            R.drawable.card,
-            R.drawable.profile,
-            R.drawable.card
+            R.drawable.cal,
+            R.drawable.comp,
     };
     Toolbar toolbar;
     DrawerLayout dlDrawer;
@@ -151,32 +149,33 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<ExpMenuItem> items = new ArrayList<>();
         ArrayList<SubMenu> subMenus1 = new ArrayList<>();
 
-        subMenus1.add(new SubMenu("hah1",R.drawable.card));
-        subMenus1.add(new SubMenu("hah1",R.drawable.card));
-        subMenus1.add(new SubMenu("hah1",R.drawable.card));
-        subMenus1.add(new SubMenu("hah1",R.drawable.card));
-        subMenus1.add(new SubMenu("hah1",R.drawable.card));
+        subMenus1.add(new SubMenu("football",R.drawable._football));
+        subMenus1.add(new SubMenu("basketball",R.drawable._basketball));
+        subMenus1.add(new SubMenu("rugby",R.drawable._rugby));
+        subMenus1.add(new SubMenu("volleyball",R.drawable._volleyball));
 
         ArrayList<SubMenu> subMenus2 = new ArrayList<>();
 
-        subMenus2.add(new SubMenu("hah2",R.drawable.card));
-        subMenus2.add(new SubMenu("hah2",R.drawable.card));
-        subMenus2.add(new SubMenu("hah2",R.drawable.card));
-        subMenus2.add(new SubMenu("hah2",R.drawable.card));
-        subMenus2.add(new SubMenu("hah2",R.drawable.card));
+        subMenus2.add(new SubMenu("joker",R.drawable.card));
+        subMenus2.add(new SubMenu("poker",R.drawable.card));
+
 
         ArrayList<SubMenu> subMenus3 = new ArrayList<>();
 
-        subMenus3.add(new SubMenu("hah3",R.drawable.card));
-        subMenus3.add(new SubMenu("hah3",R.drawable.card));
-        subMenus3.add(new SubMenu("hah3",R.drawable.card));
-        subMenus3.add(new SubMenu("hah3",R.drawable.card));
-        subMenus3.add(new SubMenu("hah3",R.drawable.card));
+        subMenus3.add(new SubMenu("ping-pong",R.drawable.card));
+
+        ArrayList<SubMenu> subMenus4 = new ArrayList<>();
+
+        subMenus4.add(new SubMenu("badminton",R.drawable.card));
+        subMenus4.add(new SubMenu("frisbee",R.drawable.card));
 
 
-        items.add(new ExpMenuItem("mtavar1",subMenus1,R.drawable.rugby));
-        items.add(new ExpMenuItem("mtavar2",subMenus2,R.drawable.rugby));
-        items.add(new ExpMenuItem("mtavar3",subMenus3,R.drawable.rugby));
+
+        items.add(new ExpMenuItem("BALL",subMenus1,R.drawable.ball));
+        items.add(new ExpMenuItem("CARD",subMenus2,R.drawable.card));
+        items.add(new ExpMenuItem("TABLE",subMenus3,R.drawable.comp));
+        items.add(new ExpMenuItem("ACTION",subMenus4,R.drawable.cal));
+
 
         return items;
     }
@@ -192,8 +191,6 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.getTabAt(2).setIcon(tabIcons[2]);
         tabLayout.getTabAt(3).setIcon(tabIcons[3]);
         tabLayout.getTabAt(4).setIcon(tabIcons[4]);
-        tabLayout.getTabAt(5).setIcon(tabIcons[5]);
-        tabLayout.getTabAt(6).setIcon(tabIcons[6]);
 
     }
 
@@ -208,12 +205,12 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int pos) {
             switch(pos) {
-                case 1: return TableGameFragment.newInstance("secondFragment");
-                case 2: return Action.newInstance("thirdFragment");
-                case 3: return Ball.newInstance("fourthFragment");
-                case 4: return Gun.newInstance("fivethFragment");
-                case 5: return Computer.newInstance("sixthFragment");
-                case 6: return CardGameFragment.newInstance("seventhFragment");
+                case 1: return Ball.newInstance("fourthFragment");
+                case 2: return CardGameFragment.newInstance("seventhFragment");
+                case 3: return TableGameFragment.newInstance("secondFragment");
+                case 4: return Action.newInstance("thirdFragment");
+
+
 
 
                 default: return AllGamesFragment.newInstance("FirstFragment");
@@ -222,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 7;
+            return 5;
         }
 
 
@@ -232,17 +229,13 @@ public class MainActivity extends AppCompatActivity {
                 case 0:
                     return "All";
                 case 1:
-                    return "Table";
+                    return "BALL";
                 case 2:
-                    return "Action";
+                    return "CARD";
                 case 3:
-                    return "Ball";
+                    return "TABLE";
                 case 4:
-                    return "Gun";
-                case 5:
-                    return "Computer";
-                case 6:
-                    return "Card";
+                    return "ACTION";
 
             }
             return null;

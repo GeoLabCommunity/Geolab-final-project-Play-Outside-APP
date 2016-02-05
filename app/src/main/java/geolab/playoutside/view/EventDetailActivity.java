@@ -45,12 +45,6 @@ public class EventDetailActivity extends AppCompatActivity {
         toolbar_detail = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar_detail);
 
-
-
-
-
-
-
         map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map))
                 .getMap();
 
@@ -71,8 +65,9 @@ public class EventDetailActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         MyEvent myEvent = (MyEvent) bundle.get("event");
 
-        toolbar_detail.setTitle("hkk".toUpperCase());
-        toolbar_detail.setLogo(R.drawable.ball);
+        getSupportActionBar().setTitle("Event Details");
+
+
 
         title.setText(myEvent.getTitle());
         time.setText(myEvent.getTime());

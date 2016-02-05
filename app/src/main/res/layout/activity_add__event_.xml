@@ -39,16 +39,40 @@
                     android:textSize="14dp"
                     android:textColor="#ED5831"
                     android:id="@+id/detail_title_text_id"
-                    android:text="title"
+                    android:text="Select Category"
                     android:layout_width="wrap_content"
                     android:layout_height="38dp" />
             </LinearLayout>
 
-            <LinearLayout
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="91dp">
+
+            <android.support.design.widget.TabLayout
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_gravity="fill_horizontal"
+                android:id="@+id/category_tabs"
                 android:layout_width="match_parent"
-                android:layout_height="99dp"></LinearLayout>
+                android:layout_height="20dp"
+                app:tabTextColor="@color/tab_color"
+                app:tabSelectedTextColor="@color/colorAccent"
+                app:tabMode="scrollable"
+                app:tabGravity="fill"/>
 
-
+            <android.support.v4.view.ViewPager
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:id="@+id/category_container"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                />
+</LinearLayout>
 
 
 
@@ -202,10 +226,6 @@
                     layout="@layout/location_fragment"/>
 
             </LinearLayout>
-
-
-
-
 
 
         </LinearLayout>

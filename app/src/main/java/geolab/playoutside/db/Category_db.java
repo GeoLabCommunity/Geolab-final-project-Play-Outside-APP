@@ -7,7 +7,15 @@ import geolab.playoutside.R;
  */
 public class Category_db {
 
-    public static  int [] category_icon = {R.drawable.comp,R.drawable.rugby,R.drawable.card,R.drawable.ball,R.drawable.profile};
+    public static  int [] category_icons = {R.drawable._football,R.drawable._basketball,R.drawable._rugby,R.drawable._volleyball,R.drawable._joker,R.drawable._poker,R.drawable._pingpong,R.drawable._badminton};
+
+    public static  int [] ball_icon = {R.drawable._football,R.drawable._basketball,R.drawable._rugby,R.drawable._volleyball};
+
+    public static  int [] card_icon = {R.drawable._joker,R.drawable._poker};
+
+    public static  int [] table_icon = {R.drawable._pingpong};
+
+    public static  int [] action_icon = {R.drawable._badminton};
 }
 
 

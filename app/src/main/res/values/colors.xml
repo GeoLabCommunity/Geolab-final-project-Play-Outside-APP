@@ -9,6 +9,7 @@
     <color name="tab_color">#4D824D</color>
     <color name="selected_tab_color">#fff</color>
     <color name="white">#fff</color>
+    <color name="grey_transparent">#66fff2f2</color>
 
 
 </resources>
