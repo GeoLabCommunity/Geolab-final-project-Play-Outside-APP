@@ -86,6 +86,8 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
     private Spinner spinner;
     private Spinner member_spinner;
 
+    private String subcategoryData = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -162,6 +164,11 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
         checkGPSStatus();
 
 
+    }
+
+    public void setSubCategoryData(String subcategory){
+        this.subcategoryData = subcategory;
+        System.out.println("222"+subcategoryData);
     }
 
     boolean gps_enabled = false;
@@ -377,12 +384,12 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
         @Override
         public Fragment getItem(int pos) {
             switch(pos) {
-                case 0: return SubCategoryIcon.newInstance(4, Category_db.ball_icon);
-                case 1: return SubCategoryIcon.newInstance(2, Category_db.card_icon);
-                case 2: return SubCategoryIcon.newInstance(1, Category_db.table_icon);
-                case 3: return SubCategoryIcon.newInstance(1, Category_db.action_icon);
+                case 0: return SubCategoryIcon.newInstance(4, Category_db.ball_icon, Category_db.bal_tag);
+                case 1: return SubCategoryIcon.newInstance(2, Category_db.card_icon, Category_db.card_tag);
+                case 2: return SubCategoryIcon.newInstance(1, Category_db.table_icon, Category_db.table_tag);
+                case 3: return SubCategoryIcon.newInstance(1, Category_db.action_icon, Category_db.action_tag);
 
-                default: return SubCategoryIcon.newInstance(4, Category_db.ball_icon);
+                default: return SubCategoryIcon.newInstance(4, Category_db.ball_icon, Category_db.bal_tag);
 
             }
         }
