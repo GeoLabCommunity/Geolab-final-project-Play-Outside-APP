@@ -1,5 +1,6 @@
 package geolab.playoutside;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,6 +24,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -55,10 +64,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import geolab.playoutside.db.Category_db;
 import geolab.playoutside.fragment_categories.SubCategoryIcon;
+import geolab.playoutside.model.ApplicationController;
 
 public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyCallback, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, View.OnClickListener{
     private CallbackManager callbackManager;
@@ -88,10 +100,16 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
 
     private String subcategoryData = null;
 
+    private RequestQueue mRequestQueue;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add__event_);
+
+        if (mRequestQueue == null) {
+            mRequestQueue = Volley.newRequestQueue(getApplicationContext());
+        }
 
         selectCategory = new MyPagerAdapter(getSupportFragmentManager());
         category_pager = (ViewPager) findViewById(R.id.category_container);
@@ -273,6 +291,8 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
                                         //fb_intent_info();
 
 
+
+
                                     } catch (NullPointerException ex) {
                                         ex.getMessage();
                                     } catch (JSONException e) {
@@ -334,38 +354,36 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
         this.getplace = spinner.getSelectedItem().toString();
 
     }
+
+
     public void sendServerData(View v) {
-        final HttpClient httpclient = new DefaultHttpClient();
-        final HttpPost httppost = new HttpPost("http://vanisgimnazia.ge/instagram/fileUpload.php");
-        try {
-            List<NameValuePair> nameValuePairs = new ArrayList<>(4);
-            getInfoFromActivity();
-            nameValuePairs.add(new BasicNameValuePair("time", gettime));
-            nameValuePairs.add(new BasicNameValuePair("date", getdate));
-            nameValuePairs.add(new BasicNameValuePair("member_count", getmember));
-            nameValuePairs.add(new BasicNameValuePair("place", getplace));
-            nameValuePairs.add(new BasicNameValuePair("latitude", latitude));
-            nameValuePairs.add(new BasicNameValuePair("longitude", longitude));
-            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-            Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        httpclient.execute(httppost);
-                    } catch (IOException e) {
-                        e.getCause();
+
+        final String URL = "http://friendlygames.byethost10.com/welcome/joingame";
+
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("personid", "AbCdEfGh123456");
+        params.put("statmentid", "AbCdEfGh123456");
+
+        JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, URL, new JSONObject(params),
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            VolleyLog.v("Response:%n %s", response.toString(4));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
-                }
-            });
-            thread.start();
-        } catch (IOException e) {
-            e.getMessage();
-        }
-        Toast.makeText(getApplicationContext(), "Post has been uploaded",
-                Toast.LENGTH_SHORT).show();
-        finish();
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.e("Error: ", error.getMessage());
+            }
+        });
+
+// add the request object to the queue to be executed
+       // ApplicationController.getInstance().addToRequestQueue(req);
+        mRequestQueue.add(req);
     }
 
     @Override

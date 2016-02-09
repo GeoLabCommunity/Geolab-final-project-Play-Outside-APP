@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ViewPager mViewPager;
     private int[] tabIcons = {
-            R.drawable.settings,
+            R.drawable.comp,
             R.drawable.ball,
             R.drawable.card,
             R.drawable.cal,
@@ -120,6 +120,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         menuItems = getData();
+
+        expandableListView.setIndicatorBoundsRelative(730,0);
         CustomExpAdapter adapter = new CustomExpAdapter(this,menuItems);
         expandableListView.setAdapter(adapter);
 

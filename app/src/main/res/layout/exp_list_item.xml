@@ -10,7 +10,7 @@
     android:divider="@android:color/transparent">
 
     <ImageView
-        android:layout_marginLeft="32dp"
+        android:layout_marginLeft="16dp"
         android:id="@+id/parent_menu_icon_id"
         android:layout_width="20dp"
         android:layout_height="20dp" />
