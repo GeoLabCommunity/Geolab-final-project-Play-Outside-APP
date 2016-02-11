@@ -11,6 +11,8 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import geolab.playoutside.R;
 import geolab.playoutside.db.Category_db;
@@ -93,7 +95,7 @@ public class MyStickyAdapter extends BaseAdapter implements StickyListHeadersAda
             holder = (HeaderViewHolder) convertView.getTag();
         }
         //set header timeHolder as first char in name
-        String headerText = "" + eventsList.get(position).getTime();
+        String headerText = "" + eventsList.get(position).getDate();
         holder.headerDateHolder.setText(headerText);
         return convertView;
     }
@@ -119,7 +121,16 @@ public class MyStickyAdapter extends BaseAdapter implements StickyListHeadersAda
     @Override
     public long getHeaderId(int position) {
         //return the first character of the country as ID because this is what headers are based upon
-        return eventsList.get(position).getId();
+
+        if(eventsList.get(position).getDate() == null || eventsList.get(position).getDate().isEmpty())
+            return 1;
+        else {
+            Date dat = new Date(eventsList.get(position).getDate());
+            Calendar c = Calendar.getInstance();
+            c.setTime(dat);
+
+            return c.getTimeInMillis();
+        }
     }
 
     class HeaderViewHolder {

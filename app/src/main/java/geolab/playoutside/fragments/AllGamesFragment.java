@@ -5,6 +5,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 import geolab.playoutside.R;
@@ -17,29 +27,39 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
  * Created by GeoLab on 1/11/16.
  */
 public class AllGamesFragment extends android.support.v4.app.Fragment {
+
+    StickyListHeadersListView list;
+    private ArrayList<MyEvent> myEvents;
+    private JsonArrayRequest jsonObjectRequest;
+    private RequestQueue requestQueue;
+    private static String GET_JSON_INFO = "http://geolab.club/iraklilataria/ika/getdata.php";
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.sport_fragment, container, false);
 
-        StickyListHeadersListView list = (StickyListHeadersListView) v.findViewById(R.id.list);
-        MyStickyAdapter adapter = new MyStickyAdapter(getActivity(), getData());
-        list.setAdapter(adapter);
+        list= (StickyListHeadersListView) v.findViewById(R.id.list);
+//        MyStickyAdapter adapter = new MyStickyAdapter(getActivity(), getData());
+//        list.setAdapter(adapter);
+//
+//        list.setOnItemClickListener(adapter.listener);
 
-        list.setOnItemClickListener(adapter.listener);
+        getJSONInfo(GET_JSON_INFO);
+
 
 
         return v;
     }
 
-    private ArrayList<MyEvent> getData() {
-        ArrayList<MyEvent> models = new ArrayList<>();
-        for (int i = 0; i < Data.time.length; i++) {
-            MyEvent model = new MyEvent(Data.time[i],Data.time[i], Data.title[i], Data.description[i], Data.place[i], Data.player[i], Data.id[i], Data.category_id[i]);
-            models.add(model);
-        }
-
-        return models;
-    }
+//    private ArrayList<MyEvent> getData() {
+//        ArrayList<MyEvent> models = new ArrayList<>();
+//        for (int i = 0; i < Data.time.length; i++) {
+//            MyEvent model = new MyEvent(Data.time[i],Data.time[i], Data.title[i], Data.description[i], Data.place[i], Data.player[i], Data.id[i], Data.category_id[i]);
+//            models.add(model);
+//        }
+//
+//        return models;
+//    }
 
     public static AllGamesFragment newInstance(String text) {
 
@@ -50,5 +70,54 @@ public class AllGamesFragment extends android.support.v4.app.Fragment {
         f.setArguments(b);
 
         return f;
+    }
+
+    private void getJSONInfo(String url) {
+        myEvents = new ArrayList<>();
+        if (requestQueue == null) {
+            requestQueue = new Volley().newRequestQueue(getContext());
+        }
+        jsonObjectRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray jsonArray) {
+                try {
+                    ArrayList<MyEvent> myEvents = new ArrayList<>();
+                    for (int i = 0; i < jsonArray.length(); i++) {
+
+                        JSONObject curObj = jsonArray.getJSONObject(i);
+
+
+                        String user_id = curObj.getString("user_id");
+                        String subcategory = curObj.getString("subcategory");
+                        String date = curObj.getString("date");
+                        String time = curObj.getString("time");
+                        String count = curObj.getString("count");
+                        String location = curObj.getString("location");
+                        String latitude = curObj.getString("latitude");
+                        String longitude = curObj.getString("longitude");
+
+
+                        MyEvent myEvent = new MyEvent(time,date,subcategory, subcategory, location, count,latitude,longitude,1,2);
+                        myEvents.add(myEvent);
+                    }
+
+                    System.out.println("jjj   "+myEvents);
+                    MyStickyAdapter adapter = new MyStickyAdapter(getActivity(), myEvents);
+
+                    list.setAdapter(adapter);
+                    list.setOnItemClickListener(adapter.listener);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        volleyError.getCause();
+                    }
+                });
+        requestQueue.add(jsonObjectRequest);
     }
 }

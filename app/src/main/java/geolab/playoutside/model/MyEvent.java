@@ -6,11 +6,11 @@ import java.io.Serializable;
  * Created by GeoLab on 1/11/16.
  */
 public class MyEvent implements Serializable {
-    private String time,date,title, description, place, playerCount;
+    private String time,date,title, description, place, playerCount, longitude, latitude;
     private long id;
     private int category_id;
 
-    public MyEvent(String time,String date, String title, String description, String place, String player, long id, int category_id) {
+    public MyEvent(String time,String date, String title, String description, String place, String player,String longitude, String latitude, long id, int category_id) {
         this.time = time;
         this.title = title;
         this.description = description;
@@ -19,6 +19,8 @@ public class MyEvent implements Serializable {
         this.date = date;
         this.id = id;
         this.category_id=category_id;
+        this.longitude=longitude;
+        this.latitude=latitude;
     }
 
     public String getDate() {
@@ -39,6 +41,22 @@ public class MyEvent implements Serializable {
 
     public String getTime() {
         return time;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
     }
 
     public int getCategory_id() {

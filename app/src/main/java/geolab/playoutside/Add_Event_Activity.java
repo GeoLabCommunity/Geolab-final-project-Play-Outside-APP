@@ -1,5 +1,6 @@
 package geolab.playoutside;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -31,6 +32,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -85,6 +87,8 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
     private TextView dateenter;
     private String gettime;
     private String getdate;
+    private String date;
+    private String time;
     private String getmember;
     private String getplace;
     private String latitude;
@@ -140,7 +144,7 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
         ((MapFragment) getFragmentManager().findFragmentById(R.id.map))
                 .getMapAsync(this);
 
-        //       loginToFB();
+               loginToFB();
         dateclick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -176,6 +180,8 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
 
             }
         });
+
+
 
 
         //shevamowmot location manageri
@@ -335,55 +341,34 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
 
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
-        String date = dayOfMonth+"/"+(monthOfYear+1)+"/"+year;
+        date = dayOfMonth+"/"+(monthOfYear+1)+"/"+year;
         dateenter.setText(date);
 
     }
 
     @Override
     public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
-        String time = hourOfDay+":"+minute;
+        time = hourOfDay+":"+minute;
         timeenter.setText(time);
 
     }
     private void getInfoFromActivity() {
-
-        this.gettime = timeenter.getText().toString();
-        this.getdate =  dateenter.getText().toString();
+        spinner = (Spinner) findViewById(R.id.spinner);
+        member_spinner = (Spinner) findViewById(R.id.member_spinner);
         this.getmember =  member_spinner.getSelectedItem().toString();
         this.getplace = spinner.getSelectedItem().toString();
+
+
+
 
     }
 
 
     public void sendServerData(View v) {
 
-        final String URL = "http://friendlygames.byethost10.com/welcome/joingame";
 
-        HashMap<String, String> params = new HashMap<String, String>();
-        params.put("personid", "AbCdEfGh123456");
-        params.put("statmentid", "AbCdEfGh123456");
 
-        JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, URL, new JSONObject(params),
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            VolleyLog.v("Response:%n %s", response.toString(4));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                VolleyLog.e("Error: ", error.getMessage());
-            }
-        });
-
-// add the request object to the queue to be executed
-       // ApplicationController.getInstance().addToRequestQueue(req);
-        mRequestQueue.add(req);
+        registerUser();
     }
 
     @Override
@@ -434,5 +419,52 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
             return null;
         }
 
+    }
+    private void registerUser(){
+
+        getInfoFromActivity();
+
+       // System.out.println("hhh"+user_id+"id   "+subcategoryData+"sub   "+date+"date   "+time+"time   "+getmember+"member   "+getplace+"place   "+latitude+"lati   "+longitude);
+
+
+
+        final String URL = "http://geolab.club/iraklilataria/ika/";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Toast.makeText(Add_Event_Activity.this, response, Toast.LENGTH_LONG).show();
+                        System.out.println("response " +response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        System.out.println("error " +error.toString());
+                        Toast.makeText(Add_Event_Activity.this,error.toString(),Toast.LENGTH_LONG).show();
+                    }
+                }){
+            @Override
+            protected Map<String,String> getParams(){
+                Map<String,String> params = new HashMap<>();
+                params.put("user_id",user_id);
+                params.put("subcategory",subcategoryData);
+                params.put("date",date);
+                params.put("time",time);
+                params.put("count",getmember);
+                params.put("location",getplace);
+                params.put("latitude",latitude);
+                params.put("longitude",longitude);
+
+                params.toString();
+                System.out.println("iiii    "+params);
+                return params;
+            }
+
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
     }
 }
