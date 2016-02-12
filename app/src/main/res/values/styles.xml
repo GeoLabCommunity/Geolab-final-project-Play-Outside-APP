@@ -6,6 +6,10 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorHint">@color/mdtp_light_gray</item>
+        <item name="colorControlNormal">#c5c5c5</item>
+        <item name="colorControlActivated">@color/psts_background_tab_pressed</item>
+        <item name="colorControlHighlight">@color/com_facebook_blue</item>
     </style>
 
     <style name="AppTheme.NoActionBar">

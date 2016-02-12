@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/detail_toolbar"
+        android:id="@+id/detail_toolbar_id"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="?attr/colorPrimary"
@@ -58,7 +58,7 @@
                 android:layout_gravity="fill_horizontal"
                 android:id="@+id/category_tabs"
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
+                android:layout_height="30dp"
                 app:tabTextColor="@color/tab_color"
                 app:tabSelectedTextColor="@color/colorAccent"
                 app:tabMode="scrollable"
@@ -157,6 +157,28 @@
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:layout_width="match_parent"
+                android:layout_height="60dp">
+
+
+
+                <EditText
+                    android:textSize="12dp"
+                    android:layout_marginLeft="16dp"
+                    android:id="@+id/detail_description_text_id"
+                    android:hint="Description....."
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+            <View
+                android:background="#bbd9d9d9"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"></View>
+            <LinearLayout
+                android:layout_marginLeft="16dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
                 android:layout_height="38dp">
 
 
@@ -201,24 +223,7 @@
 
 
 
-            <LinearLayout
-                android:layout_marginLeft="16dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_width="match_parent"
-                android:layout_height="38dp">
 
-
-
-                <TextView
-                    android:textSize="12dp"
-                    android:layout_marginLeft="16dp"
-                    android:id="@+id/detail_player_count_text_id"
-                    android:text="LOCATION"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-            </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="160dp">

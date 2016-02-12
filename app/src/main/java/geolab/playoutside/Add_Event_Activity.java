@@ -14,12 +14,16 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -93,10 +97,14 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
     private String getplace;
     private String latitude;
     private String longitude;
+    private String getdescription;
 
     private MyPagerAdapter selectCategory;
     private ViewPager category_pager;
     private TabLayout tabLayout;
+    private Toolbar toolbar;
+
+    private EditText description;
 
 
     private Spinner spinner;
@@ -110,6 +118,9 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add__event_);
+        toolbar = (Toolbar) findViewById(R.id.detail_toolbar_id);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Add New Event");
 
         if (mRequestQueue == null) {
             mRequestQueue = Volley.newRequestQueue(getApplicationContext());
@@ -139,6 +150,7 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
         dateclick = (LinearLayout) findViewById(R.id.detail_date_click);
         timeenter = (TextView) findViewById(R.id.detail_time_text_id);
         dateenter = (TextView) findViewById(R.id.detail_date_text_id);
+
 
 
         ((MapFragment) getFragmentManager().findFragmentById(R.id.map))
@@ -353,10 +365,12 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
 
     }
     private void getInfoFromActivity() {
+        description = (EditText) findViewById(R.id.detail_description_text_id);
         spinner = (Spinner) findViewById(R.id.spinner);
         member_spinner = (Spinner) findViewById(R.id.member_spinner);
         this.getmember =  member_spinner.getSelectedItem().toString();
         this.getplace = spinner.getSelectedItem().toString();
+        this.getdescription = String.valueOf(description.getText());
 
 
 
@@ -452,6 +466,7 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
                 params.put("subcategory",subcategoryData);
                 params.put("date",date);
                 params.put("time",time);
+                params.put("description",getdescription);
                 params.put("count",getmember);
                 params.put("location",getplace);
                 params.put("latitude",latitude);

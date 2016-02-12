@@ -24,6 +24,9 @@ import geolab.playoutside.model.MyEvent;
 
 public class EventDetailActivity extends AppCompatActivity {
 
+    private String longitude;
+    private String latitude;
+
     @Bind(R.id.detail_title_text_id) protected TextView title;
     @Bind(R.id.detail_date_text_id) protected TextView date;
     @Bind(R.id.detail_time_text_id) protected TextView time;
@@ -33,7 +36,6 @@ public class EventDetailActivity extends AppCompatActivity {
 
     Toolbar toolbar_detail;
 
-    static final LatLng LOCATION = new LatLng(41.7173605, 44.7832891);
     private GoogleMap map;
 
 
@@ -42,28 +44,35 @@ public class EventDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_detail);
         ButterKnife.bind(this);
+        Bundle bundle = getIntent().getExtras();
+        MyEvent myEvent = (MyEvent) bundle.get("event");
         toolbar_detail = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar_detail);
 
+        latitude = (myEvent.getLatitude());
+        longitude = (myEvent.getLongitude());
+
+
+        Double lat = Double.parseDouble(latitude);
+        Double lon = Double.parseDouble(longitude);
+
         map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map))
                 .getMap();
+        LatLng location =new LatLng(lon,lat);
 
         Marker marker = map.addMarker(new MarkerOptions()
-                .position(LOCATION)
-                .title("title")
-                .snippet("small description")
+                .position(location)
         );
         // Move the camera instantly to hamburg with a zoom of 15.
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(LOCATION, 15));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15));
 
         // Zoom in, animating the camera.
         map.animateCamera(CameraUpdateFactory.zoomTo(15), 1500, null);
-        map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         map.getUiSettings().setZoomControlsEnabled(true);
 
 
-        Bundle bundle = getIntent().getExtras();
-        MyEvent myEvent = (MyEvent) bundle.get("event");
+
 
         getSupportActionBar().setTitle("Event Details");
 

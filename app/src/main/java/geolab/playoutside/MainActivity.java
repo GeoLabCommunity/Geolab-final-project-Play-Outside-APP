@@ -1,7 +1,10 @@
 package geolab.playoutside;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -90,6 +93,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        isInternetAvailable() ;
 
         fragments = new ArrayList<>();
         fragments.add(new Action());
@@ -290,6 +295,26 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public boolean isInternetAvailable() {
+
+        try {
+            Process p1 = java.lang.Runtime.getRuntime().exec("ping -c 1    www.google.com");
+            int returnVal = p1.waitFor();
+            boolean reachable = (returnVal == 0);
+            if (reachable) {
+                System.out.println("Internet access");
+                return reachable;
+            } else {
+                System.out.println("No Internet access");
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+        return false;
     }
 
 

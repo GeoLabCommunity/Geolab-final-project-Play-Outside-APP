@@ -89,6 +89,7 @@ public class AllGamesFragment extends android.support.v4.app.Fragment {
 
                         String user_id = curObj.getString("user_id");
                         String subcategory = curObj.getString("subcategory");
+                        String description = curObj.getString("description");
                         String date = curObj.getString("date");
                         String time = curObj.getString("time");
                         String count = curObj.getString("count");
@@ -97,7 +98,7 @@ public class AllGamesFragment extends android.support.v4.app.Fragment {
                         String longitude = curObj.getString("longitude");
 
 
-                        MyEvent myEvent = new MyEvent(time,date,subcategory, subcategory, location, count,latitude,longitude,1,2);
+                        MyEvent myEvent = new MyEvent(time,date,subcategory, description, location, count,latitude,longitude,1,2);
                         myEvents.add(myEvent);
                     }
 
