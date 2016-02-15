@@ -1,6 +1,7 @@
 package geolab.playoutside;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
@@ -20,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -27,15 +29,21 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 import geolab.playoutside.adapters.CustomExpAdapter;
 import geolab.playoutside.adapters.MyStickyAdapter;
 import geolab.playoutside.fragments.Action;
@@ -66,6 +74,17 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<ExpMenuItem> menuItems;
     private ArrayList<Fragment> fragments;
 
+    private String userId;
+    private String birthday;
+    private String name;
+    private String email;
+    private String imgUrl;
+
+    private CircleImageView fb_image;
+    private TextView fb_name;
+    private TextView fb_age;
+    private TextView fb_mail;
+
     /**
      * The {@link ViewPager} that will host the section contents.
      *
@@ -93,6 +112,46 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+
+        Intent intent = getIntent();
+
+        Bundle bundle = intent.getExtras();
+        if (bundle != null) {
+            name = (String) bundle.get("fb_name");
+            userId = (String) bundle.get("fb_id");
+            email = (String) bundle.get("fb_email");
+            birthday = (String) bundle.get("fb_age");
+
+            fb_name = (TextView) findViewById(R.id.fb_name);
+            fb_mail = (TextView) findViewById(R.id.fb_mail);
+            fb_age = (TextView) findViewById(R.id.fb_age);
+            fb_image = (CircleImageView) findViewById(R.id.fb_image);
+
+            fb_name.setText(name);
+            fb_mail.setText(email);
+
+
+            imgUrl = "https://graph.facebook.com/" + userId + "/picture?height=400";
+            Picasso.with(MainActivity.this)
+                    .load(imgUrl)
+                    .resize(400, 400)
+                    .centerCrop()
+                    .into(fb_image);
+
+            SimpleDateFormat sf = new SimpleDateFormat("dd/MM/yyyy");
+            try {
+                Date dat = sf.parse(birthday);
+                Calendar birthDate = Calendar.getInstance();
+                birthDate.setTimeInMillis(dat.getTime());
+                fb_age.setText("(" + String.valueOf(getAge(birthDate, Calendar.getInstance())) + ")");
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+
 
         isInternetAvailable() ;
 
@@ -317,6 +376,17 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
+    private int getAge(Calendar birthDate, Calendar currentDate){
+        int age = currentDate.get(Calendar.YEAR) - birthDate.get(Calendar.YEAR);
 
+        if (currentDate.get(Calendar.MONTH) < birthDate.get(Calendar.MONTH)) {
+            age--;
+        } else if (currentDate.get(Calendar.MONTH) == birthDate.get(Calendar.MONTH)
+                && currentDate.get(Calendar.DAY_OF_MONTH) < birthDate.get(Calendar.DAY_OF_MONTH)) {
+            age--;
+        }
+
+        return age;
+    }
 
 }

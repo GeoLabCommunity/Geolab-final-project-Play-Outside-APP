@@ -306,7 +306,7 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
                                         birth_day = jsonObject.getString("birthday");
                                         email_json = jsonObject.getString("email");
 
-                                        //fb_intent_info();
+                                        fb_intent_info();
 
 
 

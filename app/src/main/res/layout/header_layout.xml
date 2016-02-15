@@ -11,8 +11,8 @@
         android:layout_height="90dp"
         android:src="@drawable/com_facebook_profile_picture_blank_square"
         android:layout_marginLeft="24dp"
-        android:layout_marginStart="27dp"
-        android:layout_centerVertical="true"
+        android:layout_marginStart="22dp"
+        android:layout_marginTop="20dp"
         android:layout_alignParentStart="true" />
 
     <TextView

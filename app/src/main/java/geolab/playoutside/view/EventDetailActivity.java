@@ -44,8 +44,10 @@ public class EventDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_detail);
         ButterKnife.bind(this);
+
         Bundle bundle = getIntent().getExtras();
         MyEvent myEvent = (MyEvent) bundle.get("event");
+
         toolbar_detail = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar_detail);
 
