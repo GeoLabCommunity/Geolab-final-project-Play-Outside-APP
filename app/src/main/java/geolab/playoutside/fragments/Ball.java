@@ -24,7 +24,7 @@ public class Ball extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_ball, container, false);
+        return inflater.inflate(R.layout.sport_fragment, container, false);
 
 
     }

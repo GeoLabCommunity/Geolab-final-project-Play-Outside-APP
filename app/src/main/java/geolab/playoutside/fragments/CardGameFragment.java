@@ -24,7 +24,7 @@ public class CardGameFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_card_game, container, false);
+        return inflater.inflate(R.layout.sport_fragment, container, false);
     }
     public static CardGameFragment newInstance(String text) {
 

@@ -135,6 +135,8 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
 
+        loginToFB();
+
         spinner = (Spinner) findViewById(R.id.spinner);
         member_spinner = (Spinner) findViewById(R.id.member_spinner);
 
@@ -156,7 +158,8 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
         ((MapFragment) getFragmentManager().findFragmentById(R.id.map))
                 .getMapAsync(this);
 
-               loginToFB();
+
+
         dateclick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -306,7 +309,7 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
                                         birth_day = jsonObject.getString("birthday");
                                         email_json = jsonObject.getString("email");
 
-                                        fb_intent_info();
+
 
 
 
@@ -383,6 +386,7 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
 
 
         registerUser();
+        fb_intent_info();
     }
 
     @Override

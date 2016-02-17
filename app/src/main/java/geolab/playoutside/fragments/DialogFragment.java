@@ -26,6 +26,7 @@ public class DialogFragment extends android.app.DialogFragment{
                     public void onClick(DialogInterface dialog, int which) {
                         Intent addEvent = new Intent(getActivity(), Add_Event_Activity.class);
                         startActivity(addEvent);
+
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
