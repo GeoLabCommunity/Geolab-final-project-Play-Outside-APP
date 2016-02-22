@@ -75,7 +75,7 @@ public class MyStickyAdapter extends BaseAdapter implements StickyListHeadersAda
         holder.timeHolder.setBackgroundResource(Category_db.category_icons[eventsList.get(position).getCategory_id()]);
 
         holder.titleHolder.setText(eventsList.get(position).getTitle());
-        holder.descriptionHolder.setText(eventsList.get(position).getDescription());
+        holder.descriptionHolder.setText(eventsList.get(position).getDescription()+"...");
         holder.placeHolder.setText(eventsList.get(position).getPlace());
         holder.playerHolder.setText(eventsList.get(position).getPlayerCount());
 

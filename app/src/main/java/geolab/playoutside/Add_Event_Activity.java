@@ -99,6 +99,8 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
     private String longitude;
     private String getdescription;
 
+    private String category;
+
     private MyPagerAdapter selectCategory;
     private ViewPager category_pager;
     private TabLayout tabLayout;
@@ -122,6 +124,9 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Add New Event");
 
+
+
+
         if (mRequestQueue == null) {
             mRequestQueue = Volley.newRequestQueue(getApplicationContext());
         }
@@ -131,7 +136,25 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
         category_pager.setAdapter(selectCategory);
         tabLayout = (TabLayout) findViewById(R.id.category_tabs);
         tabLayout.setupWithViewPager(category_pager);
+        category = (String) tabLayout.getTabAt(0).getText();
 
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
+            @Override
+            public void onTabSelected(TabLayout.Tab tab){
+                int position = tab.getPosition();
+                category = (String) tabLayout.getTabAt(position).getText();
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
 
@@ -303,17 +326,10 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
                                     System.out.println("ERROR");
                                 } else {
                                     try {
-
                                         user_id = jsonObject.getString("id");
                                         str_firstName = jsonObject.getString("name");
                                         birth_day = jsonObject.getString("birthday");
                                         email_json = jsonObject.getString("email");
-
-
-
-
-
-
                                     } catch (NullPointerException ex) {
                                         ex.getMessage();
                                     } catch (JSONException e) {
@@ -350,6 +366,7 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
         intent.putExtra("fb_id", user_id);
         intent.putExtra("fb_email", email_json);
         intent.putExtra("fb_age", birth_day);
+        intent.putExtra("access",accessToken);
         startActivity(intent);
     }
 
@@ -385,7 +402,7 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
 
 
 
-        registerUser();
+        addEvent();
         fb_intent_info();
     }
 
@@ -421,6 +438,10 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
         }
 
 
+
+
+
+
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
@@ -438,7 +459,7 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
         }
 
     }
-    private void registerUser(){
+    private void addEvent(){
 
         getInfoFromActivity();
 
@@ -467,6 +488,7 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<>();
                 params.put("user_id",user_id);
+                params.put("category",category);
                 params.put("subcategory",subcategoryData);
                 params.put("date",date);
                 params.put("time",time);

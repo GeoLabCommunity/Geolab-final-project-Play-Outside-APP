@@ -1,11 +1,8 @@
 package geolab.playoutside;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -24,38 +21,34 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.facebook.AccessToken;
 import com.squareup.picasso.Picasso;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import geolab.playoutside.adapters.CustomExpAdapter;
-import geolab.playoutside.adapters.MyStickyAdapter;
 import geolab.playoutside.fragments.Action;
 import geolab.playoutside.fragments.AllGamesFragment;
 import geolab.playoutside.fragments.Ball;
 import geolab.playoutside.fragments.CardGameFragment;
-import geolab.playoutside.fragments.Computer;
 import geolab.playoutside.fragments.DialogFragment;
-import geolab.playoutside.fragments.Gun;
 import geolab.playoutside.fragments.TableGameFragment;
 import geolab.playoutside.model.ExpMenuItem;
-import geolab.playoutside.model.MyEvent;
 import geolab.playoutside.model.SubMenu;
 
 
@@ -79,11 +72,13 @@ public class MainActivity extends AppCompatActivity {
     private String name;
     private String email;
     private String imgUrl;
+    private AccessToken access;
 
     private CircleImageView fb_image;
     private TextView fb_name;
     private TextView fb_age;
     private TextView fb_mail;
+
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -94,11 +89,11 @@ public class MainActivity extends AppCompatActivity {
 
     private ViewPager mViewPager;
     private int[] tabIcons = {
-            R.drawable.comp,
+            R.drawable.allgamesb,
             R.drawable.ball,
-            R.drawable.card,
-            R.drawable.cal,
-            R.drawable.comp,
+            R.drawable.cardb,
+            R.drawable._pingpong_b,
+            R.drawable.activeb,
     };
     Toolbar toolbar;
     DrawerLayout dlDrawer;
@@ -113,8 +108,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        access = null;
 
-        Intent intent = getIntent();
+
+        final Intent intent = getIntent();
+
 
         Bundle bundle = intent.getExtras();
         if (bundle != null) {
@@ -122,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
             userId = (String) bundle.get("fb_id");
             email = (String) bundle.get("fb_email");
             birthday = (String) bundle.get("fb_age");
+            access = (AccessToken) bundle.get("access");
 
             fb_name = (TextView) findViewById(R.id.fb_name);
             fb_mail = (TextView) findViewById(R.id.fb_mail);
@@ -151,18 +150,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-
-
-        isInternetAvailable() ;
-
-        fragments = new ArrayList<>();
-        fragments.add(new Action());
-        fragments.add(new AllGamesFragment());
-        fragments.add(new Ball());
-        fragments.add(new CardGameFragment());
-        fragments.add(new Gun());
-
-
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         // Find our drawer view
@@ -190,10 +177,13 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (userId == null){
 
                 DialogFragment dialogFragment = new DialogFragment();
-                dialogFragment.show(getFragmentManager(), "string");
-
+                dialogFragment.show(getFragmentManager(), "string");}
+                else{
+                    Intent addEvent = new Intent(MainActivity.this, Add_Event_Activity.class);
+                startActivity(addEvent);}
             }
         });
 
@@ -208,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 int index = (parent.getFlatListPosition(ExpandableListView.getPackedPositionForChild(groupPosition, childPosition))) ;
-                System.out.println(index);
+                System.out.println(index+"444");
 
                 parent.setItemChecked(index, true);
                 SubMenu subMenu = menuItems.get(groupPosition).getSubMenus().get(childPosition);
@@ -356,25 +346,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public boolean isInternetAvailable() {
-
-        try {
-            Process p1 = java.lang.Runtime.getRuntime().exec("ping -c 1    www.google.com");
-            int returnVal = p1.waitFor();
-            boolean reachable = (returnVal == 0);
-            if (reachable) {
-                System.out.println("Internet access");
-                return reachable;
-            } else {
-                System.out.println("No Internet access");
-            }
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-        }
-        return false;
-    }
 
     private int getAge(Calendar birthDate, Calendar currentDate){
         int age = currentDate.get(Calendar.YEAR) - birthDate.get(Calendar.YEAR);
@@ -387,6 +358,45 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return age;
+    }
+
+
+    private void filter(){
+
+
+
+        final String URL = "http://geolab.club/iraklilataria/ika/filter.php";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Toast.makeText(MainActivity.this, response, Toast.LENGTH_LONG).show();
+                        System.out.println("response " +response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        System.out.println("error " +error.toString());
+                        Toast.makeText(MainActivity.this,error.toString(),Toast.LENGTH_LONG).show();
+                    }
+                }){
+            @Override
+            protected Map<String,String> getParams(){
+                Map<String,String> params = new HashMap<>();
+                params.put("category",userId);
+
+
+                params.toString();
+                System.out.println("iiii    "+params);
+                return params;
+            }
+
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
     }
 
 }

@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="170dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/back"
     android:orientation="vertical">
 
@@ -12,29 +13,39 @@
         android:layout_marginLeft="24dp"
         android:layout_marginStart="22dp"
         android:layout_marginTop="20dp"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        app:border_width="2dp"
+        app:border_color="@color/white"/>
 
+    <RelativeLayout
+        android:background="@color/white_transparent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/relativeLayout"
+        android:layout_below="@+id/fb_image">
     <TextView
+        android:layout_marginLeft="16dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
         android:textSize="14sp"
         android:textStyle="bold"
         android:gravity="left"
-        android:paddingBottom="4dp"
         android:id="@+id/fb_name"
         android:layout_above="@+id/fb_mail"
-        android:layout_alignLeft="@+id/fb_image"
-        android:layout_alignStart="@+id/fb_image" />
-    <TextView
-        android:id="@+id/fb_age"
 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/fb_name"
-        android:layout_alignEnd="@+id/fb_mail" />
+        />
+        <TextView
+            android:layout_marginTop="15dp"
+            android:id="@+id/fb_age"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/fb_name"
+            android:layout_marginLeft="45dp"
+           />
 
-    <TextView
+        <TextView
+        android:layout_marginLeft="16dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/fb_mail"
@@ -42,8 +53,9 @@
         android:layout_marginBottom="8dp"
         android:textSize="14sp"
         android:layout_alignParentBottom="true"
-        android:layout_alignLeft="@+id/fb_name"
-        android:layout_alignStart="@+id/fb_name" />
+       />
+
+    </RelativeLayout>
 
 
 

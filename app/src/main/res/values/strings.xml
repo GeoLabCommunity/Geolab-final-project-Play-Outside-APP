@@ -11,6 +11,9 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
 
+    <string name="gcm_defaultSenderId">373514672091</string>
+    <string name="register_messaging_url">http://geolab.club/streetart/index.php/welcome/register_token/</string>
+
     <array name="district_array">
         <item>Choose your location</item>
         <item>Gldani</item>

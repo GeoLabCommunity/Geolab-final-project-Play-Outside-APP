@@ -20,6 +20,11 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="your.application.package.permission.MAPS_RECEIVE"/>
 
+    <permission
+        android:name="ge.geolab.bookswap.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="ge.geolab.bookswap.permission.C2D_MESSAGE" />
+
 
     <!-- Maps API needs OpenGL ES 2.0. -->
     <uses-feature
@@ -28,7 +33,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/_icon"
+        android:icon="@drawable/picon"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/MyMaterialTheme">
@@ -41,6 +46,37 @@
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyDgpFOs0LqjftDdxe385qEb8a2LlO16QYI" />
 
+        <service
+            android:name=".network.RegistrationIntentService"
+            android:exported="false" />
+        <service
+            android:name=".network.MyInstanceIDListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID" />
+            </intent-filter>
+        </service>
+
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
+                <category android:name="com.example.gcm" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".network.GcmMessageHandler"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
+
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
@@ -52,7 +88,6 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -60,5 +95,6 @@
         <activity android:name=".Add_Event_Activity" />
         <activity android:name=".MainActivity"></activity>
     </application>
+
 
 </manifest>

@@ -52,27 +52,10 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
                                     }
                                 }
         );
-//        MyStickyAdapter adapter = new MyStickyAdapter(getActivity(), getData());
-//        list.setAdapter(adapter);
-//
-//        list.setOnItemClickListener(adapter.listener);
-
-
-
 
 
         return v;
     }
-
-//    private ArrayList<MyEvent> getData() {
-//        ArrayList<MyEvent> models = new ArrayList<>();
-//        for (int i = 0; i < Data.time.length; i++) {
-//            MyEvent model = new MyEvent(Data.time[i],Data.time[i], Data.title[i], Data.description[i], Data.place[i], Data.player[i], Data.id[i], Data.category_id[i]);
-//            models.add(model);
-//        }
-//
-//        return models;
-//    }
 
     public static AllGamesFragment newInstance(String text) {
 
