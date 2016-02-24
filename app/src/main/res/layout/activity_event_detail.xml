@@ -53,7 +53,7 @@
     <View
         android:background="#bbd9d9d9"
         android:layout_width="match_parent"
-        android:layout_height="1dp"></View>
+        android:layout_height="0.5dp"></View>
    
     <LinearLayout
         android:layout_marginLeft="16dp"
@@ -90,7 +90,7 @@
     <View
         android:background="#bbd9d9d9"
         android:layout_width="match_parent"
-        android:layout_height="1dp"></View>
+        android:layout_height="0.5dp"></View>
 
 
 <LinearLayout
@@ -116,7 +116,7 @@
     <View
         android:background="#bbd9d9d9"
         android:layout_width="match_parent"
-        android:layout_height="1dp"></View>
+        android:layout_height="0.5dp"></View>
 
     
     
@@ -128,6 +128,7 @@
     android:layout_height="55dp">
     
     <ImageView
+        android:layout_marginLeft="3dp"
         android:src="@drawable/time"
         android:layout_width="13dp"
         android:layout_height="14dp" />
@@ -145,7 +146,7 @@
     <View
         android:background="#bbd9d9d9"
         android:layout_width="match_parent"
-        android:layout_height="1dp"></View>
+        android:layout_height="0.5dp"></View>
     <LinearLayout
         android:layout_marginLeft="16dp"
         android:orientation="horizontal"
@@ -154,12 +155,12 @@
         android:layout_height="55dp">
 
         <ImageView
-            android:src="@drawable/pers"
-            android:layout_width="15dp"
+            android:src="@drawable/dett"
+            android:layout_width="wrap_content"
             android:layout_height="16dp" />
         <TextView
             android:textSize="12dp"
-            android:layout_marginLeft="16dp"
+            android:layout_marginLeft="8dp"
             android:id="@+id/detail_description_text_id"
             android:text="description"
             android:layout_width="wrap_content"
@@ -170,16 +171,16 @@
     <View
         android:background="#bbd9d9d9"
         android:layout_width="match_parent"
-        android:layout_height="1dp"></View>
+        android:layout_height="0.5dp"></View>
     
    
 
-<LinearLayout
+<RelativeLayout
     android:layout_marginLeft="16dp"
     android:orientation="horizontal"
     android:gravity="center_vertical"
     android:layout_width="match_parent"
-    android:layout_height="55dp">
+    android:layout_height="100dp">
     
     <ImageView
         android:src="@drawable/people"
@@ -188,44 +189,102 @@
 
     <TextView
         android:textSize="12dp"
-        android:layout_marginLeft="16dp"
+        android:layout_marginLeft="25dp"
         android:id="@+id/detail_player_count_text_id"
         android:text="playerCount count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     
-</LinearLayout>
+
     <HorizontalScrollView
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/detail_player_count_text_id"
         android:layout_width="match_parent"
         android:layout_height="55dp">
         <LinearLayout
+
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/fb_image"
-                android:layout_width="31dp"
-                android:layout_height="31dp"
+                app:border_width="1dp"
+                app:border_color="@color/com_facebook_blue"
+                android:id="@+id/detail_join_image"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
                 android:src="@drawable/com_facebook_profile_picture_blank_square"
-                android:layout_marginLeft="17dp"
                 android:layout_marginRight="17dp"
-                android:layout_centerVertical="true"
-                android:layout_alignParentStart="true" />
-
+                 />
+            <de.hdodenhof.circleimageview.CircleImageView
+                app:border_width="1dp"
+                app:border_color="@color/com_facebook_blue"
+                android:id="@+id/detail_join_image1"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:src="@drawable/com_facebook_profile_picture_blank_square"
+                android:layout_marginRight="17dp"
+                />
+            <de.hdodenhof.circleimageview.CircleImageView
+                app:border_width="1dp"
+                app:border_color="@color/com_facebook_blue"
+                android:id="@+id/detail_join_image2"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:src="@drawable/com_facebook_profile_picture_blank_square"
+                android:layout_marginRight="17dp"
+                />
+            <de.hdodenhof.circleimageview.CircleImageView
+                app:border_width="1dp"
+                app:border_color="@color/com_facebook_blue"
+                android:id="@+id/detail_join_image3"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:src="@drawable/com_facebook_profile_picture_blank_square"
+                android:layout_marginRight="17dp"
+                />
+            <de.hdodenhof.circleimageview.CircleImageView
+                app:border_width="1dp"
+                app:border_color="@color/com_facebook_blue"
+                android:id="@+id/detail_join_image4"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:src="@drawable/com_facebook_profile_picture_blank_square"
+                android:layout_marginRight="17dp"
+                />
+            <de.hdodenhof.circleimageview.CircleImageView
+                app:border_width="1dp"
+                app:border_color="@color/com_facebook_blue"
+                android:id="@+id/detail_join_image5"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:src="@drawable/com_facebook_profile_picture_blank_square"
+                android:layout_marginRight="17dp"
+                />
+            <de.hdodenhof.circleimageview.CircleImageView
+                app:border_width="1dp"
+                app:border_color="@color/com_facebook_blue"
+                android:id="@+id/detail_join_image6"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:src="@drawable/com_facebook_profile_picture_blank_square"
+                android:layout_marginRight="17dp"
+                />
 
         </LinearLayout>
 
     </HorizontalScrollView>
-
+</RelativeLayout>
 
     <View
         android:background="#bbd9d9d9"
         android:layout_width="match_parent"
-        android:layout_height="1dp"></View>
+        android:layout_height="0.5dp"></View>
 
 
 </LinearLayout>
     </ScrollView>
+
+
 
 
     <Button

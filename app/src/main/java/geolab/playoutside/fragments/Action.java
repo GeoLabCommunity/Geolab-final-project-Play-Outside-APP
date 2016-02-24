@@ -95,7 +95,7 @@ public class Action extends android.support.v4.app.Fragment implements SwipeRefr
                         String longitude = curObj.getString("longitude");
 
 
-                        MyEvent myEvent = new MyEvent(time,date,subcategory, description, location, count,latitude,longitude,1,2);
+                        MyEvent myEvent = new MyEvent( user_id, time,date,subcategory, description, location, count,latitude,longitude,1);
                         myEvents.add(myEvent);
                     }
 

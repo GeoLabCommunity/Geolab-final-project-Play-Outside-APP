@@ -6,18 +6,18 @@ import java.io.Serializable;
  * Created by GeoLab on 1/11/16.
  */
 public class MyEvent implements Serializable {
-    private String time,date,title, description, place, playerCount, longitude, latitude;
-    private long id;
+    private String user_id, time,date,title, description, place, playerCount, longitude, latitude;
     private int category_id;
 
-    public MyEvent(String time,String date, String title, String description, String place, String player,String longitude, String latitude, long id, int category_id) {
+    public MyEvent(String user_id, String time,String date, String title, String description, String place, String player,String longitude, String latitude, int category_id) {
+        this.user_id = user_id;
         this.time = time;
         this.title = title;
         this.description = description;
         this.place = place;
         this.playerCount = player;
         this.date = date;
-        this.id = id;
+        this.user_id = user_id;
         this.category_id=category_id;
         this.longitude=longitude;
         this.latitude=latitude;
@@ -31,12 +31,12 @@ public class MyEvent implements Serializable {
         this.date = date;
     }
 
-    public long getId() {
-        return id;
+    public String getId() {
+        return user_id;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setId(String user_id) {
+        this.user_id = user_id;
     }
 
     public String getTime() {

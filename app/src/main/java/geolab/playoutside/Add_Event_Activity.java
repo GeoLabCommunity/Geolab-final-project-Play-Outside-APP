@@ -78,6 +78,8 @@ import geolab.playoutside.db.Category_db;
 import geolab.playoutside.fragment_categories.SubCategoryIcon;
 import geolab.playoutside.model.ApplicationController;
 
+import static geolab.playoutside.R.color.tab_color;
+
 public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyCallback, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, View.OnClickListener{
     private CallbackManager callbackManager;
     private AccessToken accessToken;
@@ -122,6 +124,7 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
         setContentView(R.layout.activity_add__event_);
         toolbar = (Toolbar) findViewById(R.id.detail_toolbar_id);
         setSupportActionBar(toolbar);
+
         getSupportActionBar().setTitle("Add New Event");
 
 
@@ -375,7 +378,6 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
         date = dayOfMonth+"/"+(monthOfYear+1)+"/"+year;
         dateenter.setText(date);
-
     }
 
     @Override
@@ -391,9 +393,6 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
         this.getmember =  member_spinner.getSelectedItem().toString();
         this.getplace = spinner.getSelectedItem().toString();
         this.getdescription = String.valueOf(description.getText());
-
-
-
 
     }
 

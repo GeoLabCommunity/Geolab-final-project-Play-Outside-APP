@@ -1,8 +1,12 @@
 package geolab.playoutside;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -14,6 +18,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +35,10 @@ import com.android.volley.toolbox.Volley;
 import com.facebook.AccessToken;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.InetAddress;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -79,6 +88,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView fb_age;
     private TextView fb_mail;
 
+    private Context context;
+
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -88,13 +99,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private ViewPager mViewPager;
-    private int[] tabIcons = {
-            R.drawable.allgamesb,
-            R.drawable.ball,
-            R.drawable.cardb,
-            R.drawable._pingpong_b,
-            R.drawable.activeb,
-    };
+
     Toolbar toolbar;
     DrawerLayout dlDrawer;
     ActionBarDrawerToggle drawerToggle;
@@ -109,6 +114,10 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         access = null;
+
+        isNetworkAvailable();
+
+
 
 
         final Intent intent = getIntent();
@@ -168,7 +177,6 @@ public class MainActivity extends AppCompatActivity {
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         tabLayout.setupWithViewPager(mViewPager);
-        setupTabIcons();
         tabLayout.setSelectedTabIndicatorColor(Color.parseColor("#FFFFFF"));
 
 
@@ -189,7 +197,9 @@ public class MainActivity extends AppCompatActivity {
 
         menuItems = getData();
 
-        expandableListView.setIndicatorBoundsRelative(730,0);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            expandableListView.setIndicatorBoundsRelative(730,0);
+        }
         CustomExpAdapter adapter = new CustomExpAdapter(this,menuItems);
         expandableListView.setAdapter(adapter);
 
@@ -243,8 +253,8 @@ public class MainActivity extends AppCompatActivity {
 
         items.add(new ExpMenuItem("BALL",subMenus1,R.drawable.ball));
         items.add(new ExpMenuItem("CARD",subMenus2,R.drawable.card));
-        items.add(new ExpMenuItem("TABLE",subMenus3,R.drawable.comp));
-        items.add(new ExpMenuItem("ACTION",subMenus4,R.drawable.cal));
+        items.add(new ExpMenuItem("TABLE",subMenus3,R.drawable.ping));
+        items.add(new ExpMenuItem("ACTION",subMenus4,R.drawable.badm));
 
 
         return items;
@@ -254,15 +264,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    private void setupTabIcons() {
 
-        tabLayout.getTabAt(0).setIcon(tabIcons[0]);
-        tabLayout.getTabAt(1).setIcon(tabIcons[1]);
-        tabLayout.getTabAt(2).setIcon(tabIcons[2]);
-        tabLayout.getTabAt(3).setIcon(tabIcons[3]);
-        tabLayout.getTabAt(4).setIcon(tabIcons[4]);
-
-    }
 
 
 
@@ -397,6 +399,16 @@ public class MainActivity extends AppCompatActivity {
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
+
     }
 
+    public void isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
+        } else {
+            Toast.makeText(this, "Internet Connection Is Required", Toast.LENGTH_LONG).show();
+
+        }
+    }
 }

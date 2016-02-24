@@ -1,10 +1,14 @@
 package geolab.playoutside.fragments;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -16,8 +20,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.InetAddress;
 import java.util.ArrayList;
 
+import geolab.playoutside.MainActivity;
 import geolab.playoutside.R;
 import geolab.playoutside.adapters.MyStickyAdapter;
 import geolab.playoutside.db.Data;
@@ -40,12 +46,14 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.sport_fragment, container, false);
 
-        list= (StickyListHeadersListView) v.findViewById(R.id.list);
+
+        list = (StickyListHeadersListView) v.findViewById(R.id.list);
         swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swiperefresh);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.post(new Runnable() {
                                     @Override
                                     public void run() {
+
                                         swipeRefreshLayout.setRefreshing(true);
 
                                         getJSONInfo(GET_JSON_INFO);
@@ -69,7 +77,9 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
     }
 
     private void getJSONInfo(String url) {
+
         swipeRefreshLayout.setRefreshing(true);
+        check();
         myEvents = new ArrayList<>();
         if (requestQueue == null) {
             requestQueue = new Volley().newRequestQueue(getContext());
@@ -95,11 +105,11 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
                         String longitude = curObj.getString("longitude");
 
 
-                        MyEvent myEvent = new MyEvent(time,date,subcategory, description, location, count,latitude,longitude,1,2);
+                        MyEvent myEvent = new MyEvent(user_id, time, date, subcategory, description, location, count, latitude, longitude, 1);
                         myEvents.add(myEvent);
                     }
 
-                    System.out.println("jjj   "+myEvents);
+                    System.out.println("jjj   " + myEvents);
                     MyStickyAdapter adapter = new MyStickyAdapter(getActivity(), myEvents);
 
                     list.setAdapter(adapter);
@@ -125,4 +135,23 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
     public void onRefresh() {
         getJSONInfo(GET_JSON_INFO);
     }
+
+    public void check() {
+        ConnectivityManager connMgr = (ConnectivityManager) getActivity()
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+
+    NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+
+    if(networkInfo!=null&&networkInfo.isConnected())
+
+    {
+        // fetch data
+    }
+
+    else
+
+    {
+        Toast.makeText(getContext(), "Internet Connection Is Required", Toast.LENGTH_LONG).show();
+    }
+}
 }
