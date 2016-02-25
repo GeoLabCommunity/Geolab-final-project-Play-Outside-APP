@@ -7,5 +7,28 @@
     android:background="@drawable/lounch"
     tools:context="geolab.playoutside.view.Lounch">
 
+    <Button
+
+        android:background="@drawable/facebook"
+        android:id="@+id/facebook"
+        android:layout_width="221dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:textSize="7pt"
+
+        android:layout_above="@+id/skip"
+        android:layout_centerHorizontal="true" />
+    <Button
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="86dp"
+        android:gravity="center"
+        android:background="@drawable/skip"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:id="@+id/skip"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+
 
 </RelativeLayout>

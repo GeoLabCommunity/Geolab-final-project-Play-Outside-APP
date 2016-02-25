@@ -107,7 +107,6 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
     private String latitude;
     private String longitude;
     private String getdescription;
-
     private String category;
 
     private MyPagerAdapter selectCategory;
@@ -118,8 +117,6 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
     private EditText description;
 
 
-    private Spinner spinner;
-    private Spinner member_spinner;
     private RelativeLayout countMember;
     private RelativeLayout location;
 
@@ -207,21 +204,6 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
             }
         });
 
-
-
-
-
-
-//        spinner = (Spinner) findViewById(R.id.spinner);
-//        member_spinner = (Spinner) findViewById(R.id.member_spinner);
-//
-//        ArrayAdapter member_adapter = ArrayAdapter.createFromResource(this, R.array.member_array, R.layout.spinner_item);
-//        member_spinner.setAdapter(member_adapter);
-//        member_adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
-//
-//        ArrayAdapter adapter = ArrayAdapter.createFromResource(this, R.array.district_array, R.layout.spinner_item);
-//        spinner.setAdapter(adapter);
-//        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
 
         timeclick = (LinearLayout) findViewById(R.id.detail_time_click);
         dateclick = (LinearLayout) findViewById(R.id.detail_date_click);
@@ -448,10 +430,7 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
 
     public void sendServerData(View v) {
 
-
-
         addEvent();
-        fb_intent_info();
     }
 
     @Override
@@ -462,7 +441,7 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
 
     @Override
     public void onClick(String value) {
-        mTextView.setText(value);
+        mTextView.setText("< " +value + " >");
     }
 
     private class MyPagerAdapter extends FragmentPagerAdapter {
@@ -516,9 +495,6 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
 
         getInfoFromActivity();
 
-       // System.out.println("hhh"+user_id+"id   "+subcategoryData+"sub   "+date+"date   "+time+"time   "+getmember+"member   "+getplace+"place   "+latitude+"lati   "+longitude);
-
-
 
         final String URL = "http://geolab.club/iraklilataria/ika/";
 
@@ -527,14 +503,14 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
                     @Override
                     public void onResponse(String response) {
                         Toast.makeText(Add_Event_Activity.this, response, Toast.LENGTH_LONG).show();
-                        System.out.println("response " +response);
+                        fb_intent_info();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        System.out.println("error " +error.toString());
-                        Toast.makeText(Add_Event_Activity.this,error.toString(),Toast.LENGTH_LONG).show();
+                       // System.out.println("error " +error.toString());
+                        Toast.makeText(Add_Event_Activity.this,"Please fill all fields",Toast.LENGTH_LONG).show();
                     }
                 }){
             @Override
@@ -552,7 +528,6 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
                 params.put("longitude",longitude);
 
                 params.toString();
-                System.out.println("iiii    "+params);
                 return params;
             }
 

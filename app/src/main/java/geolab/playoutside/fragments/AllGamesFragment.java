@@ -41,6 +41,7 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
     private RequestQueue requestQueue;
     private static String GET_JSON_INFO = "http://geolab.club/iraklilataria/ika/getdata.php";
     private SwipeRefreshLayout swipeRefreshLayout;
+    private int categoryId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -104,8 +105,39 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
                         String latitude = curObj.getString("latitude");
                         String longitude = curObj.getString("longitude");
 
+                        switch(subcategory) {
+                            case "Football":
+                                categoryId=0;
+                                break;
+                            case "Basketball":
+                                categoryId=1;
+                                break;
+                            case "Rugby":
+                                categoryId=2;
+                                break;
+                            case "Volleyball":
+                                categoryId=3;
+                                break;
+                            case "Joker":
+                                categoryId=4;
+                                break;
+                            case "Poker":
+                                categoryId=5;
+                                break;
+                            case "Ping-pong":
+                                categoryId=6;
+                                break;
+                            case "Badminton":
+                                categoryId=7;
+                                break;
+                            default:
+                                categoryId=0;
+                        }
 
-                        MyEvent myEvent = new MyEvent(user_id, time, date, subcategory, description, location, count, latitude, longitude, 1);
+
+
+
+                        MyEvent myEvent = new MyEvent(user_id, time, date, subcategory, description, location, count, latitude, longitude, categoryId);
                         myEvents.add(myEvent);
                     }
 

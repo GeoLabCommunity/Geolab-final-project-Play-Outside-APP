@@ -41,6 +41,7 @@ public class TableGameFragment extends android.support.v4.app.Fragment implement
     private RequestQueue requestQueue;
     private static String GET_JSON_INFO = "http://geolab.club/iraklilataria/ika/category/table.php";
     private SwipeRefreshLayout swipeRefreshLayout;
+    private int categoryId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -104,8 +105,16 @@ public class TableGameFragment extends android.support.v4.app.Fragment implement
                         String latitude = curObj.getString("latitude");
                         String longitude = curObj.getString("longitude");
 
+                        switch(subcategory) {
+                            case "Ping-pong":
+                                categoryId=6;
+                                break;
+                            default:
+                                categoryId=6;
+                        }
 
-                        MyEvent myEvent = new MyEvent(user_id, time, date, subcategory, description, location, count, latitude, longitude, 1);
+
+                        MyEvent myEvent = new MyEvent(user_id, time, date, subcategory, description, location, count, latitude, longitude, categoryId);
                         myEvents.add(myEvent);
                     }
 
