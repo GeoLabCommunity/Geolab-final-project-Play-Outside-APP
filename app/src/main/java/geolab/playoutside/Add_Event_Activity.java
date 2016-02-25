@@ -23,8 +23,10 @@ import android.text.Editable;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,6 +55,8 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.vi.swipenumberpicker.OnValueChangeListener;
+import com.vi.swipenumberpicker.SwipeNumberPicker;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
@@ -77,10 +81,12 @@ import java.util.Map;
 import geolab.playoutside.db.Category_db;
 import geolab.playoutside.fragment_categories.SubCategoryIcon;
 import geolab.playoutside.model.ApplicationController;
+import hotchemi.stringpicker.StringPicker;
+import hotchemi.stringpicker.StringPickerDialog;
 
 import static geolab.playoutside.R.color.tab_color;
 
-public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyCallback, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, View.OnClickListener{
+public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyCallback, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, View.OnClickListener,StringPickerDialog.OnClickListener{
     private CallbackManager callbackManager;
     private AccessToken accessToken;
     private String user_id;
@@ -97,6 +103,7 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
     private String time;
     private String getmember;
     private String getplace;
+    private SwipeNumberPicker placeview;
     private String latitude;
     private String longitude;
     private String getdescription;
@@ -113,6 +120,11 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
 
     private Spinner spinner;
     private Spinner member_spinner;
+    private RelativeLayout countMember;
+    private RelativeLayout location;
+
+    private static final String TAG = StringPickerDialog.class.getSimpleName();
+    private TextView mTextView;
 
     private String subcategoryData = null;
 
@@ -163,16 +175,53 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
 
         loginToFB();
 
-        spinner = (Spinner) findViewById(R.id.spinner);
-        member_spinner = (Spinner) findViewById(R.id.member_spinner);
+        countMember = (RelativeLayout) findViewById(R.id.count_member);
+        countMember.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final SwipeNumberPicker custom = (SwipeNumberPicker) findViewById(R.id.snp_custom);
+                custom.setOnValueChangeListener(new OnValueChangeListener() {
+                    @Override
+                    public boolean onValueChange(SwipeNumberPicker view, int oldValue, int newValue) {
+                        getmember=(String.valueOf(newValue));
+//                        TextView text = (TextView) findViewById(R.id.count_member_text);
+//                        text.setText(String.valueOf(newValue));
+                        return true;
+                    }
+                });
+            }
+        });
 
-        ArrayAdapter member_adapter = ArrayAdapter.createFromResource(this, R.array.member_array, R.layout.spinner_item);
-        member_spinner.setAdapter(member_adapter);
-        member_adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
 
-        ArrayAdapter adapter = ArrayAdapter.createFromResource(this, R.array.district_array, R.layout.spinner_item);
-        spinner.setAdapter(adapter);
-        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+
+        mTextView = (TextView) findViewById(R.id.location_text);
+        location = (RelativeLayout) findViewById(R.id.location);
+        location.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putStringArray(getString(R.string.string_picker_dialog_values), getStringArray());
+                StringPickerDialog dialog = new StringPickerDialog();
+                dialog.setArguments(bundle);
+                dialog.show(getSupportFragmentManager(), TAG);
+            }
+        });
+
+
+
+
+
+
+//        spinner = (Spinner) findViewById(R.id.spinner);
+//        member_spinner = (Spinner) findViewById(R.id.member_spinner);
+//
+//        ArrayAdapter member_adapter = ArrayAdapter.createFromResource(this, R.array.member_array, R.layout.spinner_item);
+//        member_spinner.setAdapter(member_adapter);
+//        member_adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+//
+//        ArrayAdapter adapter = ArrayAdapter.createFromResource(this, R.array.district_array, R.layout.spinner_item);
+//        spinner.setAdapter(adapter);
+//        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
 
         timeclick = (LinearLayout) findViewById(R.id.detail_time_click);
         dateclick = (LinearLayout) findViewById(R.id.detail_date_click);
@@ -388,10 +437,10 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
     }
     private void getInfoFromActivity() {
         description = (EditText) findViewById(R.id.detail_description_text_id);
-        spinner = (Spinner) findViewById(R.id.spinner);
-        member_spinner = (Spinner) findViewById(R.id.member_spinner);
-        this.getmember =  member_spinner.getSelectedItem().toString();
-        this.getplace = spinner.getSelectedItem().toString();
+        placeview= (SwipeNumberPicker) findViewById(R.id.snp_custom);
+        mTextView = (TextView) findViewById(R.id.location_text);
+        this.getmember =  String.valueOf(placeview.getText().toString());
+        this.getplace = String.valueOf(mTextView.getText().toString());
         this.getdescription = String.valueOf(description.getText());
 
     }
@@ -409,6 +458,11 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
     public void onClick(View view) {
         System.out.println();
         return;
+    }
+
+    @Override
+    public void onClick(String value) {
+        mTextView.setText(value);
     }
 
     private class MyPagerAdapter extends FragmentPagerAdapter {
@@ -506,5 +560,10 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
+    }
+    private String[] getStringArray() {
+        return new String[] {"Gldani","Nadzaladevi","Vaja-Pshavela","Samgori","Isani","VarkeTili","Digomi",
+                "Saburtalo","Vake","Rustaveli","Muxiani","Temqa","Wereteli"
+                };
     }
 }

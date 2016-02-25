@@ -103,7 +103,7 @@
                 <TextView
 
                     android:gravity="right"
-                   android:paddingRight="50dp"
+                   android:paddingRight="30dp"
                     android:layout_marginLeft="30dp"
                     android:textSize="12dp"
                     android:id="@+id/detail_date_text_id"
@@ -137,7 +137,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent" />
                 <TextView
-                    android:paddingRight="50dp"
+                    android:paddingRight="30dp"
                     android:gravity="right"
                     android:textSize="12dp"
                     android:layout_marginLeft="16dp"
@@ -161,6 +161,7 @@
 
 
                 <EditText
+                    android:textColor="@color/mdtp_light_gray"
                     android:textSize="12dp"
                     android:layout_marginLeft="16dp"
                     android:hint="Description....."
@@ -175,30 +176,50 @@
                 android:background="#bbd9d9d9"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"></View>
-            <LinearLayout
+
+            <RelativeLayout
+                android:id="@+id/count_member"
                 android:layout_marginLeft="16dp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:layout_width="match_parent"
                 android:layout_height="38dp">
 
+                <TextView
+                    android:gravity="center_vertical"
+                    android:layout_marginLeft="16dp"
+                    android:textSize="12dp"
+                    android:text="Choose count of players"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
 
 
-                <Spinner
-                    android:layout_marginLeft="7dp"
-                    android:layout_width="match_parent"
+
+
+                <com.vi.swipenumberpicker.SwipeNumberPicker
+                    android:layout_marginRight="20dp"
+                    android:textSize="11dp"
+                    android:layout_alignParentEnd="true"
+                    app:snp_backgroundColor="@color/white"
+                    android:id="@+id/snp_custom"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/member_spinner"
-                    />
+                    app:snp_arrowColor="@android:color/darker_gray"
+                    app:snp_max="24"
+                    app:snp_min="1"
+                    app:snp_value="1"
+                    android:layout_alignParentRight="true" />
 
+            </RelativeLayout>
 
-
-            </LinearLayout>
             <View
                 android:background="#bbd9d9d9"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"></View>
-            <LinearLayout
+
+
+            <RelativeLayout
+                android:id="@+id/location"
                 android:layout_marginLeft="16dp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
@@ -206,17 +227,29 @@
                 android:layout_height="38dp">
 
 
+                <TextView
+                    android:gravity="center_vertical"
+                    android:layout_marginLeft="16dp"
+                    android:textSize="12dp"
+                    android:text="Choose your location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                     />
 
-                <Spinner
-                    android:layout_marginLeft="7dp"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:paddingRight="30dp"
+                    android:textSize="11dp"
+                    android:gravity="center_vertical"
+                    android:layout_alignParentEnd="true"
+                    android:text="type your location...."
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/spinner"
-                   />
+                    android:id="@+id/location_text"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentTop="true" />
 
-
-
-            </LinearLayout>
+            </RelativeLayout>
             <View
                 android:background="#bbd9d9d9"
                 android:layout_width="match_parent"
