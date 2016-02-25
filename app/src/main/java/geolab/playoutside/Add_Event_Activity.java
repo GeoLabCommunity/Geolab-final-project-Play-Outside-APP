@@ -21,7 +21,9 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -176,19 +178,19 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
         countMember.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final SwipeNumberPicker custom = (SwipeNumberPicker) findViewById(R.id.snp_custom);
-                custom.setOnValueChangeListener(new OnValueChangeListener() {
-                    @Override
-                    public boolean onValueChange(SwipeNumberPicker view, int oldValue, int newValue) {
-                        getmember=(String.valueOf(newValue));
-//                        TextView text = (TextView) findViewById(R.id.count_member_text);
-//                        text.setText(String.valueOf(newValue));
-                        return true;
-                    }
-                });
+
             }
         });
-
+        final SwipeNumberPicker custom = (SwipeNumberPicker) findViewById(R.id.snp_custom);
+        custom.setOnValueChangeListener(new OnValueChangeListener() {
+            @Override
+            public boolean onValueChange(SwipeNumberPicker view, int oldValue, int newValue) {
+                getmember=(String.valueOf(newValue));
+//                        TextView text = (TextView) findViewById(R.id.count_member_text);
+//                        text.setText(String.valueOf(newValue));
+                return true;
+            }
+        });
 
 
         mTextView = (TextView) findViewById(R.id.location_text);
@@ -352,7 +354,7 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
                 new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
-                        Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
                         GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                             @Override
                             public void onCompleted(JSONObject jsonObject, GraphResponse graphResponse) {
@@ -419,6 +421,7 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
     }
     private void getInfoFromActivity() {
         description = (EditText) findViewById(R.id.detail_description_text_id);
+
         placeview= (SwipeNumberPicker) findViewById(R.id.snp_custom);
         mTextView = (TextView) findViewById(R.id.location_text);
         this.getmember =  String.valueOf(placeview.getText().toString());

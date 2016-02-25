@@ -110,7 +110,7 @@ public class Lounch extends AppCompatActivity {
                     @Override
                     public void onError(FacebookException exception) {
                         Log.d("FacebookException", exception.getMessage());
-                        Toast.makeText(Lounch.this, "onError", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Lounch.this, "Please, check your connection", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

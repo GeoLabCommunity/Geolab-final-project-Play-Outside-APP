@@ -168,7 +168,10 @@
                     android:id="@+id/detail_description_text_id"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:imeOptions="actionDone"
                     android:background="#00000000"
+                    android:ems="10"
+                    android:inputType="textPersonName"
                     />
 
             </LinearLayout>
@@ -198,16 +201,16 @@
 
                 <com.vi.swipenumberpicker.SwipeNumberPicker
                     android:layout_marginRight="20dp"
-                    android:textSize="11dp"
+                    android:textSize="12dp"
                     android:layout_alignParentEnd="true"
                     app:snp_backgroundColor="@color/white"
                     android:id="@+id/snp_custom"
-                    android:layout_width="wrap_content"
+                    android:layout_width="70dp"
                     android:layout_height="wrap_content"
                     app:snp_arrowColor="@android:color/darker_gray"
                     app:snp_max="24"
                     app:snp_min="1"
-                    app:snp_value="1"
+                    app:snp_value="11"
                     android:layout_alignParentRight="true" />
 
             </RelativeLayout>
@@ -238,7 +241,7 @@
 
                 <TextView
                     android:paddingRight="30dp"
-                    android:textSize="11dp"
+                    android:textSize="12dp"
                     android:gravity="center_vertical"
                     android:layout_alignParentEnd="true"
                     android:text="&lt; type your location....&gt;"

@@ -1,5 +1,7 @@
 package geolab.playoutside;
 
+import android.app.SearchManager;
+import android.app.SearchableInfo;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -13,10 +15,13 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ActionMode;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -229,25 +234,25 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<ExpMenuItem> items = new ArrayList<>();
         ArrayList<SubMenu> subMenus1 = new ArrayList<>();
 
-        subMenus1.add(new SubMenu("football",R.drawable._football));
-        subMenus1.add(new SubMenu("basketball",R.drawable._basketball));
-        subMenus1.add(new SubMenu("rugby",R.drawable._rugby));
-        subMenus1.add(new SubMenu("volleyball",R.drawable._volleyball));
+        subMenus1.add(new SubMenu("football",R.drawable.foot));
+        subMenus1.add(new SubMenu("basketball",R.drawable.bass));
+        subMenus1.add(new SubMenu("rugby",R.drawable.rug));
+        subMenus1.add(new SubMenu("volleyball",R.drawable.vol));
 
         ArrayList<SubMenu> subMenus2 = new ArrayList<>();
 
-        subMenus2.add(new SubMenu("joker",R.drawable.card));
-        subMenus2.add(new SubMenu("poker",R.drawable.card));
+        subMenus2.add(new SubMenu("joker",R.drawable.jok));
+        subMenus2.add(new SubMenu("poker",R.drawable.pok));
 
 
         ArrayList<SubMenu> subMenus3 = new ArrayList<>();
 
-        subMenus3.add(new SubMenu("ping-pong",R.drawable.card));
+        subMenus3.add(new SubMenu("ping-pong",R.drawable.pingp));
 
         ArrayList<SubMenu> subMenus4 = new ArrayList<>();
 
-        subMenus4.add(new SubMenu("badminton",R.drawable.card));
-        subMenus4.add(new SubMenu("frisbee",R.drawable.card));
+        subMenus4.add(new SubMenu("badminton",R.drawable.bad));
+
 
 
 
@@ -340,13 +345,69 @@ public class MainActivity extends AppCompatActivity {
         drawerToggle.onConfigurationChanged(newConfig);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (drawerToggle.onOptionsItemSelected(item)) {
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getSupportMenuInflater().
+//                inflate(R.menu.menu_main, menu);
+//        MenuItem item = menu.findItem(R.id.actionView);
+//        SearchView searchView =
+//                (SearchView)item.getActionView();
+//        SearchManager searchManager =
+//                (SearchManager)getSystemService(Context.SEARCH_SERVICE);
+//        SearchableInfo info =
+//                searchManager.getSearchableInfo(getComponentName());
+//        searchView.setSearchableInfo(info);
+//        return true;
+//    }
+
+
+
+    private ActionMode.Callback mActionModeSearchCallback = new ActionMode.Callback() {
+
+        private SearchView mSearchView;
+
+        @Override
+        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+            actionMode.getMenuInflater().inflate(R.menu.menu_main, menu);
+            mSearchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.pdf_menu_search_item));
+            mSearchView.setIconifiedByDefault(false);
+            mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    return false;
+                }
+            });
             return true;
         }
-        return super.onOptionsItemSelected(item);
-    }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+            mSearchView.requestFocus();
+            return true;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
+            switch (menuItem.getItemId()) {
+                default:
+                    return false;
+            }
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode actionMode) {
+
+        }
+    };
+
+
+
+
 
 
     private int getAge(Calendar birthDate, Calendar currentDate){

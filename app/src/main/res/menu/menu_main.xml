@@ -1,10 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="geolab.playoutside.MainActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <group android:id="@+id/group_search_mode">
+        <item
+            android:id="@+id/pdf_menu_search_item"
+            android:icon="@drawable/search"
+            android:title="search"
+            app:actionViewClass="android.support.v7.widget.SearchView"
+            app:showAsAction="always"/>
 
-    <item android:id="@+id/menu_search"
-        android:icon="@android:drawable/ic_menu_search"
-        android:title="Search"
-        />
+    </group>
 </menu>
