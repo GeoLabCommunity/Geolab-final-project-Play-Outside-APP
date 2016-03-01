@@ -60,10 +60,12 @@ import geolab.playoutside.fragments.Action;
 import geolab.playoutside.fragments.AllGamesFragment;
 import geolab.playoutside.fragments.Ball;
 import geolab.playoutside.fragments.CardGameFragment;
+import geolab.playoutside.fragments.Category;
 import geolab.playoutside.fragments.DialogFragment;
 import geolab.playoutside.fragments.TableGameFragment;
 import geolab.playoutside.model.ExpMenuItem;
 import geolab.playoutside.model.SubMenu;
+import geolab.playoutside.view.Search;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -93,8 +95,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView fb_age;
     private TextView fb_mail;
 
-    private Context context;
-
+    private String subcategory;
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -218,9 +219,12 @@ public class MainActivity extends AppCompatActivity {
                 parent.setItemChecked(index, true);
                 SubMenu subMenu = menuItems.get(groupPosition).getSubMenus().get(childPosition);
                 Toast.makeText(getApplicationContext(),subMenu.getMenuName(),Toast.LENGTH_SHORT).show();
-
-                mViewPager.setCurrentItem(groupPosition+1);
+                mViewPager.setCurrentItem(groupPosition + 1);
                 dlDrawer.closeDrawers();
+                subcategory=subMenu.getMenuName();
+
+                ((Category)mSectionsPagerAdapter.getItem(groupPosition+1)).updateSubcategoryData(subcategory);
+
                 return true;
             }
         });
@@ -282,15 +286,16 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int pos) {
             switch(pos) {
-                case 1: return Ball.newInstance("fourthFragment");
-                case 2: return CardGameFragment.newInstance("seventhFragment");
-                case 3: return TableGameFragment.newInstance("secondFragment");
-                case 4: return Action.newInstance("thirdFragment");
+
+                case 1: return Category.newInstance("BALL");
+                case 2: return Category.newInstance("CARD");
+                case 3: return Category.newInstance("TABLE");
+                case 4: return Category.newInstance("ACTION");
 
 
 
 
-                default: return AllGamesFragment.newInstance("FirstFragment");
+                default: return AllGamesFragment.newInstance("ALL");
             }
         }
 
@@ -320,12 +325,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.menu_main, menu);
+//        return true;
+//    }
 
 
     @Override
@@ -362,48 +367,97 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    private ActionMode.Callback mActionModeSearchCallback = new ActionMode.Callback() {
 
-        private SearchView mSearchView;
 
-        @Override
-        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-            actionMode.getMenuInflater().inflate(R.menu.menu_main, menu);
-            mSearchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.pdf_menu_search_item));
-            mSearchView.setIconifiedByDefault(false);
-            mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextSubmit(String s) {
-                    return false;
-                }
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
 
-                @Override
-                public boolean onQueryTextChange(String s) {
-                    return false;
-                }
-            });
-            return true;
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.pdf_menu_search_item)
+                .getActionView();
+        if (null != searchView) {
+            searchView.setSearchableInfo(searchManager
+                    .getSearchableInfo(getComponentName()));
+            searchView.setIconifiedByDefault(false);
         }
 
-        @Override
-        public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
-            mSearchView.requestFocus();
-            return true;
-        }
-
-        @Override
-        public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-            switch (menuItem.getItemId()) {
-                default:
-                    return false;
+        SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
+            public boolean onQueryTextChange(String newText) {
+                // this is your adapter that will be filtered
+                return true;
             }
-        }
 
-        @Override
-        public void onDestroyActionMode(ActionMode actionMode) {
+            public boolean onQueryTextSubmit(String query) {
 
-        }
-    };
+//                Intent i = new Intent(MainActivity.this, Search.class);
+//                i.putExtra("search", query);
+//                startActivity(i);
+
+
+                mViewPager.setCurrentItem(0);
+                ((AllGamesFragment)mSectionsPagerAdapter.getItem(0)).updateData(query);
+
+
+
+                return true;
+
+            }
+        };
+        searchView.setOnQueryTextListener(queryTextListener);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+
+
+
+
+
+
+
+//    private ActionMode.Callback mActionModeSearchCallback = new ActionMode.Callback() {
+//
+//        private SearchView mSearchView;
+//
+//        @Override
+//        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+//            actionMode.getMenuInflater().inflate(R.menu.menu_main, menu);
+//            mSearchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.pdf_menu_search_item));
+//            mSearchView.setIconifiedByDefault(false);
+//            mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//                @Override
+//                public boolean onQueryTextSubmit(String s) {
+//                    return true;
+//                }
+//
+//                @Override
+//                public boolean onQueryTextChange(String s) {
+//                    return true;
+//                }
+//            });
+//            return true;
+//        }
+//
+//        @Override
+//        public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+//            mSearchView.requestFocus();
+//            return true;
+//        }
+//
+//        @Override
+//        public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
+//            switch (menuItem.getItemId()) {
+//                default:
+//                    return false;
+//            }
+//        }
+//
+//        @Override
+//        public void onDestroyActionMode(ActionMode actionMode) {
+//
+//        }
+//    };
 
 
 

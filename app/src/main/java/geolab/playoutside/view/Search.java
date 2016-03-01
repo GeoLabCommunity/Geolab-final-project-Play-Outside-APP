@@ -1,14 +1,12 @@
-package geolab.playoutside.fragments;
+package geolab.playoutside.view;
 
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -23,41 +21,40 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.InetAddress;
 import java.util.ArrayList;
 
-import geolab.playoutside.MainActivity;
 import geolab.playoutside.R;
 import geolab.playoutside.adapters.MyStickyAdapter;
-import geolab.playoutside.db.Data;
 import geolab.playoutside.model.MyEvent;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
-/**
- * Created by GeoLab on 1/11/16.
- */
-public class AllGamesFragment extends android.support.v4.app.Fragment implements SwipeRefreshLayout.OnRefreshListener {
-
+public class Search extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+    private String search;
     StickyListHeadersListView list;
     private ArrayList<MyEvent> myEvents;
     private JsonArrayRequest jsonObjectRequest;
     private RequestQueue requestQueue;
-    private static String GET_JSON_INFO = "http://geolab.club/iraklilataria/ika/getdata.php";
-    private static String GET_JSON_INFO1 = "http://geolab.club/iraklilataria/ika/search.php";
+    private static String GET_JSON_INFO = "http://geolab.club/iraklilataria/ika/search.php";
     private SwipeRefreshLayout swipeRefreshLayout;
     private int categoryId;
-    private String stringSearch;
-    private String tabTitle;
+    private Context context;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        stringSearch = getActivity().getIntent().getStringExtra("search");
-        System.out.println(stringSearch+"strsrch");
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.search);
 
-        View v = inflater.inflate(R.layout.sport_fragment, container, false);
+        final Intent intent = getIntent();
 
-        list = (StickyListHeadersListView) v.findViewById(R.id.list);
-        swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swiperefresh);
+
+        Bundle bundle = intent.getExtras();
+        if (bundle != null) {
+            search = (String) bundle.get("search");
+
+        }
+
+        list = (StickyListHeadersListView) findViewById(R.id.list);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.post(new Runnable() {
                                     @Override
@@ -65,37 +62,20 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
 
                                         swipeRefreshLayout.setRefreshing(true);
 
-                                        getJSONInfo(GET_JSON_INFO);
+                                        getJSONInfo(GET_JSON_INFO+"?search="+search);
                                     }
                                 }
         );
 
 
-        return v;
+
     }
-
-    public void updateData(String searchString){
-        getJSONInfo(GET_JSON_INFO1 + "?search=" + searchString);
-    }
-
-    public static AllGamesFragment newInstance(String text) {
-
-        AllGamesFragment f = new AllGamesFragment();
-        Bundle b = new Bundle();
-        b.putString("tabTitle", text);
-
-        f.setArguments(b);
-
-        return f;
-    }
-
     private void getJSONInfo(String url) {
-
 
 
         JSONObject categoryObj = new JSONObject();
         try {
-            categoryObj.put("search", tabTitle);
+            categoryObj.put("category", "TABLE");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -166,7 +146,7 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
                     }
 
                     System.out.println("jjj   " + myEvents);
-                    MyStickyAdapter adapter = new MyStickyAdapter(getActivity(), myEvents);
+                    MyStickyAdapter adapter = new MyStickyAdapter(getApplication(), myEvents);
 
                     list.setAdapter(adapter);
                     list.setOnItemClickListener(adapter.listener);
@@ -183,7 +163,7 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
 
             }
         });
-        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplication());
         requestQueue.add(myRequest);
         swipeRefreshLayout.setRefreshing(false);
     }
@@ -194,21 +174,21 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
     }
 
     public void check() {
-        ConnectivityManager connMgr = (ConnectivityManager) getActivity()
+        ConnectivityManager connMgr = (ConnectivityManager) getApplicationContext()
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
 
-    NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
-    if(networkInfo!=null&&networkInfo.isConnected())
+        if(networkInfo!=null&&networkInfo.isConnected())
 
-    {
-        // fetch data
+        {
+            //fetch data
+        }
+
+        else
+
+        {
+            Toast.makeText(getApplicationContext(), "Internet Connection Is Required", Toast.LENGTH_LONG).show();
+        }
     }
-
-    else
-
-    {
-        Toast.makeText(getContext(), "Internet Connection Is Required", Toast.LENGTH_LONG).show();
-    }
-}
 }

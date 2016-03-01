@@ -36,10 +36,17 @@ public class Action extends android.support.v4.app.Fragment implements SwipeRefr
     private static String GET_JSON_INFO = "http://geolab.club/iraklilataria/ika/category/action.php";
     private SwipeRefreshLayout swipeRefreshLayout;
     private  int categoryId;
+    private String tabtitle;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.sport_fragment, container, false);
+
+        tabtitle = getArguments().getString("msg");
+
+
+
+
 
         list= (StickyListHeadersListView) v.findViewById(R.id.list);
         swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swiperefresh);
@@ -134,4 +141,6 @@ public class Action extends android.support.v4.app.Fragment implements SwipeRefr
     public void onRefresh() {
         getJSONInfo(GET_JSON_INFO);
     }
+
+
 }

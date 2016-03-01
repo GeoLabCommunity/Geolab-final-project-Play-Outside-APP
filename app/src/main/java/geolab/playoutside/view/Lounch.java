@@ -18,6 +18,8 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,6 +28,7 @@ import java.util.Arrays;
 
 import geolab.playoutside.MainActivity;
 import geolab.playoutside.R;
+import geolab.playoutside.gcm.RegistrationIntentService;
 
 public class Lounch extends AppCompatActivity {
 
@@ -38,6 +41,8 @@ public class Lounch extends AppCompatActivity {
     private String str_firstName;
     private String email_json;
     private String birth_day;
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +92,12 @@ public class Lounch extends AppCompatActivity {
                                         birth_day = jsonObject.getString("birthday");
                                         email_json = jsonObject.getString("email");
 
+                                        if (checkPlayServices()) {
+                                            // Start IntentService to register this application with GCM.
+                                            Intent intent = new Intent(getApplicationContext(), RegistrationIntentService.class);
+                                            startService(intent);
+                                        }
+
                                         fb_intent_info();
 
                                     } catch (NullPointerException ex) {
@@ -127,5 +138,20 @@ public class Lounch extends AppCompatActivity {
         intent.putExtra("fb_age", birth_day);
         intent.putExtra("access",accessToken);
         startActivity(intent);
+    }
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
+                        .show();
+            } else {
+                Log.i(TAG, "This device is not supported.");
+                finish();
+            }
+            return false;
+        }
+        return true;
     }
 }
