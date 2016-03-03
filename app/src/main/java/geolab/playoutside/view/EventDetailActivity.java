@@ -1,10 +1,12 @@
 package geolab.playoutside.view;
 
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
@@ -151,12 +153,12 @@ public class EventDetailActivity extends AppCompatActivity {
 
 
 
+
+
+
+
         LinearLayout content = (LinearLayout) findViewById(R.id.content);
-
-
-        HorizontalScrollView horizontalScrollView = new HorizontalScrollView(this);
-
-        content.addView(horizontalScrollView);
+        content.removeAllViews();
 
 
         final ArrayList<CircleImageView> circleImageViewlist = new ArrayList< CircleImageView>();
@@ -167,7 +169,7 @@ public class EventDetailActivity extends AppCompatActivity {
             imgUrl = "https://graph.facebook.com/" + myEvent.getId() + "/picture?height=400";
             Picasso.with(EventDetailActivity.this)
                     .load(imgUrl)
-                    .resize(400, 400)
+                    .resize(200, 200)
                     .centerCrop()
                     .into(circleImageView);
             circleImageViewlist.add(circleImageView);
@@ -179,7 +181,7 @@ public class EventDetailActivity extends AppCompatActivity {
 
                     for(int i = 0; i < circleCounter; i++){
                 if(circleImageViewlist.get(i).getId()== v.getId()){
-                    Toast.makeText(EventDetailActivity.this,"Your request has been sent",Toast.LENGTH_LONG).show();
+                    Toast.makeText(EventDetailActivity.this,"Your request has been sent"+circleImageViewlist.get(i),Toast.LENGTH_LONG).show();
                 }
             }
 

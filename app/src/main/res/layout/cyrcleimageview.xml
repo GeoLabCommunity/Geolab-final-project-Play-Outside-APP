@@ -3,7 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:id="@+id/content"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -11,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="55dp">
         <LinearLayout
+            android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <de.hdodenhof.circleimageview.CircleImageView
