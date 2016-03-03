@@ -14,12 +14,9 @@
         app:popupTheme="@style/AppTheme.PopupOverlay">
     </android.support.v7.widget.Toolbar>
 
-    <ScrollView
-        android:layout_below="@id/detail_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
 <LinearLayout
+android:layout_below="@+id/detail_toolbar"
     android:background="#fff"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -44,7 +41,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="160dp">
+        android:layout_height="170dp">
         <include
             layout="@layout/location_fragment"/>
 
@@ -175,106 +172,39 @@
     
    
 
-<RelativeLayout
+<LinearLayout
     android:layout_marginRight="16dp"
     android:layout_marginLeft="16dp"
-    android:orientation="horizontal"
-    android:gravity="center_vertical"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="100dp">
-    
+    android:layout_height="90dp">
+
+    <LinearLayout
+        android:layout_gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="25dp">
     <ImageView
+        android:layout_gravity="center_vertical"
         android:src="@drawable/people"
         android:layout_width="15dp"
         android:layout_height="16dp" />
 
     <TextView
+        android:layout_gravity="center_vertical"
         android:textSize="12dp"
-        android:layout_marginLeft="25dp"
+        android:layout_marginLeft="10dp"
         android:id="@+id/detail_player_count_text_id"
         android:text="playerCount count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-    
+    </LinearLayout>
 
-    <HorizontalScrollView
-        android:layout_marginTop="5dp"
-        android:layout_below="@+id/detail_player_count_text_id"
+    <include
+        layout="@layout/cyrcleimageview"
         android:layout_width="match_parent"
-        android:layout_height="55dp">
-        <LinearLayout
+        android:layout_height="55dp" />
 
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <de.hdodenhof.circleimageview.CircleImageView
-                app:border_width="1dp"
-                app:border_color="@color/com_facebook_blue"
-                android:id="@+id/detail_join_image"
-                android:layout_width="55dp"
-                android:layout_height="55dp"
-                android:src="@drawable/com_facebook_profile_picture_blank_square"
-                android:layout_marginRight="13dp"
-                 />
-            <de.hdodenhof.circleimageview.CircleImageView
-                app:border_width="1dp"
-                app:border_color="@color/com_facebook_blue"
-                android:id="@+id/detail_join_image1"
-                android:layout_width="55dp"
-                android:layout_height="55dp"
-                android:src="@drawable/com_facebook_profile_picture_blank_square"
-                android:layout_marginRight="13dp"
-                />
-            <de.hdodenhof.circleimageview.CircleImageView
-                app:border_width="1dp"
-                app:border_color="@color/com_facebook_blue"
-                android:id="@+id/detail_join_image2"
-                android:layout_width="55dp"
-                android:layout_height="55dp"
-                android:src="@drawable/com_facebook_profile_picture_blank_square"
-                android:layout_marginRight="13dp"
-                />
-            <de.hdodenhof.circleimageview.CircleImageView
-                app:border_width="1dp"
-                app:border_color="@color/com_facebook_blue"
-                android:id="@+id/detail_join_image3"
-                android:layout_width="55dp"
-                android:layout_height="55dp"
-                android:src="@drawable/com_facebook_profile_picture_blank_square"
-                android:layout_marginRight="13dp"
-                />
-            <de.hdodenhof.circleimageview.CircleImageView
-                app:border_width="1dp"
-                app:border_color="@color/com_facebook_blue"
-                android:id="@+id/detail_join_image4"
-                android:layout_width="55dp"
-                android:layout_height="55dp"
-                android:src="@drawable/com_facebook_profile_picture_blank_square"
-                android:layout_marginRight="13dp"
-                />
-            <de.hdodenhof.circleimageview.CircleImageView
-                app:border_width="1dp"
-                app:border_color="@color/com_facebook_blue"
-                android:id="@+id/detail_join_image5"
-                android:layout_width="55dp"
-                android:layout_height="55dp"
-                android:src="@drawable/com_facebook_profile_picture_blank_square"
-                android:layout_marginRight="13dp"
-                />
-            <de.hdodenhof.circleimageview.CircleImageView
-                app:border_width="1dp"
-                app:border_color="@color/com_facebook_blue"
-                android:id="@+id/detail_join_image6"
-                android:layout_width="55dp"
-                android:layout_height="55dp"
-                android:src="@drawable/com_facebook_profile_picture_blank_square"
-                android:layout_marginRight="13dp"
-                />
-
-        </LinearLayout>
-
-    </HorizontalScrollView>
-</RelativeLayout>
+</LinearLayout>
 
     <View
         android:background="#bbd9d9d9"
@@ -283,7 +213,7 @@
 
 
 </LinearLayout>
-    </ScrollView>
+
 
 
 

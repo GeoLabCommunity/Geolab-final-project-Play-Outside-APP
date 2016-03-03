@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,13 +42,22 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
     StickyListHeadersListView list;
     private ArrayList<MyEvent> myEvents;
     private JsonArrayRequest jsonObjectRequest;
-    private RequestQueue requestQueue;
+//    private RequestQueue requestQueue;
     private static String GET_JSON_INFO = "http://geolab.club/iraklilataria/ika/getdata.php";
     private static String GET_JSON_INFO1 = "http://geolab.club/iraklilataria/ika/search.php";
     private SwipeRefreshLayout swipeRefreshLayout;
     private int categoryId;
     private String stringSearch;
     private String tabTitle;
+
+    private RequestQueue requestQueue;
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        requestQueue = Volley.newRequestQueue(getActivity());
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -74,7 +84,8 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
         return v;
     }
 
-    public void updateData(String searchString){
+    public void updateData(Context ctx, String searchString){
+        requestQueue = Volley.newRequestQueue(ctx);
         getJSONInfo(GET_JSON_INFO1 + "?search=" + searchString);
     }
 
@@ -104,7 +115,7 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
 
         JsonObjectRequest myRequest = new JsonObjectRequest(Request.Method.GET
                 , url
-                , categoryObj
+                , null
                 , new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -183,7 +194,6 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
 
             }
         });
-        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         requestQueue.add(myRequest);
         swipeRefreshLayout.setRefreshing(false);
     }

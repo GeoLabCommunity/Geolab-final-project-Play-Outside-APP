@@ -123,9 +123,6 @@ public class MainActivity extends AppCompatActivity {
 
         isNetworkAvailable();
 
-
-
-
         final Intent intent = getIntent();
 
 
@@ -174,9 +171,28 @@ public class MainActivity extends AppCompatActivity {
         // Tie DrawerLayout events to the ActionBarToggle
         dlDrawer.setDrawerListener(drawerToggle);
 
+
+
+
+        ArrayList<Fragment> fragmentList = new ArrayList<>();
+        ArrayList<String> titleList = new ArrayList<>();
+
+        fragmentList.add(AllGamesFragment.newInstance("ALL"));
+        fragmentList.add(Category.newInstance("BALL"));
+        fragmentList.add(Category.newInstance("CARD"));
+        fragmentList.add(Category.newInstance("TABLE"));
+        fragmentList.add(Category.newInstance("ACTION"));
+
+        titleList.add("ALL");
+        titleList.add("BALL");
+        titleList.add("CARD");
+        titleList.add("TABLE");
+        titleList.add("ACTION");
+
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
+        mSectionsPagerAdapter = new MyPagerAdapter(getSupportFragmentManager(), fragmentList, titleList);
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
@@ -228,11 +244,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-
-
     }
-
-
     private ArrayList<ExpMenuItem> getData(){
 
         ArrayList<ExpMenuItem> items = new ArrayList<>();
@@ -257,46 +269,28 @@ public class MainActivity extends AppCompatActivity {
 
         subMenus4.add(new SubMenu("badminton",R.drawable.bad));
 
-
-
-
         items.add(new ExpMenuItem("BALL",subMenus1,R.drawable.ball));
         items.add(new ExpMenuItem("CARD",subMenus2,R.drawable.card));
         items.add(new ExpMenuItem("TABLE",subMenus3,R.drawable.ping));
         items.add(new ExpMenuItem("ACTION",subMenus4,R.drawable.badm));
 
-
         return items;
     }
 
-
-
-
-
-
-
-
-
     private class MyPagerAdapter extends FragmentPagerAdapter {
 
-        public MyPagerAdapter(FragmentManager fm) {
+        private ArrayList<Fragment> list;
+        private ArrayList<String> titleList;
+
+        public MyPagerAdapter(FragmentManager fm, ArrayList<Fragment> list, ArrayList<String> titleList) {
             super(fm);
+            this.list = list;
+            this.titleList = titleList;
         }
 
         @Override
         public Fragment getItem(int pos) {
-            switch(pos) {
-
-                case 1: return Category.newInstance("BALL");
-                case 2: return Category.newInstance("CARD");
-                case 3: return Category.newInstance("TABLE");
-                case 4: return Category.newInstance("ACTION");
-
-
-
-
-                default: return AllGamesFragment.newInstance("ALL");
-            }
+            return list.get(pos);
         }
 
         @Override
@@ -307,36 +301,14 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "All";
-                case 1:
-                    return "BALL";
-                case 2:
-                    return "CARD";
-                case 3:
-                    return "TABLE";
-                case 4:
-                    return "ACTION";
-
-            }
-            return null;
+            return titleList.get(position);
         }
 
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_main, menu);
-//        return true;
-//    }
-
-
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
         drawerToggle.syncState();
     }
     private ActionBarDrawerToggle setupDrawerToggle() {
@@ -349,25 +321,6 @@ public class MainActivity extends AppCompatActivity {
         // Pass any configuration change to the drawer toggles
         drawerToggle.onConfigurationChanged(newConfig);
     }
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getSupportMenuInflater().
-//                inflate(R.menu.menu_main, menu);
-//        MenuItem item = menu.findItem(R.id.actionView);
-//        SearchView searchView =
-//                (SearchView)item.getActionView();
-//        SearchManager searchManager =
-//                (SearchManager)getSystemService(Context.SEARCH_SERVICE);
-//        SearchableInfo info =
-//                searchManager.getSearchableInfo(getComponentName());
-//        searchView.setSearchableInfo(info);
-//        return true;
-//    }
-
-
-
-
 
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -383,86 +336,21 @@ public class MainActivity extends AppCompatActivity {
 
         SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
             public boolean onQueryTextChange(String newText) {
-                // this is your adapter that will be filtered
+                mViewPager.setCurrentItem(0);
+                ((AllGamesFragment)mSectionsPagerAdapter.getItem(0)).updateData(getApplicationContext(), newText);
                 return true;
             }
 
             public boolean onQueryTextSubmit(String query) {
-
-//                Intent i = new Intent(MainActivity.this, Search.class);
-//                i.putExtra("search", query);
-//                startActivity(i);
-
-
                 mViewPager.setCurrentItem(0);
-                ((AllGamesFragment)mSectionsPagerAdapter.getItem(0)).updateData(query);
-
-
-
+                ((AllGamesFragment)mSectionsPagerAdapter.getItem(0)).updateData(getApplicationContext(), query);
                 return true;
-
             }
         };
         searchView.setOnQueryTextListener(queryTextListener);
 
         return super.onCreateOptionsMenu(menu);
     }
-
-
-
-
-
-
-
-
-
-//    private ActionMode.Callback mActionModeSearchCallback = new ActionMode.Callback() {
-//
-//        private SearchView mSearchView;
-//
-//        @Override
-//        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-//            actionMode.getMenuInflater().inflate(R.menu.menu_main, menu);
-//            mSearchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.pdf_menu_search_item));
-//            mSearchView.setIconifiedByDefault(false);
-//            mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//                @Override
-//                public boolean onQueryTextSubmit(String s) {
-//                    return true;
-//                }
-//
-//                @Override
-//                public boolean onQueryTextChange(String s) {
-//                    return true;
-//                }
-//            });
-//            return true;
-//        }
-//
-//        @Override
-//        public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
-//            mSearchView.requestFocus();
-//            return true;
-//        }
-//
-//        @Override
-//        public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-//            switch (menuItem.getItemId()) {
-//                default:
-//                    return false;
-//            }
-//        }
-//
-//        @Override
-//        public void onDestroyActionMode(ActionMode actionMode) {
-//
-//        }
-//    };
-
-
-
-
-
 
     private int getAge(Calendar birthDate, Calendar currentDate){
         int age = currentDate.get(Calendar.YEAR) - birthDate.get(Calendar.YEAR);
@@ -477,45 +365,6 @@ public class MainActivity extends AppCompatActivity {
         return age;
     }
 
-
-    private void filter(){
-
-
-
-        final String URL = "http://geolab.club/iraklilataria/ika/filter.php";
-
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Toast.makeText(MainActivity.this, response, Toast.LENGTH_LONG).show();
-                        System.out.println("response " +response);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        System.out.println("error " +error.toString());
-                        Toast.makeText(MainActivity.this,error.toString(),Toast.LENGTH_LONG).show();
-                    }
-                }){
-            @Override
-            protected Map<String,String> getParams(){
-                Map<String,String> params = new HashMap<>();
-                params.put("category",userId);
-
-
-                params.toString();
-                System.out.println("iiii    "+params);
-                return params;
-            }
-
-        };
-
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(stringRequest);
-
-    }
 
     public void isNetworkAvailable() {
         ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
