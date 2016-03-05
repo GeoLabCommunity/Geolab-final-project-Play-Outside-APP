@@ -1,6 +1,7 @@
 package geolab.playoutside.view;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -92,9 +93,14 @@ public class Lounch extends AppCompatActivity {
                                         birth_day = jsonObject.getString("birthday");
                                         email_json = jsonObject.getString("email");
 
+
                                         if (checkPlayServices()) {
+
+
+
                                             // Start IntentService to register this application with GCM.
                                             Intent intent = new Intent(getApplicationContext(), RegistrationIntentService.class);
+//
                                             startService(intent);
                                         }
 
@@ -154,4 +160,5 @@ public class Lounch extends AppCompatActivity {
         }
         return true;
     }
+
 }

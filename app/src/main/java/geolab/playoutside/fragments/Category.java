@@ -101,7 +101,6 @@ public class Category extends android.support.v4.app.Fragment implements SwipeRe
     private void getJSONInfo(String url) {
 
 
-
         JSONObject categoryObj = new JSONObject();
         try {
             categoryObj.put("category", tabTitle);

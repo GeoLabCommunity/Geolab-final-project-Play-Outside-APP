@@ -1,8 +1,11 @@
 package geolab.playoutside.gcm;
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.ContactsContract;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -15,6 +18,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.facebook.Profile;
+import com.facebook.ProfileTracker;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 
@@ -26,6 +32,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,11 +40,12 @@ import java.util.Map;
 
 import geolab.playoutside.R;
 
-public class RegistrationIntentService extends IntentService {
+public class RegistrationIntentService extends IntentService implements Serializable {
 
     private String token;
     private static final String TAG = "RegIntentService";
     private static final String[] TOPICS = {"global"};
+
 
     public RegistrationIntentService() {
         super(TAG);
@@ -80,43 +88,10 @@ public class RegistrationIntentService extends IntentService {
         LocalBroadcastManager.getInstance(this).sendBroadcast(registrationComplete);
     }
 
-
-//    private static final String SAVE_TOKEN_URL = "http://geolab.club/iraklilataria/ika/register.php";
-//
-//    /**
-//     * Persist registration to third-party servers.
-//     * <p/>
-//     * Modify this method to associate the user's GCM registration token with any server-side account
-//     * maintained by your application.
-//     *
-//     * @param token The new token.
-//     */
-//    private void sendRegistrationToServer(String token) {
-//
-//        final HttpClient httpclient = new DefaultHttpClient();
-//        final HttpPost httppost = new HttpPost(SAVE_TOKEN_URL);
-//        try {
-//            List<NameValuePair> nameValuePairs = new ArrayList<>();
-//            nameValuePairs.add(new BasicNameValuePair("fb_id", Profile.getCurrentProfile().getId()));
-//            nameValuePairs.add(new BasicNameValuePair("token", token));
-//            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-//            Thread thread = new Thread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    try {
-//                        httpclient.execute(httppost);
-//                    } catch (IOException e) {
-//                        e.getCause();
-//                    }
-//                }
-//            });
-//            thread.start();
-//        } catch (Exception e) {
-//            e.getMessage();
-//        }
-//    }
-
     private void sendRegistrationToServer(){
+
+
+
 
 
         final String URL = "http://geolab.club/iraklilataria/ika/register.php";
@@ -140,6 +115,11 @@ public class RegistrationIntentService extends IntentService {
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<>();
                 params.put("fb_id",Profile.getCurrentProfile().getId());
+
+                params.put("fb_name",Profile.getCurrentProfile().getFirstName());
+                params.put("fb_Lname",Profile.getCurrentProfile().getLastName());
+               // LoginManager.getInstance().logOut();
+
                 params.put("token",token);
                 params.toString();
                 return params;

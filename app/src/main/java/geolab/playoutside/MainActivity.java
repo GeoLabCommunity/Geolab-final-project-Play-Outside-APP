@@ -134,6 +134,8 @@ public class MainActivity extends AppCompatActivity {
             birthday = (String) bundle.get("fb_age");
             access = (AccessToken) bundle.get("access");
 
+            sendPlayerInfo();
+
             fb_name = (TextView) findViewById(R.id.fb_name);
             fb_mail = (TextView) findViewById(R.id.fb_mail);
             fb_age = (TextView) findViewById(R.id.fb_age);
@@ -374,5 +376,41 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Internet Connection Is Required", Toast.LENGTH_LONG).show();
 
         }
+    }
+    private void sendPlayerInfo(){
+
+
+
+        final String URL = "http://geolab.club/iraklilataria/ika/sendPlayerInfo/sendplayerinfo.php";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Toast.makeText(MainActivity.this, response, Toast.LENGTH_LONG).show();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // System.out.println("error " +error.toString());
+                        Toast.makeText(MainActivity.this,"Please fill all fields",Toast.LENGTH_LONG).show();
+                    }
+                }){
+            @Override
+            protected Map<String,String> getParams(){
+                Map<String,String> params = new HashMap<>();
+                params.put("user_id",userId);
+                params.put("age",birthday);
+                params.put("name",name);
+                params.put("email",email);
+                params.toString();
+                return params;
+            }
+
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
     }
 }
