@@ -6,21 +6,31 @@ import java.io.Serializable;
  * Created by GeoLab on 1/11/16.
  */
 public class MyEvent implements Serializable {
+    private int eventId;
     private String user_id, time,date,title, description, place, playerCount, longitude, latitude;
     private int category_id;
 
-    public MyEvent(String user_id, String time,String date, String title, String description, String place, String player,String longitude, String latitude, int category_id) {
+    public MyEvent(int eventId, String user_id, String time,String date, String title, String description, String place, String player,String longitude, String latitude, int category_id) {
+        this.eventId = eventId;
         this.user_id = user_id;
         this.time = time;
+        this.date = date;
         this.title = title;
         this.description = description;
         this.place = place;
         this.playerCount = player;
-        this.date = date;
-        this.user_id = user_id;
-        this.category_id=category_id;
         this.longitude=longitude;
         this.latitude=latitude;
+        this.category_id=category_id;
+
+    }
+
+    public int getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(int eventId) {
+        this.eventId = eventId;
     }
 
     public String getDate() {

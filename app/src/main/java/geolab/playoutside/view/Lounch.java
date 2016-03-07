@@ -1,8 +1,6 @@
 package geolab.playoutside.view;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,6 +25,7 @@ import org.json.JSONObject;
 
 import java.util.Arrays;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import geolab.playoutside.MainActivity;
 import geolab.playoutside.R;
 import geolab.playoutside.gcm.RegistrationIntentService;
@@ -57,6 +56,7 @@ public class Lounch extends AppCompatActivity {
                 Intent mainIntent = new Intent(Lounch.this, MainActivity.class);
                 startActivity(mainIntent);
                 Lounch.this.finish();
+
             }
         });
 
@@ -67,6 +67,7 @@ public class Lounch extends AppCompatActivity {
         facebook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 loginToFB();
             }
         });

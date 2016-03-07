@@ -129,6 +129,7 @@ public class Category extends android.support.v4.app.Fragment implements SwipeRe
                         JSONObject curObj = jsonArray.getJSONObject(i);
 
 
+                        int eventId = curObj.getInt("id");
                         String user_id = curObj.getString("user_id");
                         String subcategory = curObj.getString("subcategory");
                         String description = curObj.getString("description");
@@ -169,7 +170,7 @@ public class Category extends android.support.v4.app.Fragment implements SwipeRe
                         }
 
 
-                        MyEvent myEvent = new MyEvent(user_id, time, date, subcategory, description, location, count, latitude, longitude, categoryId);
+                        MyEvent myEvent = new MyEvent(eventId, user_id, time, date, subcategory, description, location, count, latitude, longitude, categoryId);
                         myEvents.add(myEvent);
                     }
 

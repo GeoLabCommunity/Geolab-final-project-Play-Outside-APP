@@ -1,7 +1,6 @@
 package geolab.playoutside;
 
 import android.app.SearchManager;
-import android.app.SearchableInfo;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -15,19 +14,16 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.ActionMode;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,12 +34,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.facebook.AccessToken;
+import com.facebook.Profile;
+import com.facebook.login.LoginManager;
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.InetAddress;
-import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -56,16 +50,12 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import geolab.playoutside.adapters.CustomExpAdapter;
-import geolab.playoutside.fragments.Action;
 import geolab.playoutside.fragments.AllGamesFragment;
-import geolab.playoutside.fragments.Ball;
-import geolab.playoutside.fragments.CardGameFragment;
 import geolab.playoutside.fragments.Category;
 import geolab.playoutside.fragments.DialogFragment;
-import geolab.playoutside.fragments.TableGameFragment;
 import geolab.playoutside.model.ExpMenuItem;
 import geolab.playoutside.model.SubMenu;
-import geolab.playoutside.view.Search;
+import geolab.playoutside.view.Lounch;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -94,6 +84,12 @@ public class MainActivity extends AppCompatActivity {
     private TextView fb_name;
     private TextView fb_age;
     private TextView fb_mail;
+
+    private LinearLayout profile;
+    private LinearLayout myGame;
+    private LinearLayout logout;
+
+
 
     private String subcategory;
 
@@ -174,6 +170,29 @@ public class MainActivity extends AppCompatActivity {
         dlDrawer.setDrawerListener(drawerToggle);
 
 
+        profile = (LinearLayout) findViewById(R.id.profile);
+        myGame = (LinearLayout) findViewById(R.id.myGame);
+        logout = (LinearLayout) findViewById(R.id.logout);
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                LoginManager.getInstance().logOut();
+                Intent intent = new Intent(MainActivity.this, Lounch.class);
+                startActivity(intent);
+
+            }
+        });
+
+        myGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mViewPager.setCurrentItem(0);
+                ((AllGamesFragment)mSectionsPagerAdapter.getItem(0)).updateData(getApplicationContext(), Profile.getCurrentProfile().getId());
+                dlDrawer.closeDrawers();
+            }
+        });
 
 
         ArrayList<Fragment> fragmentList = new ArrayList<>();
@@ -315,7 +334,10 @@ public class MainActivity extends AppCompatActivity {
     }
     private ActionBarDrawerToggle setupDrawerToggle() {
         return new ActionBarDrawerToggle(this, dlDrawer, toolbar, R.string.drawer_open,  R.string.drawer_close);
+
     }
+
+
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -387,14 +409,14 @@ public class MainActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Toast.makeText(MainActivity.this, response, Toast.LENGTH_LONG).show();
+                       // Toast.makeText(MainActivity.this, response, Toast.LENGTH_LONG).show();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // System.out.println("error " +error.toString());
-                        Toast.makeText(MainActivity.this,"Please fill all fields",Toast.LENGTH_LONG).show();
+                        //Toast.makeText(MainActivity.this,"Please fill all fields",Toast.LENGTH_LONG).show();
                     }
                 }){
             @Override
@@ -413,4 +435,6 @@ public class MainActivity extends AppCompatActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
     }
+
+
 }

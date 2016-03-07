@@ -100,7 +100,7 @@ public class RegistrationIntentService extends IntentService implements Serializ
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Toast.makeText(RegistrationIntentService.this, response, Toast.LENGTH_LONG).show();
+                      //  Toast.makeText(RegistrationIntentService.this, response, Toast.LENGTH_LONG).show();
 
                     }
                 },
@@ -108,7 +108,7 @@ public class RegistrationIntentService extends IntentService implements Serializ
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // System.out.println("error " +error.toString());
-                        Toast.makeText(RegistrationIntentService.this,"Please fill all fields",Toast.LENGTH_LONG).show();
+                     //   Toast.makeText(RegistrationIntentService.this,"Please fill all fields",Toast.LENGTH_LONG).show();
                     }
                 }){
             @Override
