@@ -83,6 +83,7 @@ import java.util.Map;
 import geolab.playoutside.db.Category_db;
 import geolab.playoutside.fragment_categories.SubCategoryIcon;
 import geolab.playoutside.model.ApplicationController;
+import geolab.playoutside.model.MyEvent;
 import hotchemi.stringpicker.StringPicker;
 import hotchemi.stringpicker.StringPickerDialog;
 
@@ -111,6 +112,8 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
     private String getdescription;
     private String category;
 
+    private String eventId;
+
     private MyPagerAdapter selectCategory;
     private ViewPager category_pager;
     private TabLayout tabLayout;
@@ -132,11 +135,23 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_add__event_);
         toolbar = (Toolbar) findViewById(R.id.detail_toolbar_id);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setTitle("Add New Event");
+
+        final Bundle bundle = getIntent().getExtras();
+
+
+        if (bundle!=null){
+
+            final MyEvent myEvent = (MyEvent) bundle.get("event");
+
+            eventId =String.valueOf(myEvent.getEventId()) ;
+
+        }
 
 
 
@@ -432,8 +447,12 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
 
 
     public void sendServerData(View v) {
+         if(eventId==null){
+             addEvent();
+         }else {
+             update();
+         }
 
-        addEvent();
     }
 
     @Override
@@ -519,6 +538,7 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
             @Override
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<>();
+               // params.put("eventId",eventId);
                 params.put("user_id",user_id);
                 params.put("category",category);
                 params.put("subcategory",subcategoryData);
@@ -543,5 +563,51 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
         return new String[] {"Gldani","Nadzaladevi","Vaja-Pshavela","Samgori","Isani","VarkeTili","Digomi",
                 "Saburtalo","Vake","Rustaveli","Muxiani","Temqa","Wereteli"
                 };
+    }
+    private void update(){
+
+        getInfoFromActivity();
+
+
+        final String URL = "http://geolab.club/iraklilataria/ika/";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Toast.makeText(Add_Event_Activity.this, response, Toast.LENGTH_LONG).show();
+                        fb_intent_info();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // System.out.println("error " +error.toString());
+                        Toast.makeText(Add_Event_Activity.this,"Please fill all fields",Toast.LENGTH_LONG).show();
+                    }
+                }){
+            @Override
+            protected Map<String,String> getParams(){
+                Map<String,String> params = new HashMap<>();
+                params.put("eventId",eventId);
+                params.put("user_id",user_id);
+                params.put("category",category);
+                params.put("subcategory",subcategoryData);
+                params.put("date",date);
+                params.put("time",time);
+                params.put("description",getdescription);
+                params.put("count",getmember);
+                params.put("location",getplace);
+                params.put("latitude",latitude);
+                params.put("longitude",longitude);
+
+                params.toString();
+                return params;
+            }
+
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
     }
 }

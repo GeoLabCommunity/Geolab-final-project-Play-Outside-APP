@@ -51,7 +51,6 @@ public class EventDetailActivity extends AppCompatActivity {
 
     private String longitude;
     private String latitude;
-    private String getId_intent;
     private String description_intent;
     private String title_intent;
     private String time_intent;
@@ -169,7 +168,7 @@ public class EventDetailActivity extends AppCompatActivity {
                     Intent addactivity = new Intent(EventDetailActivity.this, Add_Event_Activity.class);
                     Bundle bundle = new Bundle();
                     addactivity.putExtra("check",true);
-                    bundle.putSerializable("event",event);
+                    bundle.putSerializable("event",myEvent);
                     addactivity.putExtras(bundle);
 
                     startActivity(addactivity);
