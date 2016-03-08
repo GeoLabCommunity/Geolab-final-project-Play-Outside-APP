@@ -1,11 +1,17 @@
 package geolab.playoutside.view;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,16 +39,30 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
+import geolab.playoutside.Add_Event_Activity;
+import geolab.playoutside.MainActivity;
 import geolab.playoutside.R;
+import geolab.playoutside.fragments.AllGamesFragment;
 import geolab.playoutside.model.MyEvent;
 
 public class EventDetailActivity extends AppCompatActivity {
 
     private String longitude;
     private String latitude;
-    private String imgUrl;
+    private String getId_intent;
+    private String description_intent;
+    private String title_intent;
+    private String time_intent;
+    private String date_intent;
+    private String count_intent;
     private String getId;
+    private int eventId_intent;
+    private String place_intent;
+
+    private String imgUrl;
+
     private int circleCounter;
 
 
@@ -63,6 +83,10 @@ public class EventDetailActivity extends AppCompatActivity {
     @Bind(R.id.detail_join_image)
     protected CircleImageView joinImage;
 
+    private ImageView edit;
+    private ImageView delete;
+    private String URL = "http://geolab.club/iraklilataria/ika/delete.php";
+
 
 
     Toolbar toolbar_detail;
@@ -73,19 +97,101 @@ public class EventDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_event_detail);
+        final Bundle bundle = getIntent().getExtras();
+        final MyEvent myEvent = (MyEvent) bundle.get("event");
+        latitude = (myEvent.getLatitude());
+        longitude = (myEvent.getLongitude());
+        getId = myEvent.getId();
+
+        final Boolean check = (Boolean) bundle.get("check");
+        if(check==true){
+            setContentView(R.layout.activity_event_detail_admin);
+
+            edit= (ImageView) findViewById(R.id.admin_edit_id);
+            delete = (ImageView) findViewById(R.id.admin_delete_id);
+
+            delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new SweetAlertDialog(EventDetailActivity.this, SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText("Are you sure?")
+                            .setContentText("Won't be able to recover this file!")
+                            .setCancelText("No,cancel plz!")
+                            .setConfirmText("Yes,delete it!")
+                            .showCancelButton(true)
+                            .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sDialog) {
+                                    // reuse previous dialog instance, keep widget user state, reset them if you need
+//                            sDialog.setTitleText("Cancelled!")
+//                                    .setContentText("Your imaginary file is safe :)")
+//                                    .setConfirmText("OK")
+//                                    .showCancelButton(false)
+//                                    .setCancelClickListener(null)
+//                                    .setConfirmClickListener(null)
+//                                    .changeAlertType(SweetAlertDialog.ERROR_TYPE);
+
+                                    // or you can new a SweetAlertDialog to show
+                                    sDialog.dismiss();
+                                    new SweetAlertDialog(EventDetailActivity.this, SweetAlertDialog.ERROR_TYPE)
+                                            .setTitleText("Cancelled!")
+                                            .setContentText("Your imaginary file is safe :)")
+                                            .setConfirmText("OK")
+                                            .show();
+                                }
+                            })
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sDialog) {
+                                    delete(URL+"?eventId="+myEvent.getEventId());
+
+                                    Intent intent = new Intent(EventDetailActivity.this, MainActivity.class);
+                                    startActivity(intent);
+
+                                    sDialog.setTitleText("Deleted!")
+                                            .setContentText("Your imaginary file has been deleted!")
+                                            .setConfirmText("OK")
+                                            .showCancelButton(false)
+                                            .setCancelClickListener(null)
+                                            .setConfirmClickListener(null)
+                                            .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+
+                                }
+
+                            })
+                            .show();
+                }
+            });
+
+            edit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent addactivity = new Intent(EventDetailActivity.this, Add_Event_Activity.class);
+                    Bundle bundle = new Bundle();
+                    addactivity.putExtra("check",true);
+                    bundle.putSerializable("event",event);
+                    addactivity.putExtras(bundle);
+
+                    startActivity(addactivity);
+                }
+            });
+
+
+        }else{
+            setContentView(R.layout.activity_event_detail);
+        }
+
         ButterKnife.bind(this);
 
 
 
-        Bundle bundle = getIntent().getExtras();
-        final MyEvent myEvent = (MyEvent) bundle.get("event");
 
         toolbar_detail = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar_detail);
 
-        latitude = (myEvent.getLatitude());
-        longitude = (myEvent.getLongitude());
+
+
+
 
 
         Double lat = Double.parseDouble(latitude);
@@ -124,8 +230,6 @@ public class EventDetailActivity extends AppCompatActivity {
         }
 
 
-        getId = myEvent.getId();
-
 
         LinearLayout content = (LinearLayout) findViewById(R.id.content);
         content.removeAllViews();
@@ -136,7 +240,7 @@ public class EventDetailActivity extends AppCompatActivity {
 
             final CircleImageView circleImageView = new CircleImageView(getApplication());
             circleImageView.setId(i);
-            imgUrl = "https://graph.facebook.com/" + myEvent.getId() + "/picture?height=400";
+            imgUrl = "https://graph.facebook.com/" + getId + "/picture?height=400";
             Picasso.with(EventDetailActivity.this)
                     .load(imgUrl)
                     .resize(200, 200)
@@ -205,6 +309,34 @@ public class EventDetailActivity extends AppCompatActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
     }
+    private void delete(String URL){
 
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                }){
+            @Override
+            protected Map<String,String> getParams(){
+                Map<String,String> params = new HashMap<>();
+
+                params.toString();
+                return params;
+            }
+
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(EventDetailActivity.this);
+        requestQueue.add(stringRequest);
+    }
 
 }

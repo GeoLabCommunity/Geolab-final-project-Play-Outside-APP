@@ -12,6 +12,25 @@
         android:background="?attr/colorPrimary"
         app:layout_scrollFlags="scroll|enterAlways"
         app:popupTheme="@style/AppTheme.PopupOverlay">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_marginRight="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+         <TextView
+             android:textColor="@color/white"
+             android:textSize="18dp"
+             android:gravity="center"
+             android:text="Event detail"
+             android:layout_width="wrap_content"
+             android:layout_height="match_parent"
+             />
+
+
+        </LinearLayout>
+
+
     </android.support.v7.widget.Toolbar>
 
 
@@ -227,4 +246,6 @@ android:layout_below="@+id/detail_toolbar"
         android:textSize="24dp"
         android:layout_width="match_parent"
         android:layout_height="48dp" />
+
+
 </RelativeLayout>

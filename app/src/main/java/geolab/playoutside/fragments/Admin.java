@@ -38,12 +38,12 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 /**
  * Created by GeoLab on 1/11/16.
  */
-public class AllGamesFragment extends android.support.v4.app.Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class Admin extends android.support.v4.app.Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     StickyListHeadersListView list;
     private ArrayList<MyEvent> myEvents;
     private JsonArrayRequest jsonObjectRequest;
-//    private RequestQueue requestQueue;
+    //    private RequestQueue requestQueue;
     private static String GET_JSON_INFO = "http://geolab.club/iraklilataria/ika/getdata.php";
     private static String GET_JSON_INFO1 = "http://geolab.club/iraklilataria/ika/search.php";
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -90,14 +90,9 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
         getJSONInfo(GET_JSON_INFO1 + "?search=" + searchString);
     }
 
-    public void admin(Context ctx,String searchString){
-        requestQueue = Volley.newRequestQueue(ctx);
-        admin(GET_JSON_INFO1 + "?search=" + searchString);
-    }
+    public static Admin newInstance(String text) {
 
-    public static AllGamesFragment newInstance(String text) {
-
-        AllGamesFragment f = new AllGamesFragment();
+        Admin f = new Admin();
         Bundle b = new Bundle();
         b.putString("tabTitle", text);
 
@@ -183,11 +178,11 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
                     }
 
                     System.out.println("jjj   " + myEvents);
-                    MyStickyAdapter adapter = new MyStickyAdapter(getActivity(), myEvents);
+                    AdminAdapter adminAdapter = new AdminAdapter(getActivity(), myEvents);
 
-                    list.setAdapter(adapter);
-                    list.setOnItemClickListener(adapter.listener);
-     //               list.setOnItemLongClickListener(adapter.longClickListener);
+                    list.setAdapter(adminAdapter);
+                        list.setOnItemClickListener(adminAdapter.listener);
+                   // list.setOnItemLongClickListener(adminAdapter.longClickListener);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -214,117 +209,18 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
         ConnectivityManager connMgr = (ConnectivityManager) getActivity()
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
 
-    NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
-    if(networkInfo!=null&&networkInfo.isConnected())
+        if(networkInfo!=null&&networkInfo.isConnected())
 
-    {
-        // fetch data
-    }
-
-    else
-
-    {
-        Toast.makeText(getContext(), "Internet Connection Is Required", Toast.LENGTH_LONG).show();
-    }
-}
-
-    private void admin(String url) {
-
-
-
-        JSONObject categoryObj = new JSONObject();
-        try {
-            categoryObj.put("search", tabTitle);
-        } catch (JSONException e) {
-            e.printStackTrace();
+        {
+            // fetch data
         }
 
+        else
 
-
-        JsonObjectRequest myRequest = new JsonObjectRequest(Request.Method.GET
-                , url
-                , null
-                , new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-
-                JSONArray jsonArray = null;
-                try {
-                    jsonArray = response.getJSONArray("data");
-                    System.out.println(jsonArray+"9999");
-
-
-                    ArrayList<MyEvent> myEvents = new ArrayList<>();
-                    for (int i = 0; i < jsonArray.length(); i++) {
-
-                        JSONObject curObj = jsonArray.getJSONObject(i);
-
-                        int eventId = curObj.getInt("id");
-                        String user_id = curObj.getString("user_id");
-                        String subcategory = curObj.getString("subcategory");
-                        String description = curObj.getString("description");
-                        String date = curObj.getString("date");
-                        String time = curObj.getString("time");
-                        String count = curObj.getString("count");
-                        String location = curObj.getString("location");
-                        String latitude = curObj.getString("latitude");
-                        String longitude = curObj.getString("longitude");
-
-                        switch(subcategory) {
-                            case "Football":
-                                categoryId=0;
-                                break;
-                            case "Basketball":
-                                categoryId=1;
-                                break;
-                            case "Rugby":
-                                categoryId=2;
-                                break;
-                            case "Volleyball":
-                                categoryId=3;
-                                break;
-                            case "Joker":
-                                categoryId=4;
-                                break;
-                            case "Poker":
-                                categoryId=5;
-                                break;
-                            case "Ping-pong":
-                                categoryId=6;
-                                break;
-                            case "Badminton":
-                                categoryId=7;
-                                break;
-                            default:
-                                categoryId=0;
-                        }
-
-
-                        MyEvent myEvent = new MyEvent(eventId, user_id, time, date, subcategory, description, location, count, latitude, longitude, categoryId);
-                        myEvents.add(myEvent);
-                    }
-
-                    System.out.println("jjj   " + myEvents);
-                    AdminAdapter adminAdapter = new AdminAdapter(getActivity(), myEvents);
-
-                    list.setAdapter(adminAdapter);
-                    list.setOnItemClickListener(adminAdapter.listener);
-                    list.setOnItemLongClickListener(adminAdapter.longClickListener);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                System.out.println(error+"   nnn");
-
-            }
-        });
-        requestQueue.add(myRequest);
-        swipeRefreshLayout.setRefreshing(false);
+        {
+            Toast.makeText(getContext(), "Internet Connection Is Required", Toast.LENGTH_LONG).show();
+        }
     }
 }

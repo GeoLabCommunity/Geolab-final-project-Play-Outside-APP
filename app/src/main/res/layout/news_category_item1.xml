@@ -22,7 +22,7 @@
 
         <TextView
             android:layout_marginLeft="16dp"
-            android:id="@+id/time_text_id"
+            android:id="@+id/time_text_id1"
             android:text="16:00"
             android:background="@drawable/_football"
             android:gravity="center"
@@ -36,13 +36,14 @@
         <LinearLayout
             android:layout_marginLeft="10dp"
             android:orientation="vertical"
-            android:layout_width="250dp"
+
+            android:layout_width="235dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.35">
 
             <TextView
                 android:textColor="@color/colorPrimaryDark"
-                android:id="@+id/title_text_id"
+                android:id="@+id/title_text_id1"
                 android:text="title"
                 android:textSize="14sp"
                 android:layout_marginTop="6dp"
@@ -53,7 +54,7 @@
             <TextView
                 android:textSize="11sp"
                 android:layout_marginBottom="6dp"
-                android:id="@+id/description_text_id"
+                android:id="@+id/description_text_id1"
                 android:text="description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -64,7 +65,7 @@
             <TextView
                 android:layout_marginBottom="6dp"
                 android:textSize="11sp"
-                android:id="@+id/place_text_id"
+                android:id="@+id/place_text_id1"
                 android:text="place"
                 android:textColor="@color/com_facebook_button_background_color_disabled"
                 android:layout_width="wrap_content"
@@ -76,26 +77,33 @@
         <LinearLayout
             android:layout_marginRight="5dp"
             android:id="@+id/setting_id"
-            android:layout_width="30dp"
+            android:layout_width="50dp"
             android:layout_height="match_parent">
 
-            <ImageView
+        <ImageView
 
-                android:src="@drawable/people"
-                android:gravity="center"
-                android:layout_width="15dp"
-                android:layout_height="match_parent" />
+            android:src="@drawable/people"
+            android:gravity="center"
+            android:layout_width="15dp"
+            android:layout_height="match_parent" />
 
 
-            <TextView
-                android:layout_marginLeft="1dp"
-                android:gravity="center"
-                android:id="@+id/player_count_id"
-                android:text="15"
-                android:textSize="12dp"
-                android:layout_width="16dp"
-                android:layout_height="match_parent" />
+        <TextView
+            android:layout_marginLeft="1dp"
+            android:gravity="center"
+            android:id="@+id/player_count_id1"
+            android:text="15"
+            android:textSize="12dp"
+            android:layout_width="16dp"
+            android:layout_height="match_parent" />
+        <ImageView
 
+
+            android:src="@drawable/sett"
+            android:gravity="center"
+            android:layout_width="20dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom" />
 
         </LinearLayout>
 

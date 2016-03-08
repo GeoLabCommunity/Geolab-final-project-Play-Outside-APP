@@ -50,6 +50,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import geolab.playoutside.adapters.CustomExpAdapter;
+import geolab.playoutside.fragments.Admin;
 import geolab.playoutside.fragments.AllGamesFragment;
 import geolab.playoutside.fragments.Category;
 import geolab.playoutside.fragments.DialogFragment;
@@ -122,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
         final Intent intent = getIntent();
 
 
-        Bundle bundle = intent.getExtras();
+        final Bundle bundle = intent.getExtras();
         if (bundle != null) {
             name = (String) bundle.get("fb_name");
             userId = (String) bundle.get("fb_id");
@@ -185,14 +186,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        myGame.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mViewPager.setCurrentItem(0);
-                ((AllGamesFragment)mSectionsPagerAdapter.getItem(0)).updateData(getApplicationContext(), Profile.getCurrentProfile().getId());
-                dlDrawer.closeDrawers();
-            }
-        });
+          myGame.setOnClickListener(new View.OnClickListener() {
+              @Override
+              public void onClick(View v) {
+                  if(bundle != null) {
+                      mViewPager.setCurrentItem(0);
+                      ((AllGamesFragment) mSectionsPagerAdapter.getItem(0)).admin(getApplicationContext(), Profile.getCurrentProfile().getId());
+                      dlDrawer.closeDrawers();
+                  }else{
+                      Toast.makeText(MainActivity.this, "You must login to see your game", Toast.LENGTH_LONG).show();
+                  }
+
+              }
+          });
+
 
 
         ArrayList<Fragment> fragmentList = new ArrayList<>();
@@ -362,7 +369,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onQueryTextChange(String newText) {
                 mViewPager.setCurrentItem(0);
                 ((AllGamesFragment)mSectionsPagerAdapter.getItem(0)).updateData(getApplicationContext(), newText);
-                return true;
+                return false;
             }
 
             public boolean onQueryTextSubmit(String query) {

@@ -40,13 +40,11 @@ public class MyStickyAdapter extends BaseAdapter implements StickyListHeadersAda
     private ArrayList<MyEvent> eventsList;
     private LayoutInflater inflater;
     private Context context;
-    private String URL = "http://geolab.club/iraklilataria/ika/delete.php";
-    private MyStickyAdapter myAdapter;
+
 
     public MyStickyAdapter(Context context, ArrayList<MyEvent> list) {
         inflater = LayoutInflater.from(context);
         eventsList = list;
-        myAdapter = this;
         this.context = context;
     }
 
@@ -124,6 +122,7 @@ public class MyStickyAdapter extends BaseAdapter implements StickyListHeadersAda
 
             Intent detailIntent = new Intent(context, EventDetailActivity.class);
             Bundle bundle = new Bundle();
+            detailIntent.putExtra("check",false);
             bundle.putSerializable("event",event);
             detailIntent.putExtras(bundle);
 
@@ -133,64 +132,6 @@ public class MyStickyAdapter extends BaseAdapter implements StickyListHeadersAda
 
     };
 
-    public AdapterView.OnItemLongClickListener longClickListener = new AdapterView.OnItemLongClickListener() {
-
-        @Override
-        public boolean onItemLongClick(final AdapterView<?> parent, View view, final int position, long id) {
-            MyEvent event = (MyEvent) parent.getAdapter().getItem(position);
-
-            new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
-                    .setTitleText("Are you sure?")
-                    .setContentText("Won't be able to recover this file!")
-                    .setCancelText("No,cancel plz!")
-                    .setConfirmText("Yes,delete it!")
-                    .showCancelButton(true)
-                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sDialog) {
-                            // reuse previous dialog instance, keep widget user state, reset them if you need
-//                            sDialog.setTitleText("Cancelled!")
-//                                    .setContentText("Your imaginary file is safe :)")
-//                                    .setConfirmText("OK")
-//                                    .showCancelButton(false)
-//                                    .setCancelClickListener(null)
-//                                    .setConfirmClickListener(null)
-//                                    .changeAlertType(SweetAlertDialog.ERROR_TYPE);
-
-                            // or you can new a SweetAlertDialog to show
-                              sDialog.dismiss();
-                                new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
-                                        .setTitleText("Cancelled!")
-                                        .setContentText("Your imaginary file is safe :)")
-                                        .setConfirmText("OK")
-                                        .show();
-                        }
-                    })
-                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sDialog) {
-                            addEvent(URL+"?eventId="+eventsList.get(position).getEventId());
-                            sDialog.setTitleText("Deleted!")
-                                    .setContentText("Your imaginary file has been deleted!")
-                                    .setConfirmText("OK")
-                                    .showCancelButton(false)
-                                    .setCancelClickListener(null)
-                                    .setConfirmClickListener(null)
-                                    .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-
-                            eventsList.remove(position);
-                            myAdapter.notifyDataSetChanged();
-
-                        }
-
-                    })
-                    .show();
-
-
-            return true;
-        }
-
-    };
 
 
     @Override
@@ -216,33 +157,5 @@ public class MyStickyAdapter extends BaseAdapter implements StickyListHeadersAda
         TextView timeHolder, titleHolder, descriptionHolder, placeHolder, playerHolder;
 
     }
-    private void addEvent(String URL){
 
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                    }
-                }){
-            @Override
-            protected Map<String,String> getParams(){
-                Map<String,String> params = new HashMap<>();
-
-                params.toString();
-                return params;
-            }
-
-        };
-
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
-        requestQueue.add(stringRequest);
-    }
 }
