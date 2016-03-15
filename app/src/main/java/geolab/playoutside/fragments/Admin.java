@@ -44,8 +44,8 @@ public class Admin extends android.support.v4.app.Fragment implements SwipeRefre
     private ArrayList<MyEvent> myEvents;
     private JsonArrayRequest jsonObjectRequest;
     //    private RequestQueue requestQueue;
-    private static String GET_JSON_INFO = "http://geolab.club/iraklilataria/ika/getdata.php";
-    private static String GET_JSON_INFO1 = "http://geolab.club/iraklilataria/ika/search.php";
+    private static String GET_JSON_INFO = "http://geolab.club/geolabwork/ika/getdata.php";
+    private static String GET_JSON_INFO1 = "http://geolab.club/geolabwork/ika/search.php";
     private SwipeRefreshLayout swipeRefreshLayout;
     private int categoryId;
     private String stringSearch;

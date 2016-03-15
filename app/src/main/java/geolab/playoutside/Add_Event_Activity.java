@@ -230,6 +230,10 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
 
 
         ((MapFragment) getFragmentManager().findFragmentById(R.id.map))
+
+
+
+
                 .getMapAsync(this);
 
 
@@ -270,12 +274,8 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
             }
         });
 
-
-
-
         //shevamowmot location manageri
         checkGPSStatus();
-
 
     }
 
@@ -518,7 +518,7 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
         getInfoFromActivity();
 
 
-        final String URL = "http://geolab.club/iraklilataria/ika/";
+        final String URL = "http://geolab.club/geolabwork/ika/";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
@@ -569,7 +569,7 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
         getInfoFromActivity();
 
 
-        final String URL = "http://geolab.club/iraklilataria/ika/";
+        final String URL = "http://geolab.club/geolabwork/ika/";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {

@@ -20,6 +20,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ExpandableListView;
@@ -90,15 +91,14 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout myGame;
     private LinearLayout logout;
 
+    private String message;
 
 
     private String subcategory;
 
     /**
      * The {@link ViewPager} that will host the section contents.
-     *
      */
-
 
 
     private ViewPager mViewPager;
@@ -107,8 +107,10 @@ public class MainActivity extends AppCompatActivity {
     DrawerLayout dlDrawer;
     ActionBarDrawerToggle drawerToggle;
 
-    @Bind(R.id.tabs)protected TabLayout tabLayout;
-    @Bind(R.id.exp_list_id) protected ExpandableListView expandableListView;
+    @Bind(R.id.tabs)
+    protected TabLayout tabLayout;
+    @Bind(R.id.exp_list_id)
+    protected ExpandableListView expandableListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,7 +123,6 @@ public class MainActivity extends AppCompatActivity {
         isNetworkAvailable();
 
         final Intent intent = getIntent();
-
 
         final Bundle bundle = intent.getExtras();
         if (bundle != null) {
@@ -164,8 +165,8 @@ public class MainActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         // Find our drawer view
-         dlDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-         drawerToggle = setupDrawerToggle();
+        dlDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerToggle = setupDrawerToggle();
 
         // Tie DrawerLayout events to the ActionBarToggle
         dlDrawer.setDrawerListener(drawerToggle);
@@ -186,20 +187,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-          myGame.setOnClickListener(new View.OnClickListener() {
-              @Override
-              public void onClick(View v) {
-                  if(bundle != null) {
-                      mViewPager.setCurrentItem(0);
-                      ((AllGamesFragment) mSectionsPagerAdapter.getItem(0)).admin(getApplicationContext(), Profile.getCurrentProfile().getId());
-                      dlDrawer.closeDrawers();
-                  }else{
-                      Toast.makeText(MainActivity.this, "You must login to see your game", Toast.LENGTH_LONG).show();
-                  }
+        myGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (bundle != null) {
+                    mViewPager.setCurrentItem(0);
+                    ((AllGamesFragment) mSectionsPagerAdapter.getItem(0)).admin(getApplicationContext(), Profile.getCurrentProfile().getId());
+                    dlDrawer.closeDrawers();
+                } else {
+                    Toast.makeText(MainActivity.this, "You must login to see your game", Toast.LENGTH_LONG).show();
+                }
 
-              }
-          });
-
+            }
+        });
 
 
         ArrayList<Fragment> fragmentList = new ArrayList<>();
@@ -230,77 +230,78 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setSelectedTabIndicatorColor(Color.parseColor("#FFFFFF"));
 
 
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (userId == null){
+                if (userId == null) {
 
-                DialogFragment dialogFragment = new DialogFragment();
-                dialogFragment.show(getFragmentManager(), "string");}
-                else{
+                    DialogFragment dialogFragment = new DialogFragment();
+                    dialogFragment.show(getFragmentManager(), "string");
+                } else {
                     Intent addEvent = new Intent(MainActivity.this, Add_Event_Activity.class);
-                startActivity(addEvent);}
+                    startActivity(addEvent);
+                }
             }
         });
 
         menuItems = getData();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            expandableListView.setIndicatorBoundsRelative(730,0);
+            expandableListView.setIndicatorBoundsRelative(730, 0);
         }
-        CustomExpAdapter adapter = new CustomExpAdapter(this,menuItems);
+        CustomExpAdapter adapter = new CustomExpAdapter(this, menuItems);
         expandableListView.setAdapter(adapter);
 
 
         expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                int index = (parent.getFlatListPosition(ExpandableListView.getPackedPositionForChild(groupPosition, childPosition))) ;
-                System.out.println(index+"444");
+                int index = (parent.getFlatListPosition(ExpandableListView.getPackedPositionForChild(groupPosition, childPosition)));
+                System.out.println(index + "444");
 
                 parent.setItemChecked(index, true);
                 SubMenu subMenu = menuItems.get(groupPosition).getSubMenus().get(childPosition);
-                Toast.makeText(getApplicationContext(),subMenu.getMenuName(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), subMenu.getMenuName(), Toast.LENGTH_SHORT).show();
                 mViewPager.setCurrentItem(groupPosition + 1);
                 dlDrawer.closeDrawers();
-                subcategory=subMenu.getMenuName();
+                subcategory = subMenu.getMenuName();
 
-                ((Category)mSectionsPagerAdapter.getItem(groupPosition+1)).updateSubcategoryData(subcategory);
+                ((Category) mSectionsPagerAdapter.getItem(groupPosition + 1)).updateSubcategoryData(subcategory);
 
                 return true;
             }
         });
     }
-    private ArrayList<ExpMenuItem> getData(){
+
+    private ArrayList<ExpMenuItem> getData() {
 
         ArrayList<ExpMenuItem> items = new ArrayList<>();
         ArrayList<SubMenu> subMenus1 = new ArrayList<>();
 
-        subMenus1.add(new SubMenu("football",R.drawable.foot));
-        subMenus1.add(new SubMenu("basketball",R.drawable.bass));
-        subMenus1.add(new SubMenu("rugby",R.drawable.rug));
-        subMenus1.add(new SubMenu("volleyball",R.drawable.vol));
+        subMenus1.add(new SubMenu("football", R.drawable.foot));
+        subMenus1.add(new SubMenu("basketball", R.drawable.bass));
+        subMenus1.add(new SubMenu("rugby", R.drawable.rug));
+        subMenus1.add(new SubMenu("volleyball", R.drawable.vol));
 
         ArrayList<SubMenu> subMenus2 = new ArrayList<>();
 
-        subMenus2.add(new SubMenu("joker",R.drawable.jok));
-        subMenus2.add(new SubMenu("poker",R.drawable.pok));
+        subMenus2.add(new SubMenu("joker", R.drawable.jok));
+        subMenus2.add(new SubMenu("poker", R.drawable.pok));
 
 
         ArrayList<SubMenu> subMenus3 = new ArrayList<>();
 
-        subMenus3.add(new SubMenu("ping-pong",R.drawable.pingp));
+        subMenus3.add(new SubMenu("ping-pong", R.drawable.pingp));
 
         ArrayList<SubMenu> subMenus4 = new ArrayList<>();
 
-        subMenus4.add(new SubMenu("badminton",R.drawable.bad));
+        subMenus4.add(new SubMenu("badminton", R.drawable.bad));
 
-        items.add(new ExpMenuItem("BALL",subMenus1,R.drawable.ball));
-        items.add(new ExpMenuItem("CARD",subMenus2,R.drawable.card));
-        items.add(new ExpMenuItem("TABLE",subMenus3,R.drawable.ping));
-        items.add(new ExpMenuItem("ACTION",subMenus4,R.drawable.badm));
+        items.add(new ExpMenuItem("BALL", subMenus1, R.drawable.ball));
+        items.add(new ExpMenuItem("CARD", subMenus2, R.drawable.card));
+        items.add(new ExpMenuItem("TABLE", subMenus3, R.drawable.ping));
+        items.add(new ExpMenuItem("ACTION", subMenus4, R.drawable.badm));
 
         return items;
     }
@@ -339,11 +340,11 @@ public class MainActivity extends AppCompatActivity {
         super.onPostCreate(savedInstanceState);
         drawerToggle.syncState();
     }
+
     private ActionBarDrawerToggle setupDrawerToggle() {
-        return new ActionBarDrawerToggle(this, dlDrawer, toolbar, R.string.drawer_open,  R.string.drawer_close);
+        return new ActionBarDrawerToggle(this, dlDrawer, toolbar, R.string.drawer_open, R.string.drawer_close);
 
     }
-
 
 
     @Override
@@ -368,13 +369,13 @@ public class MainActivity extends AppCompatActivity {
         SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
             public boolean onQueryTextChange(String newText) {
                 mViewPager.setCurrentItem(0);
-                ((AllGamesFragment)mSectionsPagerAdapter.getItem(0)).updateData(getApplicationContext(), newText);
+                ((AllGamesFragment) mSectionsPagerAdapter.getItem(0)).updateData(getApplicationContext(), newText);
                 return false;
             }
 
             public boolean onQueryTextSubmit(String query) {
                 mViewPager.setCurrentItem(0);
-                ((AllGamesFragment)mSectionsPagerAdapter.getItem(0)).updateData(getApplicationContext(), query);
+                ((AllGamesFragment) mSectionsPagerAdapter.getItem(0)).updateData(getApplicationContext(), query);
                 return true;
             }
         };
@@ -383,7 +384,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    private int getAge(Calendar birthDate, Calendar currentDate){
+    private int getAge(Calendar birthDate, Calendar currentDate) {
         int age = currentDate.get(Calendar.YEAR) - birthDate.get(Calendar.YEAR);
 
         if (currentDate.get(Calendar.MONTH) < birthDate.get(Calendar.MONTH)) {
@@ -406,17 +407,17 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
-    private void sendPlayerInfo(){
+
+    private void sendPlayerInfo() {
 
 
-
-        final String URL = "http://geolab.club/iraklilataria/ika/sendPlayerInfo/sendplayerinfo.php";
+        final String URL = "http://geolab.club/geolabwork/ika/sendPlayerInfo/sendplayerinfo.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                       // Toast.makeText(MainActivity.this, response, Toast.LENGTH_LONG).show();
+                        // Toast.makeText(MainActivity.this, response, Toast.LENGTH_LONG).show();
                     }
                 },
                 new Response.ErrorListener() {
@@ -425,14 +426,14 @@ public class MainActivity extends AppCompatActivity {
                         // System.out.println("error " +error.toString());
                         //Toast.makeText(MainActivity.this,"Please fill all fields",Toast.LENGTH_LONG).show();
                     }
-                }){
+                }) {
             @Override
-            protected Map<String,String> getParams(){
-                Map<String,String> params = new HashMap<>();
-                params.put("user_id",userId);
-                params.put("age",birthday);
-                params.put("name",name);
-                params.put("email",email);
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("user_id", userId);
+                params.put("age", birthday);
+                params.put("name", name);
+                params.put("email", email);
                 params.toString();
                 return params;
             }
@@ -442,6 +443,4 @@ public class MainActivity extends AppCompatActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
     }
-
-
 }

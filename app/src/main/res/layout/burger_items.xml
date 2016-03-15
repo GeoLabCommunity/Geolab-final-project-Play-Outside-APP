@@ -38,7 +38,7 @@
             android:layout_width="21dp"
             android:layout_height="wrap_content" />
         <TextView
-            android:text="My game"
+            android:text="@string/mygame"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 

@@ -1,5 +1,6 @@
 package geolab.playoutside.view;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import java.util.Arrays;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import geolab.playoutside.MainActivity;
 import geolab.playoutside.R;
+import geolab.playoutside.fb_login.FbLogin;
 import geolab.playoutside.gcm.RegistrationIntentService;
 
 public class Lounch extends AppCompatActivity {
@@ -43,11 +45,14 @@ public class Lounch extends AppCompatActivity {
     private String birth_day;
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private static final String TAG = "MainActivity";
+    private Activity launchActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lounch);
+
+        launchActivity = this;
 
         skip = (Button) findViewById(R.id.skip);
         skip.setOnClickListener(new View.OnClickListener() {
@@ -63,10 +68,13 @@ public class Lounch extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
 
+
         facebook = (Button) findViewById(R.id.facebook);
         facebook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+               // FbLogin login = new FbLogin(launchActivity);
 
                 loginToFB();
             }

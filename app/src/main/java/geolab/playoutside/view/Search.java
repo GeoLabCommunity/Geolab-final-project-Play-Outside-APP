@@ -34,7 +34,7 @@ public class Search extends AppCompatActivity implements SwipeRefreshLayout.OnRe
     private ArrayList<MyEvent> myEvents;
     private JsonArrayRequest jsonObjectRequest;
     private RequestQueue requestQueue;
-    private static String GET_JSON_INFO = "http://geolab.club/iraklilataria/ika/search.php";
+    private static String GET_JSON_INFO = "http://geolab.club/geolabwork/ika/search.php";
     private SwipeRefreshLayout swipeRefreshLayout;
     private int categoryId;
     private Context context;

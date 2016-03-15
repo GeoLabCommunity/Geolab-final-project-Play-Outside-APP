@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello_blank_fragment">ოპა</string>
+
+    <array name="district_array">
+        <item>Choose your location</item>
+        <item>გლდანი</item>
+        <item>ნაძალადევი</item>
+        <item>ისანი</item>
+        <item>სამგორი</item>
+        <item>დიდუბე</item>
+        <item>ჩუღურეთი</item>
+        <item>ვაკე</item>
+        <item>საბურთალო</item>
+        <item>კრწანისი</item>
+        <item>მტაწმინდა</item>
+    </array>
+
+    <string name="mygame">ჩემი თამაშები</string>
+</resources>

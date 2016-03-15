@@ -42,7 +42,7 @@ public class Category extends android.support.v4.app.Fragment implements SwipeRe
     private ArrayList<MyEvent> myEvents;
     private JsonArrayRequest jsonObjectRequest;
     private RequestQueue requestQueue;
-    private static String GET_JSON_INFO = "http://geolab.club/iraklilataria/ika/filter.php";
+    private static String GET_JSON_INFO = "http://geolab.club/geolabwork/ika/filter.php";
     private SwipeRefreshLayout swipeRefreshLayout;
     private int categoryId;
     private String stringSearch;

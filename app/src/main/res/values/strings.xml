@@ -22,6 +22,7 @@
         <item>Saburtalo</item>
         <item>Krwanisi</item>
         <item>Mtatsminda</item>
+
     </array>
 
     <array name="member_array">
@@ -49,6 +50,9 @@
 
     </array>
     <string name="title_activity_fb_login">FbLogin</string>
+
+
+    <string name="mygame">My Games</string>
 
 </resources>
 

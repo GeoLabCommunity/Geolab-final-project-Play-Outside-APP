@@ -1,20 +1,30 @@
 package geolab.playoutside.gcm;
+
+import android.annotation.TargetApi;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
+
 import geolab.playoutside.MainActivity;
 import geolab.playoutside.R;
+import geolab.playoutside.view.EventDetailActivity;
 
 public class MyGcmListenerService extends GcmListenerService {
+    String event_id;
 
     private static final String TAG = "MyGcmListenerService";
 
@@ -31,6 +41,11 @@ public class MyGcmListenerService extends GcmListenerService {
         String message = data.getString("message");
         Log.d(TAG, "From: " + from);
         Log.d(TAG, "Message: " + message);
+
+
+         event_id = message.split("-")[0]; // "Before"
+         String msg = message.split("-")[1]; // "After"
+
 
         if (from.startsWith("/topics/")) {
             // message received from some topic.
@@ -50,7 +65,8 @@ public class MyGcmListenerService extends GcmListenerService {
          * In some cases it may be useful to show a notification indicating to the user
          * that a message was received.
          */
-        sendNotification(message);
+        //sendNotification(message);
+        simpleNotificationExample(msg);
         // [END_EXCLUDE]
     }
     // [END receive_message]
@@ -60,24 +76,57 @@ public class MyGcmListenerService extends GcmListenerService {
      *
      * @param message GCM message received.
      */
-    private void sendNotification(String message) {
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-                PendingIntent.FLAG_ONE_SHOT);
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+//    private void sendNotification(String message) {
+//        Intent intent = new Intent(this, MainActivity.class);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//        Bundle bundle = new Bundle();
+//        bundle.putString("message", message);
+//        intent.putExtra("bgd", bundle);
+//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
+//                PendingIntent.FLAG_UPDATE_CURRENT);
+//
+//        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+//        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+//                .setSmallIcon(R.drawable.product)
+//                .setContentTitle("GCM Message")
+//                .setContentText(message)
+//                .setAutoCancel(true)
+//                .setSound(defaultSoundUri)
+//                .setContentIntent(pendingIntent);
+//
+//        NotificationManager notificationManager =
+//                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//
+//        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+//    }
 
+    private void simpleNotificationExample(String message) {
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.product)
-                .setContentTitle("GCM Message")
-                .setContentText(message)
                 .setAutoCancel(true)
+                .setContentTitle("GCM Message")
                 .setSound(defaultSoundUri)
-                .setContentIntent(pendingIntent);
+                .setContentText(message);
 
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        Intent transport = new Intent(this, MainActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("message", event_id );
+        transport.putExtra("Extra", bundle);
 
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+
+        stackBuilder.addNextIntent(transport);
+
+        PendingIntent pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        builder.setContentIntent(pendingIntent);
+
+        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+        Notification notif = builder.build();
+
+        manager.notify(1, notif);
     }
 }

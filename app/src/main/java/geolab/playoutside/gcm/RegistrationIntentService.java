@@ -94,7 +94,7 @@ public class RegistrationIntentService extends IntentService implements Serializ
 
 
 
-        final String URL = "http://geolab.club/iraklilataria/ika/register.php";
+        final String URL = "http://geolab.club/geolabwork/ika/register.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
@@ -115,10 +115,6 @@ public class RegistrationIntentService extends IntentService implements Serializ
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<>();
                 params.put("fb_id",Profile.getCurrentProfile().getId());
-
-                params.put("fb_name",Profile.getCurrentProfile().getFirstName());
-                params.put("fb_Lname",Profile.getCurrentProfile().getLastName());
-               // LoginManager.getInstance().logOut();
 
                 params.put("token",token);
                 params.toString();

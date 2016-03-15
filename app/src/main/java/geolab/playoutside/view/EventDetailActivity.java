@@ -4,9 +4,11 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.renderscript.Sampler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -16,13 +18,25 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.Profile;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -31,9 +45,13 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,6 +63,7 @@ import geolab.playoutside.Add_Event_Activity;
 import geolab.playoutside.MainActivity;
 import geolab.playoutside.R;
 import geolab.playoutside.fragments.AllGamesFragment;
+import geolab.playoutside.gcm.RegistrationIntentService;
 import geolab.playoutside.model.MyEvent;
 
 public class EventDetailActivity extends AppCompatActivity {
@@ -57,8 +76,19 @@ public class EventDetailActivity extends AppCompatActivity {
     private String date_intent;
     private String count_intent;
     private String getId;
-    private int eventId_intent;
+    private String eventId_intent;
     private String place_intent;
+
+
+
+    private CallbackManager callbackManager;
+    private AccessToken accessToken;
+    private String user_id;
+    private String str_firstName;
+    private String email_json;
+    private String birth_day;
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    private static final String TAG = "MainActivity";
 
     private String imgUrl;
 
@@ -84,7 +114,7 @@ public class EventDetailActivity extends AppCompatActivity {
 
     private ImageView edit;
     private ImageView delete;
-    private String URL = "http://geolab.club/iraklilataria/ika/delete.php";
+    private String URL = "http://geolab.club/geolabwork/ika/delete.php";
 
 
 
@@ -97,10 +127,26 @@ public class EventDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final Bundle bundle = getIntent().getExtras();
-        final MyEvent myEvent = (MyEvent) bundle.get("event");
-        latitude = (myEvent.getLatitude());
-        longitude = (myEvent.getLongitude());
-        getId = myEvent.getId();
+        if(bundle != null) {
+            final MyEvent myEvent = (MyEvent) bundle.get("event");
+            latitude = (myEvent.getLatitude());
+            longitude = (myEvent.getLongitude());
+            getId = myEvent.getId();
+            eventId_intent = String.valueOf(myEvent.getEventId());
+            description_intent = myEvent.getDescription();
+            title_intent = myEvent.getTitle();
+            time_intent = myEvent.getTitle();
+            time_intent = myEvent.getTime();
+            date_intent = myEvent.getDate();
+            count_intent = myEvent.getPlayerCount();
+            place_intent = myEvent.getPlace();
+        }
+
+        Bundle bundle2 = getIntent().getBundleExtra("Extra");
+        if(bundle2 != null){
+            String k = bundle2.getString("message");
+
+        }
 
         final Boolean check = (Boolean) bundle.get("check");
         if(check==true){
@@ -142,7 +188,7 @@ public class EventDetailActivity extends AppCompatActivity {
                             .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                                 @Override
                                 public void onClick(SweetAlertDialog sDialog) {
-                                    delete(URL+"?eventId="+myEvent.getEventId());
+                                    delete(URL+"?eventId="+eventId_intent);
 
                                     Intent intent = new Intent(EventDetailActivity.this, MainActivity.class);
                                     startActivity(intent);
@@ -168,7 +214,7 @@ public class EventDetailActivity extends AppCompatActivity {
                     Intent addactivity = new Intent(EventDetailActivity.this, Add_Event_Activity.class);
                     Bundle bundle = new Bundle();
                     addactivity.putExtra("check",true);
-                    bundle.putSerializable("event",myEvent);
+                    addactivity.putExtra("event",eventId_intent);
                     addactivity.putExtras(bundle);
 
                     startActivity(addactivity);
@@ -181,6 +227,9 @@ public class EventDetailActivity extends AppCompatActivity {
         }
 
         ButterKnife.bind(this);
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        callbackManager = CallbackManager.Factory.create();
 
 
 
@@ -215,15 +264,15 @@ public class EventDetailActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Event Details");
 
 
-        title.setText(myEvent.getTitle());
-        time.setText(myEvent.getTime());
-        description.setText(myEvent.getDescription());
-        date.setText(myEvent.getDate());
-        place.setText(myEvent.getPlace());
-        count.setText(myEvent.getPlayerCount());
+        title.setText(title_intent);
+        time.setText(time_intent);
+        description.setText(description_intent);
+        date.setText(date_intent);
+        place.setText(place_intent);
+        count.setText(count_intent);
 
         try {
-            circleCounter = NumberFormat.getInstance().parse(myEvent.getPlayerCount()).intValue();
+            circleCounter = NumberFormat.getInstance().parse(count_intent).intValue();
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -277,7 +326,7 @@ public class EventDetailActivity extends AppCompatActivity {
     private void addEvent(){
 
 
-        final String URL = "http://geolab.club/iraklilataria/ika/ci/";
+        final String URL = "http://geolab.club/geolabwork/ika/ci/";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
@@ -290,9 +339,33 @@ public class EventDetailActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // System.out.println("error " +error.toString());
-                        Toast.makeText(EventDetailActivity.this,"Please fill all fields",Toast.LENGTH_LONG).show();
+                        new SweetAlertDialog(EventDetailActivity.this, SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("Login via Facebook")
+                                .setContentText("For JOIN this Event you need to Login!")
+                                .setCancelText("No,cancel")
+                                .setConfirmText("Yes, Login")
+                                .showCancelButton(true)
+                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sDialog) {
+                                        loginToFB();
+                                        sDialog.setTitleText("")
+                                                .setContentText("Your request has been sent")
+                                                .setConfirmText("OK")
+                                                .showCancelButton(false)
+                                                .setCancelClickListener(null)
+                                                .setConfirmClickListener(null)
+                                                .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                                    }
+
+                                })
+                                .show();
+
+                   //      System.out.println("shecdoma " +error.toString());
+
+
                     }
+
                 }){
             @Override
             protected Map<String,String> getParams(){
@@ -304,6 +377,8 @@ public class EventDetailActivity extends AppCompatActivity {
             }
 
         };
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(5000,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        stringRequest.setShouldCache(false);
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
@@ -336,6 +411,96 @@ public class EventDetailActivity extends AppCompatActivity {
 
         RequestQueue requestQueue = Volley.newRequestQueue(EventDetailActivity.this);
         requestQueue.add(stringRequest);
+    }
+
+    public void loginToFB() {
+        accessToken = AccessToken.getCurrentAccessToken();
+        System.out.println(accessToken);
+        callbackManager = CallbackManager.Factory.create();
+        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("email", "user_photos", "public_profile", "user_birthday"));
+        LoginManager.getInstance().registerCallback(callbackManager,
+                new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
+                        GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+                            @Override
+                            public void onCompleted(JSONObject jsonObject, GraphResponse graphResponse) {
+                                if (graphResponse.getError() != null) {
+                                    System.out.println("ERROR");
+                                } else {
+                                    try {
+                                        user_id = jsonObject.getString("id");
+                                        str_firstName = jsonObject.getString("name");
+                                        birth_day = jsonObject.getString("birthday");
+                                        email_json = jsonObject.getString("email");
+
+
+                                        if (checkPlayServices()) {
+
+
+
+                                            // Start IntentService to register this application with GCM.
+                                            Intent intent = new Intent(getApplicationContext(), RegistrationIntentService.class);
+//
+                                            startService(intent);
+                                        }
+
+                                        fb_intent_info();
+
+                                    } catch (NullPointerException ex) {
+                                        ex.getMessage();
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                        });
+                        Bundle parameters = new Bundle();
+                        parameters.putString("fields", "id,name,birthday,gender,email");
+                        request.setParameters(parameters);
+                        request.executeAsync();
+                    }
+                    @Override
+                    public void onCancel() {
+                        Toast.makeText(EventDetailActivity.this, "onCancel", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onError(FacebookException exception) {
+                        Log.d("FacebookException", exception.getMessage());
+                        Toast.makeText(EventDetailActivity.this, "Please, check your connection", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+    private void fb_intent_info() {
+        Intent intent = new Intent(EventDetailActivity.this, MainActivity.class);
+        intent.putExtra("fb_name", str_firstName);
+        intent.putExtra("fb_id", user_id);
+        intent.putExtra("fb_email", email_json);
+        intent.putExtra("fb_age", birth_day);
+        intent.putExtra("access",accessToken);
+        startActivity(intent);
+    }
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
+                        .show();
+            } else {
+                Log.i(TAG, "This device is not supported.");
+                finish();
+            }
+            return false;
+        }
+        return true;
     }
 
 }
