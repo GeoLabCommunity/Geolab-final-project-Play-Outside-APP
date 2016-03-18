@@ -372,13 +372,12 @@ public class EventDetailActivity extends AppCompatActivity {
                 Map<String,String> params = new HashMap<>();
                 params.put("u_id",Profile.getCurrentProfile().getId());
                 params.put("r_id",getId);
+                params.put("event_id",eventId_intent);
                 params.toString();
                 return params;
             }
 
         };
-        stringRequest.setRetryPolicy(new DefaultRetryPolicy(5000,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        stringRequest.setShouldCache(false);
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);

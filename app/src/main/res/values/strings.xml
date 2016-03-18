@@ -53,6 +53,7 @@
 
 
     <string name="mygame">My Games</string>
+    <string name="title_activity_view_profile">ViewProfile</string>
 
 </resources>
 

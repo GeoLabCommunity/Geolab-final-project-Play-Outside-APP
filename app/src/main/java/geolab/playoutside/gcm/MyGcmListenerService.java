@@ -21,10 +21,12 @@ import java.text.ParseException;
 
 import geolab.playoutside.MainActivity;
 import geolab.playoutside.R;
+import geolab.playoutside.ViewProfile;
 import geolab.playoutside.view.EventDetailActivity;
 
 public class MyGcmListenerService extends GcmListenerService {
     String event_id;
+    String fb_id;
 
     private static final String TAG = "MyGcmListenerService";
 
@@ -44,7 +46,8 @@ public class MyGcmListenerService extends GcmListenerService {
 
 
          event_id = message.split("-")[0]; // "Before"
-         String msg = message.split("-")[1]; // "After"
+         fb_id = message.split("-")[1];
+         String msg = message.split("-")[2]; // "After"
 
 
         if (from.startsWith("/topics/")) {
@@ -106,13 +109,14 @@ public class MyGcmListenerService extends GcmListenerService {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.product)
                 .setAutoCancel(true)
-                .setContentTitle("GCM Message")
+                .setContentTitle("New Request")
                 .setSound(defaultSoundUri)
                 .setContentText(message);
 
-        Intent transport = new Intent(this, MainActivity.class);
+        Intent transport = new Intent(this, ViewProfile.class);
         Bundle bundle = new Bundle();
-        bundle.putString("message", event_id );
+        bundle.putString("event_id", event_id );
+        bundle.putString("fb_id",fb_id);
         transport.putExtra("Extra", bundle);
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
