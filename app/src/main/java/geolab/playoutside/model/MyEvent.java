@@ -1,6 +1,7 @@
 package geolab.playoutside.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by GeoLab on 1/11/16.
@@ -9,8 +10,9 @@ public class MyEvent implements Serializable {
     private int eventId;
     private String user_id, time,date,title, description, place, playerCount, longitude, latitude;
     private int category_id;
+    private List<String> events;
 
-    public MyEvent(int eventId, String user_id, String time,String date, String title, String description, String place, String player,String longitude, String latitude, int category_id) {
+    public MyEvent(int eventId, String user_id, String time, String date, String title, String description, String place, String player, String longitude, String latitude, int category_id, List<String> events) {
         this.eventId = eventId;
         this.user_id = user_id;
         this.time = time;
@@ -22,7 +24,17 @@ public class MyEvent implements Serializable {
         this.longitude=longitude;
         this.latitude=latitude;
         this.category_id=category_id;
+        this.events = events;
 
+    }
+
+
+    public List<String> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<String> events) {
+        this.events = events;
     }
 
     public int getEventId() {

@@ -53,6 +53,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
@@ -62,6 +63,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import geolab.playoutside.Add_Event_Activity;
 import geolab.playoutside.MainActivity;
 import geolab.playoutside.R;
+import geolab.playoutside.ViewProfile;
 import geolab.playoutside.fragments.AllGamesFragment;
 import geolab.playoutside.gcm.RegistrationIntentService;
 import geolab.playoutside.model.MyEvent;
@@ -78,6 +80,9 @@ public class EventDetailActivity extends AppCompatActivity {
     private String getId;
     private String eventId_intent;
     private String place_intent;
+    private List<String> profile;
+
+    private String checkprofile = "shemovida";
 
 
 
@@ -140,6 +145,8 @@ public class EventDetailActivity extends AppCompatActivity {
             date_intent = myEvent.getDate();
             count_intent = myEvent.getPlayerCount();
             place_intent = myEvent.getPlace();
+            profile = myEvent.getEvents();
+
         }
 
         Bundle bundle2 = getIntent().getBundleExtra("Extra");
@@ -284,11 +291,11 @@ public class EventDetailActivity extends AppCompatActivity {
 
 
         final ArrayList<CircleImageView> circleImageViewlist = new ArrayList< CircleImageView>();
-        for (int i = 0; i < circleCounter; i++) {
+        for (int i = 0; i < profile.size(); i++) {
 
             final CircleImageView circleImageView = new CircleImageView(getApplication());
             circleImageView.setId(i);
-            imgUrl = "https://graph.facebook.com/" + getId + "/picture?height=400";
+            imgUrl = "https://graph.facebook.com/" + profile.get(i) + "/picture?height=400";
             Picasso.with(EventDetailActivity.this)
                     .load(imgUrl)
                     .resize(200, 200)
@@ -301,9 +308,16 @@ public class EventDetailActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
 
-                    for(int i = 0; i < circleCounter; i++){
+                    for(int i = 0; i < profile.size(); i++){
                 if(circleImageViewlist.get(i).getId()== v.getId()){
-                    Toast.makeText(EventDetailActivity.this,"Your request has been sent"+circleImageViewlist.get(i),Toast.LENGTH_LONG).show();
+        //            Toast.makeText(EventDetailActivity.this,profile.get(i),Toast.LENGTH_LONG).show();
+                    Intent transport = new Intent(EventDetailActivity.this, ViewProfile.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("event_id", eventId_intent );
+                    bundle.putString("fb_id",profile.get(i));
+                    bundle.putString("check",checkprofile);
+                    transport.putExtra("Extra", bundle);
+                    startActivity(transport);
                 }
             }
 

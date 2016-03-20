@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="geolab.playoutside.ViewProfile">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/MyMaterialTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/MyMaterialTheme.PopupOverlay" >
+            <TextView
+                android:textColor="@color/white"
+                android:textSize="18dp"
+                android:gravity="center"
+                android:text="Personal Information"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_marginRight="16dp"
+                android:gravity="right"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+                <ImageView
+                    android:id="@+id/profile_accept"
+                    android:layout_marginRight="16dp"
+                    android:layout_gravity="center"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:src="@drawable/accept" />
+
+                <ImageView
+                    android:id="@+id/profile_reject"
+                    android:layout_gravity="center"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/reject"
+                    />
+
+            </LinearLayout>
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <include layout="@layout/content_view_profile" />
+
+
+</android.support.design.widget.CoordinatorLayout>

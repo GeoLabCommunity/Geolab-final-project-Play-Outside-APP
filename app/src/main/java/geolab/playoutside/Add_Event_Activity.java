@@ -266,10 +266,7 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
                         false
                 );
                 tpd.show(getFragmentManager(), "Timepickerdialog");
-                tpd.setMinTime(
-                        now.get(Calendar.HOUR_OF_DAY),
-                        now.get(Calendar.MINUTE),
-                        now.get(Calendar.SECOND));
+
 
             }
         });

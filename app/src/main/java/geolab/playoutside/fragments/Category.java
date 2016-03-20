@@ -25,6 +25,7 @@ import org.json.JSONObject;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.List;
 
 import geolab.playoutside.MainActivity;
 import geolab.playoutside.R;
@@ -129,7 +130,7 @@ public class Category extends android.support.v4.app.Fragment implements SwipeRe
                         JSONObject curObj = jsonArray.getJSONObject(i);
 
 
-                        int eventId = curObj.getInt("id");
+                        int eventId = curObj.getInt("event_id");
                         String user_id = curObj.getString("user_id");
                         String subcategory = curObj.getString("subcategory");
                         String description = curObj.getString("description");
@@ -139,6 +140,12 @@ public class Category extends android.support.v4.app.Fragment implements SwipeRe
                         String location = curObj.getString("location");
                         String latitude = curObj.getString("latitude");
                         String longitude = curObj.getString("longitude");
+
+                        JSONArray array = curObj.getJSONArray("event_player");
+                        List<String> event_players = new ArrayList<>();
+                        for (int j = 0; j < array.length(); j++) {
+                            event_players.add(array.get(j).toString());
+                        }
 
                         switch(subcategory) {
                             case "Football":
@@ -170,7 +177,7 @@ public class Category extends android.support.v4.app.Fragment implements SwipeRe
                         }
 
 
-                        MyEvent myEvent = new MyEvent(eventId, user_id, time, date, subcategory, description, location, count, latitude, longitude, categoryId);
+                        MyEvent myEvent = new MyEvent(eventId, user_id, time, date, subcategory, description, location, count, latitude, longitude, categoryId,event_players);
                         myEvents.add(myEvent);
                     }
 

@@ -37,6 +37,7 @@
         android:layout_height="wrap_content">
 
         <TextView
+            android:id="@+id/profile_name"
             android:textColor="@color/white"
             android:textSize="20dp"
             android:text="irakli lataria"
@@ -45,6 +46,7 @@
             />
 
         <TextView
+            android:id="@+id/profile_age"
             android:textSize="15dp"
             android:textColor="@color/white"
             android:layout_marginLeft="20dp"
@@ -69,6 +71,7 @@
             android:layout_height="wrap_content"
             android:text="e-mail:"/>
         <TextView
+            android:id="@+id/profile_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="ilataria@i991@gmaillllcoom"/>
