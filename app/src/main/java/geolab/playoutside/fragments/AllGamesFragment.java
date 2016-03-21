@@ -71,12 +71,14 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
         list = (StickyListHeadersListView) v.findViewById(R.id.list);
         swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swiperefresh);
         swipeRefreshLayout.setOnRefreshListener(this);
+        check();
         swipeRefreshLayout.setRefreshing(true);
         swipeRefreshLayout.post(new Runnable() {
                                     @Override
                                     public void run() {
 
                                         swipeRefreshLayout.setRefreshing(true);
+                                        check();
 
                                         getJSONInfo(GET_JSON_INFO);
                                     }
@@ -88,11 +90,14 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
     }
 
     public void updateData(Context ctx,String searchString){
+        check();
         requestQueue = Volley.newRequestQueue(ctx);
+
         getJSONInfo(GET_JSON_INFO1 + "?search=" + searchString);
     }
 
     public void admin(Context ctx,String searchString){
+        check();
         requestQueue = Volley.newRequestQueue(ctx);
         admin(GET_JSON_INFO1 + "?search=" + searchString);
     }

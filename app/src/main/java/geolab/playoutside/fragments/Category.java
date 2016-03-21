@@ -68,10 +68,12 @@ public class Category extends android.support.v4.app.Fragment implements SwipeRe
 
         list = (StickyListHeadersListView) v.findViewById(R.id.list);
         swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swiperefresh);
+        check();
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.post(new Runnable() {
                                     @Override
                                     public void run() {
+                                        check();
 
                                         swipeRefreshLayout.setRefreshing(true);
 
@@ -96,6 +98,7 @@ public class Category extends android.support.v4.app.Fragment implements SwipeRe
         return f;
     }
     public void updateSubcategoryData(String subcategory){
+        check();
         getJSONInfo(GET_JSON_INFO+"?category="+subcategory);
     }
 
@@ -206,6 +209,7 @@ public class Category extends android.support.v4.app.Fragment implements SwipeRe
 
     @Override
     public void onRefresh() {
+        check();
         getJSONInfo(GET_JSON_INFO);
     }
 

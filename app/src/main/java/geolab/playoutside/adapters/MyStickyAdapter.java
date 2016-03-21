@@ -27,6 +27,7 @@ import java.util.Map;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import geolab.playoutside.R;
+import geolab.playoutside.ViewProfile;
 import geolab.playoutside.db.Category_db;
 import geolab.playoutside.model.MyEvent;
 import geolab.playoutside.view.EventDetailActivity;
@@ -124,7 +125,7 @@ public class MyStickyAdapter extends BaseAdapter implements StickyListHeadersAda
             Bundle bundle = new Bundle();
             detailIntent.putExtra("check",false);
             bundle.putSerializable("event",event);
-            detailIntent.putExtras(bundle);
+            detailIntent.putExtra("fromadapter",bundle);
 
             context.startActivity(detailIntent);
 

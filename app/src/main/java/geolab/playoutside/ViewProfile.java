@@ -36,6 +36,7 @@ import java.util.Map;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import geolab.playoutside.adapters.MyStickyAdapter;
 import geolab.playoutside.model.MyEvent;
+import geolab.playoutside.view.EventDetailActivity;
 
 public class ViewProfile extends AppCompatActivity {
     private  String eventId_intent;
@@ -79,8 +80,11 @@ public class ViewProfile extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         accept(acceptUrl);
-                        Intent mainIntent = new Intent(ViewProfile.this, MainActivity.class);
-                        startActivity(mainIntent);
+                        Intent transport = new Intent(ViewProfile.this, EventDetailActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("event_id", eventId_intent );
+                        transport.putExtra("Extra", bundle);
+                        startActivity(transport);
                     }
                 });
 
@@ -88,7 +92,7 @@ public class ViewProfile extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Toast.makeText(ViewProfile.this, "Rejected", Toast.LENGTH_LONG).show();
-                        Intent mainIntent = new Intent(ViewProfile.this, MainActivity.class);
+                        Intent mainIntent = new Intent(ViewProfile.this, EventDetailActivity.class);
                         startActivity(mainIntent);
                     }
                 });

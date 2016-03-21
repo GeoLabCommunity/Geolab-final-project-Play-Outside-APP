@@ -23,6 +23,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.facebook.AccessToken;
@@ -45,6 +46,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -64,6 +66,7 @@ import geolab.playoutside.Add_Event_Activity;
 import geolab.playoutside.MainActivity;
 import geolab.playoutside.R;
 import geolab.playoutside.ViewProfile;
+import geolab.playoutside.adapters.MyStickyAdapter;
 import geolab.playoutside.fragments.AllGamesFragment;
 import geolab.playoutside.gcm.RegistrationIntentService;
 import geolab.playoutside.model.MyEvent;
@@ -83,6 +86,8 @@ public class EventDetailActivity extends AppCompatActivity {
     private List<String> profile;
 
     private String checkprofile = "shemovida";
+
+    private RequestQueue requestQueue;
 
 
 
@@ -121,6 +126,8 @@ public class EventDetailActivity extends AppCompatActivity {
     private ImageView delete;
     private String URL = "http://geolab.club/geolabwork/ika/delete.php";
 
+    private String currentUrl = "http://geolab.club/geolabwork/ika/currentevent.php?";
+
 
 
     Toolbar toolbar_detail;
@@ -131,9 +138,19 @@ public class EventDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final Bundle bundle = getIntent().getExtras();
+        Bundle bundle2 = getIntent().getBundleExtra("Extra");
+        if(bundle2 != null){
+            String event_id = bundle2.getString("event_id");
+            getCurrentEvent(currentUrl+"event_id="+event_id);
+
+        }
+
+        Bundle bundle = getIntent().getBundleExtra("fromadapter");
+
+
         if(bundle != null) {
             final MyEvent myEvent = (MyEvent) bundle.get("event");
+
             latitude = (myEvent.getLatitude());
             longitude = (myEvent.getLongitude());
             getId = myEvent.getId();
@@ -149,14 +166,10 @@ public class EventDetailActivity extends AppCompatActivity {
 
         }
 
-        Bundle bundle2 = getIntent().getBundleExtra("Extra");
-        if(bundle2 != null){
-            String k = bundle2.getString("message");
 
-        }
+        Bundle bundle3 = getIntent().getBundleExtra("check");
 
-        final Boolean check = (Boolean) bundle.get("check");
-        if(check==true){
+        if(bundle3 != null){
             setContentView(R.layout.activity_event_detail_admin);
 
             edit= (ImageView) findViewById(R.id.admin_edit_id);
@@ -515,5 +528,59 @@ public class EventDetailActivity extends AppCompatActivity {
         }
         return true;
     }
+    private void getCurrentEvent(String url) {
+
+        JsonObjectRequest myRequest = new JsonObjectRequest(Request.Method.GET
+                , url
+                , null
+                , new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONArray jsonArray = null;
+                try {
+                    jsonArray = response.getJSONArray("data");
+                    System.out.println(jsonArray+"hhhh");
+
+
+                    for (int i = 0; i < jsonArray.length(); i++) {
+
+                        JSONObject curObj = jsonArray.getJSONObject(i);
+
+                        eventId_intent = String.valueOf(curObj.getInt("event_id"));
+                        getId = curObj.getString("user_id");
+                        title_intent = curObj.getString("subcategory");
+                        description_intent = curObj.getString("description");
+                        date_intent = curObj.getString("date");
+                        time_intent = curObj.getString("time");
+                        count_intent = curObj.getString("count");
+                        place_intent = curObj.getString("location");
+                        latitude = curObj.getString("latitude");
+                        longitude = curObj.getString("longitude");
+
+                        JSONArray array = curObj.getJSONArray("event_player");
+                        for (int j = 0; j < array.length(); j++) {
+                            profile.add(array.get(j).toString());
+                        }
+
+                    }
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println(error+"   nnn");
+
+            }
+        });
+        requestQueue = Volley.newRequestQueue(EventDetailActivity.this);
+        requestQueue.add(myRequest);
+    }
+
 
 }

@@ -21,7 +21,7 @@
 
     <ImageView
 
-        android:src="@drawable/com_facebook_profile_picture_blank_square"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/profile_image"
@@ -40,7 +40,6 @@
             android:id="@+id/profile_name"
             android:textColor="@color/white"
             android:textSize="20dp"
-            android:text="irakli lataria"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             />
@@ -52,7 +51,7 @@
             android:layout_marginLeft="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="(25)"/>
+            />
 
 
 
@@ -74,7 +73,7 @@
             android:id="@+id/profile_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ilataria@i991@gmaillllcoom"/>
+            />
 
     </LinearLayout>
 
