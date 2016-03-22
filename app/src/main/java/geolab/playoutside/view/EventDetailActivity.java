@@ -167,9 +167,9 @@ public class EventDetailActivity extends AppCompatActivity {
         }
 
 
-        Bundle bundle3 = getIntent().getBundleExtra("check");
+        boolean bundle3 = getIntent().getBooleanExtra("check",true);
 
-        if(bundle3 != null){
+        if(bundle3 == true){
             setContentView(R.layout.activity_event_detail_admin);
 
             edit= (ImageView) findViewById(R.id.admin_edit_id);
@@ -233,8 +233,7 @@ public class EventDetailActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     Intent addactivity = new Intent(EventDetailActivity.this, Add_Event_Activity.class);
                     Bundle bundle = new Bundle();
-                    addactivity.putExtra("check",true);
-                    addactivity.putExtra("event",eventId_intent);
+                    bundle.putString("event",eventId_intent);
                     addactivity.putExtras(bundle);
 
                     startActivity(addactivity);

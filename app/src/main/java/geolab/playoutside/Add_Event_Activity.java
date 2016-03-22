@@ -146,16 +146,8 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
 
 
         if (bundle!=null){
-
-            final MyEvent myEvent = (MyEvent) bundle.get("event");
-
-            eventId =String.valueOf(myEvent.getEventId()) ;
-
+            eventId = (String) bundle.get("event");
         }
-
-
-
-
         if (mRequestQueue == null) {
             mRequestQueue = Volley.newRequestQueue(getApplicationContext());
         }

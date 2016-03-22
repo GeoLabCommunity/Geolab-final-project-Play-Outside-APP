@@ -67,12 +67,14 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
         System.out.println(stringSearch+"strsrch");
 
         View v = inflater.inflate(R.layout.sport_fragment, container, false);
-
-        list = (StickyListHeadersListView) v.findViewById(R.id.list);
         swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swiperefresh);
         swipeRefreshLayout.setOnRefreshListener(this);
         check();
         swipeRefreshLayout.setRefreshing(true);
+
+
+        list = (StickyListHeadersListView) v.findViewById(R.id.list);
+
         swipeRefreshLayout.post(new Runnable() {
                                     @Override
                                     public void run() {

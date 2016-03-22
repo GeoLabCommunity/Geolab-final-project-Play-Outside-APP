@@ -181,7 +181,7 @@ public class AdminAdapter extends BaseAdapter implements StickyListHeadersAdapte
 
             Intent detailIntent = new Intent(context, EventDetailActivity.class);
             Bundle bundle = new Bundle();
-            detailIntent.putExtra("check",false);
+            detailIntent.putExtra("check",true);
             bundle.putSerializable("event",event);
             detailIntent.putExtra("fromadapter",bundle);
 
