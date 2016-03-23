@@ -2,6 +2,7 @@ package geolab.playoutside;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -17,12 +18,16 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ExpandableListView;
+import android.widget.Gallery;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,13 +39,25 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -53,6 +70,7 @@ import geolab.playoutside.adapters.CustomExpAdapter;
 import geolab.playoutside.fragments.AllGamesFragment;
 import geolab.playoutside.fragments.Category;
 import geolab.playoutside.fragments.DialogFragment;
+import geolab.playoutside.gcm.RegistrationIntentService;
 import geolab.playoutside.model.ExpMenuItem;
 import geolab.playoutside.model.SubMenu;
 import geolab.playoutside.view.Lounch;
@@ -89,7 +107,8 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout myGame;
     private LinearLayout logout;
 
-    private String message;
+
+
 
 
     private String subcategory;
@@ -116,7 +135,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        access = null;
+
+
 
         isNetworkAvailable();
 
@@ -174,15 +194,48 @@ public class MainActivity extends AppCompatActivity {
         myGame = (LinearLayout) findViewById(R.id.myGame);
         logout = (LinearLayout) findViewById(R.id.logout);
 
+        if(bundle == null) {
+
+            logout.removeAllViews();
+            ImageView login = new ImageView(getApplication());
+            login.setImageResource(R.drawable.logout);
+            login.setScaleType(ImageView.ScaleType.FIT_XY);
+            login.setLayoutParams(new Gallery.LayoutParams(69, 60));
+
+            TextView loginText = new TextView(getApplication());
+            loginText.setText("Login");
+            loginText.setPadding(55, 0, 0, 0);
+            loginText.setTextColor(getResources().getColor(R.color.login_logout));
+            logout.addView(login);
+            logout.addView(loginText);
+        }
+
+        profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(bundle != null) {
+                    Intent transport = new Intent(MainActivity.this, ViewProfile.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("fb_id", userId);
+                    transport.putExtra("Extra", bundle);
+                    startActivity(transport);
+                    dlDrawer.closeDrawers();
+                }else{
+                    Toast.makeText(MainActivity.this, "You must login to see your profile", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+
                 LoginManager.getInstance().logOut();
                 Intent intent = new Intent(MainActivity.this, Lounch.class);
                 startActivity(intent);
-
-            }
+                dlDrawer.closeDrawers();
+                finish();}
         });
 
         myGame.setOnClickListener(new View.OnClickListener() {
@@ -190,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (bundle != null) {
                     mViewPager.setCurrentItem(0);
-                    ((AllGamesFragment) mSectionsPagerAdapter.getItem(0)).admin(getApplicationContext(), Profile.getCurrentProfile().getId());
+                    ((AllGamesFragment) mSectionsPagerAdapter.getItem(0)).admin(getApplicationContext(), userId);
                     dlDrawer.closeDrawers();
                 } else {
                     Toast.makeText(MainActivity.this, "You must login to see your game", Toast.LENGTH_LONG).show();
@@ -440,5 +493,33 @@ public class MainActivity extends AppCompatActivity {
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
+    }
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle("Exit Application?");
+        alertDialogBuilder
+                .setMessage("Click yes to exit!")
+                .setCancelable(false)
+                .setPositiveButton("Yes",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                moveTaskToBack(true);
+                                LoginManager.getInstance().logOut();
+                                finish();
+                                android.os.Process.killProcess(android.os.Process.myPid());
+                                System.exit(1);
+                            }
+                        })
+
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 }

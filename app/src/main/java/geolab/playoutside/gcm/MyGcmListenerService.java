@@ -117,6 +117,7 @@ public class MyGcmListenerService extends GcmListenerService {
         Bundle bundle = new Bundle();
         bundle.putString("event_id", event_id );
         bundle.putString("fb_id",fb_id);
+        bundle.putBoolean("check",true);
         transport.putExtra("Extra", bundle);
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);

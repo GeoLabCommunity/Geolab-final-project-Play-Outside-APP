@@ -91,7 +91,7 @@ public class MyStickyAdapter extends BaseAdapter implements StickyListHeadersAda
         holder.titleHolder.setText(eventsList.get(position).getTitle());
         holder.descriptionHolder.setText(eventsList.get(position).getDescription()+"...");
         holder.placeHolder.setText(eventsList.get(position).getPlace());
-        holder.playerHolder.setText(eventsList.get(position).getPlayerCount());
+        holder.playerHolder.setText(String.valueOf(eventsList.get(position).getEvents().size()) );
 
         return convertView;
     }

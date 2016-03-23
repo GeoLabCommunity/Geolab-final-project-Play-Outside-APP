@@ -15,7 +15,7 @@
 
     <ImageView
         android:layout_gravity="fill_vertical"
-        android:layout_marginRight="20dp"
+        android:layout_marginRight="18dp"
         android:src="@drawable/profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
@@ -53,13 +53,13 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:layout_gravity="fill_vertical"
             android:layout_marginRight="20dp"
             android:src="@drawable/logout"
             android:layout_width="23dp"
             android:layout_height="20dp" />
         <TextView
             android:text="Logout"
+            android:textColor="@color/login_logout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             />

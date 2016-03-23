@@ -85,7 +85,7 @@ public class EventDetailActivity extends AppCompatActivity {
     private String place_intent;
     private List<String> profile;
 
-    private String checkprofile = "shemovida";
+    private boolean checkprofile = false;
 
     private RequestQueue requestQueue;
 
@@ -138,12 +138,12 @@ public class EventDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle bundle2 = getIntent().getBundleExtra("Extra");
-        if(bundle2 != null){
-            String event_id = bundle2.getString("event_id");
-            getCurrentEvent(currentUrl+"event_id="+event_id);
-
-        }
+//        Bundle bundle2 = getIntent().getBundleExtra("Extra");
+//        if(bundle2 != null){
+//            String event_id = bundle2.getString("event_id");
+//            getCurrentEvent(currentUrl+"event_id="+event_id);
+//
+//        }
 
         Bundle bundle = getIntent().getBundleExtra("fromadapter");
 
@@ -288,7 +288,7 @@ public class EventDetailActivity extends AppCompatActivity {
         description.setText(description_intent);
         date.setText(date_intent);
         place.setText(place_intent);
-        count.setText(count_intent);
+        count.setText(String.valueOf(profile.size()));
 
         try {
             circleCounter = NumberFormat.getInstance().parse(count_intent).intValue();
@@ -302,7 +302,7 @@ public class EventDetailActivity extends AppCompatActivity {
         content.removeAllViews();
 
 
-        final ArrayList<CircleImageView> circleImageViewlist = new ArrayList< CircleImageView>();
+        final ArrayList<CircleImageView> circleImageViewlist = new ArrayList< >();
         for (int i = 0; i < profile.size(); i++) {
 
             final CircleImageView circleImageView = new CircleImageView(getApplication());
@@ -327,7 +327,7 @@ public class EventDetailActivity extends AppCompatActivity {
                     Bundle bundle = new Bundle();
                     bundle.putString("event_id", eventId_intent );
                     bundle.putString("fb_id",profile.get(i));
-                    bundle.putString("check",checkprofile);
+                    bundle.putBoolean("check",checkprofile);
                     transport.putExtra("Extra", bundle);
                     startActivity(transport);
                 }
@@ -343,7 +343,8 @@ public class EventDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                // Toast.makeText(EventDetailActivity.this,"Your request has been sent",Toast.LENGTH_LONG).show();
-                addEvent();
+                    addEvent();
+
             }
         });
 
@@ -526,59 +527,6 @@ public class EventDetailActivity extends AppCompatActivity {
             return false;
         }
         return true;
-    }
-    private void getCurrentEvent(String url) {
-
-        JsonObjectRequest myRequest = new JsonObjectRequest(Request.Method.GET
-                , url
-                , null
-                , new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-
-                JSONArray jsonArray = null;
-                try {
-                    jsonArray = response.getJSONArray("data");
-                    System.out.println(jsonArray+"hhhh");
-
-
-                    for (int i = 0; i < jsonArray.length(); i++) {
-
-                        JSONObject curObj = jsonArray.getJSONObject(i);
-
-                        eventId_intent = String.valueOf(curObj.getInt("event_id"));
-                        getId = curObj.getString("user_id");
-                        title_intent = curObj.getString("subcategory");
-                        description_intent = curObj.getString("description");
-                        date_intent = curObj.getString("date");
-                        time_intent = curObj.getString("time");
-                        count_intent = curObj.getString("count");
-                        place_intent = curObj.getString("location");
-                        latitude = curObj.getString("latitude");
-                        longitude = curObj.getString("longitude");
-
-                        JSONArray array = curObj.getJSONArray("event_player");
-                        for (int j = 0; j < array.length(); j++) {
-                            profile.add(array.get(j).toString());
-                        }
-
-                    }
-
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                System.out.println(error+"   nnn");
-
-            }
-        });
-        requestQueue = Volley.newRequestQueue(EventDetailActivity.this);
-        requestQueue.add(myRequest);
     }
 
 

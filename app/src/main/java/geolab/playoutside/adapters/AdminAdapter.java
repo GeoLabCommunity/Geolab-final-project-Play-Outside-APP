@@ -96,7 +96,7 @@ public class AdminAdapter extends BaseAdapter implements StickyListHeadersAdapte
         holder.titleHolder.setText(eventsList.get(position).getTitle());
         holder.descriptionHolder.setText(eventsList.get(position).getDescription()+"...");
         holder.placeHolder.setText(eventsList.get(position).getPlace());
-        holder.playerHolder.setText(eventsList.get(position).getPlayerCount());
+        holder.playerHolder.setText(String.valueOf(eventsList.get(position).getEvents().size()) );
         holder.setting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

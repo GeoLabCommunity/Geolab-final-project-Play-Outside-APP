@@ -64,7 +64,6 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         stringSearch = getActivity().getIntent().getStringExtra("search");
-        System.out.println(stringSearch+"strsrch");
 
         View v = inflater.inflate(R.layout.sport_fragment, container, false);
         swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swiperefresh);

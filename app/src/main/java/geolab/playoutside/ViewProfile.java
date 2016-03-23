@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -39,13 +40,17 @@ import geolab.playoutside.model.MyEvent;
 import geolab.playoutside.view.EventDetailActivity;
 
 public class ViewProfile extends AppCompatActivity {
-    private  String eventId_intent;
     private String fb_id;
     private String nameJsn;
     private String ageJsn;
     private String emailJsn;
 
-    private String check;
+    private Boolean check;
+
+    private int categoryId;
+    private String eventId_intent;
+
+    private String currentUrl = "http://geolab.club/geolabwork/ika/currentevent.php?";
 
     private String acceptUrl = "http://geolab.club/geolabwork/ika/accept.php";
 
@@ -66,10 +71,10 @@ public class ViewProfile extends AppCompatActivity {
         Bundle bundle = getIntent().getBundleExtra("Extra");
         if(bundle != null){
 
-            check =bundle.getString("check");
+            check =bundle.getBoolean("check");
             eventId_intent = bundle.getString("event_id");
             fb_id = bundle.getString("fb_id");
-            if(check == null){
+            if(check != false){
                 setContentView(R.layout.activity_view_profile_checked);
                 getProfileInfo(profileUrl+"event_id="+eventId_intent+"&fb_id="+fb_id);
                 accept = (ImageView) findViewById(R.id.profile_accept);
@@ -80,13 +85,9 @@ public class ViewProfile extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         accept(acceptUrl);
-                        Intent mainIntent = new Intent(ViewProfile.this, MainActivity.class);
-                        startActivity(mainIntent);
-//                        Intent transport = new Intent(ViewProfile.this, EventDetailActivity.class);
-//                        Bundle bundle = new Bundle();
-//                        bundle.putString("event_id", eventId_intent );
-//                        transport.putExtra("Extra", bundle);
-//                        startActivity(transport);
+
+                        getCurrentEvent(currentUrl+"event_id="+eventId_intent);
+
                     }
                 });
 
@@ -94,8 +95,8 @@ public class ViewProfile extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Toast.makeText(ViewProfile.this, "Rejected", Toast.LENGTH_LONG).show();
-                        Intent mainIntent = new Intent(ViewProfile.this, MainActivity.class);
-                        startActivity(mainIntent);
+                        getCurrentEvent(currentUrl+"event_id="+eventId_intent);
+
                     }
                 });
 
@@ -233,5 +234,99 @@ public class ViewProfile extends AppCompatActivity {
 
         return age;
     }
+
+    private void getCurrentEvent(String url) {
+
+        JsonObjectRequest myRequest = new JsonObjectRequest(Request.Method.GET
+                , url
+                , null
+                , new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONArray jsonArray = null;
+                try {
+                    jsonArray = response.getJSONArray("data");
+                    System.out.println(jsonArray+"hhhh");
+
+                    for (int i = 0; i < jsonArray.length(); i++) {
+
+                        JSONObject curObj = jsonArray.getJSONObject(i);
+
+                        int eventId = curObj.getInt("event_id");
+                        String user_id = curObj.getString("user_id");
+                        String subcategory = curObj.getString("subcategory");
+                        String description = curObj.getString("description");
+                        String date = curObj.getString("date");
+                        String time = curObj.getString("time");
+                        String count = curObj.getString("count");
+                        String location = curObj.getString("location");
+                        String latitude = curObj.getString("latitude");
+                        String longitude = curObj.getString("longitude");
+
+                        JSONArray array = curObj.getJSONArray("event_player");
+                        List<String> event_players = new ArrayList<>();
+                        for (int j = 0; j < array.length(); j++) {
+                            event_players.add(array.get(j).toString());
+                        }
+
+                        switch(subcategory) {
+                            case "Football":
+                                categoryId=0;
+                                break;
+                            case "Basketball":
+                                categoryId=1;
+                                break;
+                            case "Rugby":
+                                categoryId=2;
+                                break;
+                            case "Volleyball":
+                                categoryId=3;
+                                break;
+                            case "Joker":
+                                categoryId=4;
+                                break;
+                            case "Poker":
+                                categoryId=5;
+                                break;
+                            case "Ping-pong":
+                                categoryId=6;
+                                break;
+                            case "Badminton":
+                                categoryId=7;
+                                break;
+                            default:
+                                categoryId=0;
+                        }
+                        MyEvent myEvent = new MyEvent(eventId, user_id, time, date, subcategory, description, location, count, latitude, longitude, categoryId,event_players);
+
+                        Intent detailIntent = new Intent(ViewProfile.this, EventDetailActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("event",myEvent);
+                        detailIntent.putExtra("fromadapter",bundle);
+
+                        startActivity(detailIntent);
+
+                    }
+
+
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println(error+"   nnn");
+
+            }
+        });
+        requestQueue = Volley.newRequestQueue(ViewProfile.this);
+        requestQueue.add(myRequest);
+    }
+
 
 }
