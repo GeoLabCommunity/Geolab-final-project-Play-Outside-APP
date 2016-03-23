@@ -1,7 +1,6 @@
 package geolab.playoutside.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -24,15 +23,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
-import geolab.playoutside.MainActivity;
 import geolab.playoutside.R;
 import geolab.playoutside.adapters.AdminAdapter;
 import geolab.playoutside.adapters.MyStickyAdapter;
-import geolab.playoutside.db.Data;
 import geolab.playoutside.model.MyEvent;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
@@ -66,7 +62,7 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
         stringSearch = getActivity().getIntent().getStringExtra("search");
 
 
-        View v = inflater.inflate(R.layout.sport_fragment, container, false);
+        View v = inflater.inflate(R.layout.content_fragment, container, false);
         swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swiperefresh);
         swipeRefreshLayout.setOnRefreshListener(this);
         check();

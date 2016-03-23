@@ -2,6 +2,7 @@ package geolab.playoutside.view;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +17,7 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.common.ConnectionResult;
@@ -74,7 +76,17 @@ public class Lounch extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-               // FbLogin login = new FbLogin(launchActivity);
+//                if(Profile.getCurrentProfile().getId() != null){
+//
+//                final Handler handler = new Handler();
+//                handler.postDelayed(new Runnable() {
+//                    public void run() {
+//                        // TODO: Your application init goes here.
+//                        Intent mInHome = new Intent(Lounch.this, MainActivity.class);
+//                        Lounch.this.startActivity(mInHome);
+//                        Lounch.this.finish();
+//                    }
+//                }, 1000);}
 
                 loginToFB();
             }

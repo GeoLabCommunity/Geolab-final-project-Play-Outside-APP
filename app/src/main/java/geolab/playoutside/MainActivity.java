@@ -10,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -182,6 +183,14 @@ public class MainActivity extends AppCompatActivity {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
+
+
+            new PreferenceManager.OnActivityDestroyListener() {
+                @Override
+                public void onActivityDestroy() {
+                    MainActivity.getInstance().finish();
+                }
+            };
         }
 
 
@@ -543,4 +552,5 @@ public class MainActivity extends AppCompatActivity {
     public static MainActivity getInstance(){
         return   mainActivity;
     }
+
 }

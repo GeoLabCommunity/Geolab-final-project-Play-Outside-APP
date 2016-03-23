@@ -7,7 +7,9 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +27,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,7 +42,8 @@ import geolab.playoutside.adapters.MyStickyAdapter;
 import geolab.playoutside.model.MyEvent;
 import geolab.playoutside.view.EventDetailActivity;
 
-public class ViewProfile extends AppCompatActivity {
+public class ViewProfile extends AppCompatActivity implements
+        RatingBar.OnRatingBarChangeListener {
     private String fb_id;
     private String nameJsn;
     private String ageJsn;
@@ -64,10 +68,20 @@ public class ViewProfile extends AppCompatActivity {
     private ImageView accept;
     private ImageView reject;
 
+   private RatingBar getRatingBar;
+   private RatingBar setRatingBar;
+   private TextView countText;
+   private int count;
+   private float curRate;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
         Bundle bundle = getIntent().getBundleExtra("Extra");
         if(bundle != null){
 
@@ -116,6 +130,15 @@ public class ViewProfile extends AppCompatActivity {
         name = (TextView) findViewById(R.id.profile_name);
         age = (TextView) findViewById(R.id.profile_age);
         email = (TextView) findViewById(R.id.profile_email);
+
+
+        getRatingBar = (RatingBar) findViewById(R.id.getRating_id);
+        setRatingBar = (RatingBar) findViewById(R.id.setRating_id);
+        countText = (TextView) findViewById(R.id.countText_id);
+
+
+        setRatingBar.setRating(curRate);
+        getRatingBar.setOnRatingBarChangeListener(this);
 
 
 
@@ -326,6 +349,18 @@ public class ViewProfile extends AppCompatActivity {
         });
         requestQueue = Volley.newRequestQueue(ViewProfile.this);
         requestQueue.add(myRequest);
+    }
+
+
+    public void onRatingChanged(RatingBar rateBar, float rating,
+                                boolean fromUser) {
+        DecimalFormat decimalFormat = new DecimalFormat("#.#");
+        curRate = Float.valueOf(decimalFormat.format((curRate * count + rating)
+                / ++count));
+        Toast.makeText(ViewProfile.this,
+                "New Rating: " + curRate, Toast.LENGTH_SHORT).show();
+        setRatingBar.setRating(curRate);
+        countText.setText(count + " Ratings");
     }
 
 

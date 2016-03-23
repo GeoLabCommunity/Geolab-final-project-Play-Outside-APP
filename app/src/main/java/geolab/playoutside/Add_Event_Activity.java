@@ -49,6 +49,7 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -91,18 +92,10 @@ import hotchemi.stringpicker.StringPickerDialog;
 import static geolab.playoutside.R.color.tab_color;
 
 public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyCallback, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, View.OnClickListener,StringPickerDialog.OnClickListener{
-    private CallbackManager callbackManager;
-    private AccessToken accessToken;
-    private String user_id;
-    private String str_firstName;
-    private String email_json;
-    private String birth_day;
     private LinearLayout timeclick;
     private LinearLayout dateclick;
     private TextView timeenter;
     private TextView dateenter;
-    private String gettime;
-    private String getdate;
     private String date;
     private String time;
     private String getmember;
@@ -466,7 +459,7 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<>();
                // params.put("eventId",eventId);
-                params.put("user_id",user_id);
+                params.put("user_id",Profile.getCurrentProfile().getId());
                 params.put("category",category);
                 params.put("subcategory",subcategoryData);
                 params.put("date",date);
@@ -518,7 +511,7 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<>();
                 params.put("eventId",eventId);
-                params.put("user_id",user_id);
+                params.put("user_id", Profile.getCurrentProfile().getId());
                 params.put("category",category);
                 params.put("subcategory",subcategoryData);
                 params.put("date",date);

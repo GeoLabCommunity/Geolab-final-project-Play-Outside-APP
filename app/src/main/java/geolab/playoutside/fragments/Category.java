@@ -1,7 +1,6 @@
 package geolab.playoutside.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -23,14 +22,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
-import geolab.playoutside.MainActivity;
 import geolab.playoutside.R;
 import geolab.playoutside.adapters.MyStickyAdapter;
-import geolab.playoutside.db.Data;
 import geolab.playoutside.model.MyEvent;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
@@ -55,7 +51,7 @@ public class Category extends android.support.v4.app.Fragment implements SwipeRe
         stringSearch = getActivity().getIntent().getStringExtra("search");
         System.out.println(stringSearch+"strsrch");
 
-        View v = inflater.inflate(R.layout.sport_fragment, container, false);
+        View v = inflater.inflate(R.layout.content_fragment, container, false);
 
 
         tabTitle = getArguments().getString("tabTitle");
@@ -184,7 +180,6 @@ public class Category extends android.support.v4.app.Fragment implements SwipeRe
                         myEvents.add(myEvent);
                     }
 
-                    System.out.println("jjj   " + myEvents);
                     MyStickyAdapter adapter = new MyStickyAdapter(getActivity(), myEvents);
 
                     list.setAdapter(adapter);
@@ -198,7 +193,7 @@ public class Category extends android.support.v4.app.Fragment implements SwipeRe
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                System.out.println(error+"   nnn");
+
 
             }
         });

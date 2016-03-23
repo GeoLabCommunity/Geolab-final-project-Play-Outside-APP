@@ -360,6 +360,8 @@ public class EventDetailActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         Toast.makeText(EventDetailActivity.this, response, Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(EventDetailActivity.this, MainActivity.class);
+                        startActivity(intent);
                     }
                 },
                 new Response.ErrorListener() {
