@@ -7,4 +7,7 @@
     <dimen name="tab_label">14sp</dimen>
     <dimen name="custom_tab_layout_height">72dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="dimen_entry_in_dp">21dp</dimen>
+    <dimen name="imageview_width">21dp</dimen>
+    <dimen name="imageview_height">21dp</dimen>
 </resources>

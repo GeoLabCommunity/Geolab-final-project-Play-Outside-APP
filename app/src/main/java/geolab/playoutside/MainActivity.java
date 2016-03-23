@@ -194,17 +194,21 @@ public class MainActivity extends AppCompatActivity {
         myGame = (LinearLayout) findViewById(R.id.myGame);
         logout = (LinearLayout) findViewById(R.id.logout);
 
+        final float scale = getResources().getDisplayMetrics().density;
+        int dpWidthInPx  = (int) (21 * scale);
+        int dpHeightInPx = (int) (21 * scale);
+
         if(bundle == null) {
 
             logout.removeAllViews();
             ImageView login = new ImageView(getApplication());
             login.setImageResource(R.drawable.logout);
-            login.setScaleType(ImageView.ScaleType.FIT_XY);
-            login.setLayoutParams(new Gallery.LayoutParams(69, 60));
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(dpWidthInPx, dpHeightInPx);
+            login.setLayoutParams(layoutParams);
 
             TextView loginText = new TextView(getApplication());
             loginText.setText("Login");
-            loginText.setPadding(55, 0, 0, 0);
+            loginText.setPadding(dpHeightInPx, 0, 0, 0);
             loginText.setTextColor(getResources().getColor(R.color.login_logout));
             logout.addView(login);
             logout.addView(loginText);

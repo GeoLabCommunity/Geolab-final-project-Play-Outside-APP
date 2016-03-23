@@ -65,6 +65,7 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         stringSearch = getActivity().getIntent().getStringExtra("search");
 
+
         View v = inflater.inflate(R.layout.sport_fragment, container, false);
         swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swiperefresh);
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -82,6 +83,7 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
                                         check();
 
                                         getJSONInfo(GET_JSON_INFO);
+
                                     }
                                 }
         );
@@ -330,6 +332,7 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
 
                     list.setAdapter(adminAdapter);
                     list.setOnItemClickListener(adminAdapter.listener);
+
                     list.setOnItemLongClickListener(adminAdapter.longClickListener);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -347,4 +350,5 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
         requestQueue.add(myRequest);
         swipeRefreshLayout.setRefreshing(false);
     }
+
 }

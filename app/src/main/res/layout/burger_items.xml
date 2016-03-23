@@ -3,25 +3,25 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="130dp">
+    android:layout_height="150dp">
     <LinearLayout
         android:id="@+id/profile"
         android:layout_marginBottom="10dp"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
     <ImageView
         android:layout_gravity="fill_vertical"
-        android:layout_marginRight="18dp"
-        android:src="@drawable/profile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_marginRight="20dp"
+        android:src="@drawable/profilexxx"
+        android:layout_width="21dp"
+        android:layout_height="21dp" />
     <TextView
         android:layout_gravity="center"
-        android:text="Profile"
+        android:text="My Profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 </LinearLayout>
@@ -34,11 +34,33 @@
 
         <ImageView
             android:layout_marginRight="20dp"
-            android:src="@drawable/mygame"
+            android:src="@drawable/myevent"
             android:layout_width="21dp"
-            android:layout_height="wrap_content" />
+            android:layout_height="21dp" />
         <TextView
-            android:text="@string/mygame"
+            android:layout_gravity="center"
+            android:text="My Events"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/allplayers"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_marginRight="20dp"
+            android:src="@drawable/allplayers"
+            android:layout_width="21dp"
+            android:layout_height="21dp" />
+        <TextView
+            android:layout_gravity="center"
+            android:text="All Players"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
@@ -54,10 +76,11 @@
 
         <ImageView
             android:layout_marginRight="20dp"
-            android:src="@drawable/logout"
+            android:src="@drawable/logoutxxx"
             android:layout_width="23dp"
             android:layout_height="20dp" />
         <TextView
+            android:layout_gravity="center"
             android:text="Logout"
             android:textColor="@color/login_logout"
             android:layout_width="wrap_content"

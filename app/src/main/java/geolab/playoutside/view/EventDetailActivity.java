@@ -360,6 +360,7 @@ public class EventDetailActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         Toast.makeText(EventDetailActivity.this, response, Toast.LENGTH_LONG).show();
+                        fb_intent_info();
 
                     }
                 },
@@ -376,13 +377,14 @@ public class EventDetailActivity extends AppCompatActivity {
                                     @Override
                                     public void onClick(SweetAlertDialog sDialog) {
                                         loginToFB();
-                                        sDialog.setTitleText("")
-                                                .setContentText("Your request has been sent")
-                                                .setConfirmText("OK")
-                                                .showCancelButton(false)
-                                                .setCancelClickListener(null)
-                                                .setConfirmClickListener(null)
-                                                .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                                        sDialog.dismissWithAnimation();
+//                                        sDialog.setTitleText("")
+//                                                .setContentText("Your request has been sent")
+//                                                .setConfirmText("OK")
+//                                                .showCancelButton(false)
+//                                                .setCancelClickListener(null)
+//                                                .setConfirmClickListener(null)
+//                                                .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
                                     }
 
                                 })
@@ -472,7 +474,7 @@ public class EventDetailActivity extends AppCompatActivity {
                                             startService(intent);
                                         }
 
-                                        fb_intent_info();
+
 
                                     } catch (NullPointerException ex) {
                                         ex.getMessage();
