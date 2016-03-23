@@ -84,6 +84,7 @@ import geolab.playoutside.db.Category_db;
 import geolab.playoutside.fragment_categories.SubCategoryIcon;
 import geolab.playoutside.model.ApplicationController;
 import geolab.playoutside.model.MyEvent;
+import geolab.playoutside.view.Lounch;
 import hotchemi.stringpicker.StringPicker;
 import hotchemi.stringpicker.StringPickerDialog;
 
@@ -176,10 +177,8 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
 
             }
         });
-        FacebookSdk.sdkInitialize(getApplicationContext());
-        callbackManager = CallbackManager.Factory.create();
 
-        loginToFB();
+
 
         countMember = (RelativeLayout) findViewById(R.id.count_member);
         countMember.setOnClickListener(new View.OnClickListener() {
@@ -349,68 +348,6 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
 
 
 
-    public void loginToFB() {
-        accessToken = AccessToken.getCurrentAccessToken();
-        System.out.println(accessToken);
-        callbackManager = CallbackManager.Factory.create();
-        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("email", "user_photos", "public_profile", "user_birthday"));
-        LoginManager.getInstance().registerCallback(callbackManager,
-                new FacebookCallback<LoginResult>() {
-                    @Override
-                    public void onSuccess(LoginResult loginResult) {
-//                        Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
-                        GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
-                            @Override
-                            public void onCompleted(JSONObject jsonObject, GraphResponse graphResponse) {
-                                if (graphResponse.getError() != null) {
-                                    System.out.println("ERROR");
-                                } else {
-                                    try {
-                                        user_id = jsonObject.getString("id");
-                                        str_firstName = jsonObject.getString("name");
-                                        birth_day = jsonObject.getString("birthday");
-                                        email_json = jsonObject.getString("email");
-                                    } catch (NullPointerException ex) {
-                                        ex.getMessage();
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            }
-                        });
-                        Bundle parameters = new Bundle();
-                        parameters.putString("fields", "id,name,birthday,gender,email");
-                        request.setParameters(parameters);
-                        request.executeAsync();
-                    }
-                    @Override
-                    public void onCancel() {
-                        Toast.makeText(Add_Event_Activity.this, "onCancel", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onError(FacebookException exception) {
-                        Log.d("FacebookException", exception.getMessage());
-                        Toast.makeText(Add_Event_Activity.this, "onError", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode, resultCode, data);
-    }
-    private void fb_intent_info() {
-        Intent intent = new Intent(Add_Event_Activity.this, MainActivity.class);
-        intent.putExtra("fb_name", str_firstName);
-        intent.putExtra("fb_id", user_id);
-        intent.putExtra("fb_email", email_json);
-        intent.putExtra("fb_age", birth_day);
-        intent.putExtra("access",accessToken);
-        startActivity(intent);
-    }
-
-
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
         date = dayOfMonth+"/"+(monthOfYear+1)+"/"+year;
@@ -514,7 +451,8 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
                     @Override
                     public void onResponse(String response) {
                         Toast.makeText(Add_Event_Activity.this, response, Toast.LENGTH_LONG).show();
-                        fb_intent_info();
+                        Intent intent = new Intent(Add_Event_Activity.this, MainActivity.class);
+                        startActivity(intent);
                     }
                 },
                 new Response.ErrorListener() {
@@ -565,7 +503,8 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
                     @Override
                     public void onResponse(String response) {
                         Toast.makeText(Add_Event_Activity.this, response, Toast.LENGTH_LONG).show();
-                        fb_intent_info();
+                        Intent intent = new Intent(Add_Event_Activity.this, MainActivity.class);
+                        startActivity(intent);
                     }
                 },
                 new Response.ErrorListener() {

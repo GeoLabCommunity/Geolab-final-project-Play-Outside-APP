@@ -10,6 +10,7 @@ import android.widget.Toast;
 import geolab.playoutside.Add_Event_Activity;
 import geolab.playoutside.MainActivity;
 import geolab.playoutside.R;
+import geolab.playoutside.view.Lounch;
 
 /**
  * Created by GeoLab on 1/15/16.
@@ -24,8 +25,9 @@ public class DialogFragment extends android.app.DialogFragment{
                 .setPositiveButton("yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent addEvent = new Intent(getActivity(), Add_Event_Activity.class);
+                        Intent addEvent = new Intent(getActivity(), Lounch.class);
                         startActivity(addEvent);
+                        getActivity().finish();
 
                     }
                 })

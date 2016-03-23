@@ -106,6 +106,9 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout profile;
     private LinearLayout myGame;
     private LinearLayout logout;
+    private LinearLayout allPlayer;
+    public static MainActivity mainActivity;
+
 
 
 
@@ -134,6 +137,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        mainActivity=this;
 
 
 
@@ -193,6 +198,15 @@ public class MainActivity extends AppCompatActivity {
         profile = (LinearLayout) findViewById(R.id.profile);
         myGame = (LinearLayout) findViewById(R.id.myGame);
         logout = (LinearLayout) findViewById(R.id.logout);
+        allPlayer = (LinearLayout) findViewById(R.id.allplayers);
+
+        allPlayer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
 
         final float scale = getResources().getDisplayMetrics().density;
         int dpWidthInPx  = (int) (21 * scale);
@@ -289,7 +303,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (userId == null) {
+                if (bundle == null) {
 
                     DialogFragment dialogFragment = new DialogFragment();
                     dialogFragment.show(getFragmentManager(), "string");
@@ -525,5 +539,8 @@ public class MainActivity extends AppCompatActivity {
 
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+    }
+    public static MainActivity getInstance(){
+        return   mainActivity;
     }
 }
