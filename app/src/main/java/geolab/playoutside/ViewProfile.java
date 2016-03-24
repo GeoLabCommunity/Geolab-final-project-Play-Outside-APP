@@ -39,6 +39,7 @@ import java.util.Map;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import geolab.playoutside.adapters.MyStickyAdapter;
+import geolab.playoutside.model.AllPlayersModel;
 import geolab.playoutside.model.MyEvent;
 import geolab.playoutside.view.EventDetailActivity;
 
@@ -48,6 +49,7 @@ public class ViewProfile extends AppCompatActivity implements
     private String nameJsn;
     private String ageJsn;
     private String emailJsn;
+    private String reiting;
 
     private Boolean check;
 
@@ -68,11 +70,11 @@ public class ViewProfile extends AppCompatActivity implements
     private ImageView accept;
     private ImageView reject;
 
-   private RatingBar getRatingBar;
-   private RatingBar setRatingBar;
-   private TextView countText;
-   private int count;
-   private float curRate;
+    private RatingBar getRatingBar;
+    private RatingBar setRatingBar;
+    private TextView countText;
+    private int count;
+    private float curRate;
 
 
 
@@ -83,7 +85,37 @@ public class ViewProfile extends AppCompatActivity implements
 
 
         Bundle bundle = getIntent().getBundleExtra("Extra");
-        if(bundle != null){
+        Bundle bundle2 = getIntent().getBundleExtra("fromadapter");
+        if(bundle2 != null){
+            setContentView(R.layout.activity_view_profile);
+            final AllPlayersModel allPlayersModel = (AllPlayersModel) bundle2.get("playerinfo");
+
+            nameJsn = (allPlayersModel.getName());
+            ageJsn = (allPlayersModel.getBirthday());
+            fb_id = (allPlayersModel.getFb_id());
+            reiting = (allPlayersModel.getReiting());
+            emailJsn = (allPlayersModel.getMail());
+
+            FindViewById();
+
+            name.setText(nameJsn);
+            age.setText(ageJsn);
+            email.setText(emailJsn);
+            String imgUrl = "https://graph.facebook.com/" + fb_id + "/picture?height=400";
+            Picasso.with(ViewProfile.this)
+                    .load(imgUrl)
+                    .resize(400, 400)
+                    .centerCrop()
+                    .into(imageProfile);
+            setRatingBar = (RatingBar) findViewById(R.id.setRating_id);
+            setRatingBar.setRating(Float.parseFloat(reiting));
+
+
+
+        }
+
+        else if(bundle != null){
+            System.out.println("shemovida");
 
             check =bundle.getBoolean("check");
             eventId_intent = bundle.getString("event_id");
@@ -114,7 +146,9 @@ public class ViewProfile extends AppCompatActivity implements
                     }
                 });
 
-            }else {
+            }
+
+            else {
 
 
                 getProfileInfo(profileUrl + "event_id=" + eventId_intent + "&fb_id=" + fb_id);
@@ -123,22 +157,14 @@ public class ViewProfile extends AppCompatActivity implements
 
         }
 
+        FindViewById();
+//        getRatingBar = (RatingBar) findViewById(R.id.getRating_id);
+//        setRatingBar = (RatingBar) findViewById(R.id.setRating_id);
+//        countText = (TextView) findViewById(R.id.countText_id);
 
 
-
-        imageProfile = (ImageView) findViewById(R.id.profile_image);
-        name = (TextView) findViewById(R.id.profile_name);
-        age = (TextView) findViewById(R.id.profile_age);
-        email = (TextView) findViewById(R.id.profile_email);
-
-
-        getRatingBar = (RatingBar) findViewById(R.id.getRating_id);
-        setRatingBar = (RatingBar) findViewById(R.id.setRating_id);
-        countText = (TextView) findViewById(R.id.countText_id);
-
-
-        setRatingBar.setRating(curRate);
-        getRatingBar.setOnRatingBarChangeListener(this);
+//        setRatingBar.setRating(curRate);
+//        getRatingBar.setOnRatingBarChangeListener(this);
 
 
 
@@ -172,7 +198,7 @@ public class ViewProfile extends AppCompatActivity implements
 
                     }
 
-                   String imgUrl = "https://graph.facebook.com/" + fb_id + "/picture?height=400";
+                    String imgUrl = "https://graph.facebook.com/" + fb_id + "/picture?height=400";
                     Picasso.with(ViewProfile.this)
                             .load(imgUrl)
                             .resize(400, 400)
@@ -362,6 +388,11 @@ public class ViewProfile extends AppCompatActivity implements
         setRatingBar.setRating(curRate);
         countText.setText(count + " Ratings");
     }
-
+    public void FindViewById(){
+        imageProfile = (ImageView) findViewById(R.id.profile_image);
+        name = (TextView) findViewById(R.id.profile_name);
+        age = (TextView) findViewById(R.id.profile_age);
+        email = (TextView) findViewById(R.id.profile_email);
+    }
 
 }

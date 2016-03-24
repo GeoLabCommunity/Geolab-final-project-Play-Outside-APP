@@ -54,6 +54,7 @@
 
     <string name="mygame">My Games</string>
     <string name="title_activity_view_profile">ViewProfile</string>
+    <string name="title_activity_all_players">AllPlayers</string>
 
 </resources>
 

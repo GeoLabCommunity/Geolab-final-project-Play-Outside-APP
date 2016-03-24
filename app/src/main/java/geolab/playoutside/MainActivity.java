@@ -212,7 +212,9 @@ public class MainActivity extends AppCompatActivity {
         allPlayer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(MainActivity.this, AllPlayers.class);
+                startActivity(intent);
+                dlDrawer.closeDrawers();
             }
         });
 
@@ -402,7 +404,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 5;
+            return list.size();
         }
 
 

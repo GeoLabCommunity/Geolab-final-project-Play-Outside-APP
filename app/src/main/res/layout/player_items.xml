@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView android:id="@+id/cardview"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp"
+    android:orientation="vertical"
+    app:cardCornerRadius="0dp"
+    card_view:cardPreventCornerOverlap="false"
+    xmlns:card_view="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:background="#fff"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="1"
+        >
+
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_marginLeft="16dp"
+            android:layout_gravity="center"
+            android:id="@+id/item_profile"
+            android:layout_width="62dp"
+            android:layout_height="62dp"
+            android:src="@drawable/com_facebook_profile_picture_blank_portrait"/>
+
+
+        <LinearLayout
+            android:layout_marginLeft="10dp"
+            android:orientation="vertical"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.35">
+
+            <TextView
+                android:textColor="@color/colorPrimaryDark"
+                android:id="@+id/item_name"
+                android:text="saxeli gvari"
+                android:textSize="14sp"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="6dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:textSize="11sp"
+                android:layout_marginBottom="6dp"
+                android:id="@+id/item_mail"
+                android:text="mail@gmail.com"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"/>
+
+
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+            <TextView
+                android:layout_marginBottom="6dp"
+                android:textSize="11sp"
+                android:text="age"
+                android:textColor="@color/com_facebook_button_background_color_disabled"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+    <TextView
+        android:layout_marginLeft="8dp"
+        android:layout_marginBottom="6dp"
+        android:textSize="11sp"
+        android:id="@+id/item_age"
+        android:text="25"
+        android:textColor="@color/com_facebook_button_background_color_disabled"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</LinearLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginRight="5dp"
+            android:id="@+id/setting_id"
+            android:layout_width="50dp"
+            android:layout_height="match_parent">
+
+            <ImageView
+
+                android:src="@drawable/reiting"
+                android:gravity="center"
+                android:layout_width="25dp"
+                android:layout_height="match_parent" />
+
+
+            <TextView
+                android:layout_marginLeft="1dp"
+                android:gravity="center"
+                android:id="@+id/item_reiting"
+                android:text="15"
+                android:textSize="12dp"
+                android:layout_width="16dp"
+                android:layout_height="match_parent" />
+
+
+        </LinearLayout>
+
+
+
+
+
+
+    </LinearLayout>
+
+
+
+</android.support.v7.widget.CardView>

@@ -117,6 +117,10 @@
         <activity
             android:name=".ViewProfile"
             android:label="@string/title_activity_view_profile"
+            android:theme="@style/MyMaterialTheme" />
+        <activity
+            android:name=".AllPlayers"
+            android:label="@string/title_activity_all_players"
             android:theme="@style/MyMaterialTheme"></activity>
     </application>
 
