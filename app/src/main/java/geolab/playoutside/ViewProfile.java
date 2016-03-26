@@ -38,13 +38,13 @@ import java.util.List;
 import java.util.Map;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import de.hdodenhof.circleimageview.CircleImageView;
 import geolab.playoutside.adapters.MyStickyAdapter;
 import geolab.playoutside.model.AllPlayersModel;
 import geolab.playoutside.model.MyEvent;
 import geolab.playoutside.view.EventDetailActivity;
 
-public class ViewProfile extends AppCompatActivity implements
-        RatingBar.OnRatingBarChangeListener {
+public class ViewProfile extends AppCompatActivity implements RatingBar.OnRatingBarChangeListener {
     private String fb_id;
     private String nameJsn;
     private String ageJsn;
@@ -62,7 +62,7 @@ public class ViewProfile extends AppCompatActivity implements
 
     private String profileUrl ="http://geolab.club/geolabwork/ika/viewprofile.php?";
     private RequestQueue requestQueue;
-    private ImageView imageProfile;
+    private CircleImageView imageProfile;
     private TextView name;
     private TextView age;
     private TextView email;
@@ -75,6 +75,9 @@ public class ViewProfile extends AppCompatActivity implements
     private TextView countText;
     private int count;
     private float curRate;
+
+    private Toolbar toolbar;
+    private ImageView arrow;
 
 
 
@@ -99,12 +102,23 @@ public class ViewProfile extends AppCompatActivity implements
             FindViewById();
 
             name.setText(nameJsn);
-            age.setText(ageJsn);
+            SimpleDateFormat sf = new SimpleDateFormat("dd/MM/yyyy");
+            try {
+                Date dat = sf.parse(ageJsn);
+                Calendar birthDate = Calendar.getInstance();
+                birthDate.setTimeInMillis(dat.getTime());
+                age.setText("(" + String.valueOf(getAge(birthDate, Calendar.getInstance())) + ")");
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             email.setText(emailJsn);
             String imgUrl = "https://graph.facebook.com/" + fb_id + "/picture?height=400";
+            final float scale = getResources().getDisplayMetrics().density;
+            int width  = (int) (200 * scale);
+            int height = (int) (200 * scale);
             Picasso.with(ViewProfile.this)
                     .load(imgUrl)
-                    .resize(400, 400)
+                    .resize(width, height)
                     .centerCrop()
                     .into(imageProfile);
             setRatingBar = (RatingBar) findViewById(R.id.setRating_id);
@@ -115,7 +129,6 @@ public class ViewProfile extends AppCompatActivity implements
         }
 
         else if(bundle != null){
-            System.out.println("shemovida");
 
             check =bundle.getBoolean("check");
             eventId_intent = bundle.getString("event_id");
@@ -165,7 +178,21 @@ public class ViewProfile extends AppCompatActivity implements
 
 //        setRatingBar.setRating(curRate);
 //        getRatingBar.setOnRatingBarChangeListener(this);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("");
 
+
+        arrow = (ImageView) findViewById(R.id.arrow);
+        arrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent transport = new Intent(ViewProfile.this, AllPlayers.class);
+                Bundle bundle = new Bundle();
+                transport.putExtra("profile_extra", bundle);
+                startActivity(transport);
+            }
+        });
 
 
 
@@ -198,10 +225,13 @@ public class ViewProfile extends AppCompatActivity implements
 
                     }
 
-                    String imgUrl = "https://graph.facebook.com/" + fb_id + "/picture?height=400";
+                    String imgUrl = "https://graph.facebook.com/" + fb_id + "/picture?height=200";
+                    final float scale = getResources().getDisplayMetrics().density;
+                    int width  = (int) (200 * scale);
+                    int height = (int) (200 * scale);
                     Picasso.with(ViewProfile.this)
                             .load(imgUrl)
-                            .resize(400, 400)
+                            .resize(width, height)
                             .centerCrop()
                             .into(imageProfile);
 
@@ -389,7 +419,7 @@ public class ViewProfile extends AppCompatActivity implements
         countText.setText(count + " Ratings");
     }
     public void FindViewById(){
-        imageProfile = (ImageView) findViewById(R.id.profile_image);
+        imageProfile = (CircleImageView) findViewById(R.id.profile_image);
         name = (TextView) findViewById(R.id.profile_name);
         age = (TextView) findViewById(R.id.profile_age);
         email = (TextView) findViewById(R.id.profile_email);

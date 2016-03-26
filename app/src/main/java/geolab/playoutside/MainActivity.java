@@ -1,5 +1,6 @@
 package geolab.playoutside;
 
+import android.annotation.TargetApi;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,7 +11,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -23,11 +23,9 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ExpandableListView;
-import android.widget.Gallery;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -37,28 +35,20 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.facebook.AccessToken;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -71,10 +61,9 @@ import geolab.playoutside.adapters.CustomExpAdapter;
 import geolab.playoutside.fragments.AllGamesFragment;
 import geolab.playoutside.fragments.Category;
 import geolab.playoutside.fragments.DialogFragment;
-import geolab.playoutside.gcm.RegistrationIntentService;
 import geolab.playoutside.model.ExpMenuItem;
 import geolab.playoutside.model.SubMenu;
-import geolab.playoutside.view.Lounch;
+import geolab.playoutside.view.Launch;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -97,7 +86,11 @@ public class MainActivity extends AppCompatActivity {
     private String name;
     private String email;
     private String imgUrl;
-    private AccessToken access;
+
+    private String profileUrl ="http://geolab.club/geolabwork/ika/viewprofile.php?";
+    private RequestQueue requestQueue;
+
+
 
     private CircleImageView fb_image;
     private TextView fb_name;
@@ -109,10 +102,6 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout logout;
     private LinearLayout allPlayer;
     public static MainActivity mainActivity;
-
-
-
-
 
 
     private String subcategory;
@@ -133,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
     @Bind(R.id.exp_list_id)
     protected ExpandableListView expandableListView;
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -146,15 +136,35 @@ public class MainActivity extends AppCompatActivity {
 
         isNetworkAvailable();
 
-        final Intent intent = getIntent();
 
-        final Bundle bundle = intent.getExtras();
+        final Bundle bundle2 = getIntent().getBundleExtra("profile_extra");
+        final Bundle bundle = getIntent().getBundleExtra("from_fb_login");
+
+        if (bundle2 != null){
+            getProfileInfo(profileUrl + "fb_id=" + Profile.getCurrentProfile().getId());
+            logout = (LinearLayout) findViewById(R.id.logout);
+            final float scale = getResources().getDisplayMetrics().density;
+            int dpWidthInPx  = (int) (21 * scale);
+            int dpHeightInPx = (int) (21 * scale);
+            logout.removeAllViews();
+            ImageView login = new ImageView(getApplication());
+            login.setImageResource(R.drawable.logoutxxx);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(dpWidthInPx, dpHeightInPx);
+            login.setLayoutParams(layoutParams);
+
+            TextView loginText = new TextView(getApplication());
+            loginText.setText("Logout");
+            loginText.setPadding(dpHeightInPx, 0, 0, 0);
+            loginText.setTextColor(getResources().getColor(R.color.login_logout));
+            logout.addView(login);
+            logout.addView(loginText);
+        }
+
         if (bundle != null) {
             name = (String) bundle.get("fb_name");
             userId = (String) bundle.get("fb_id");
             email = (String) bundle.get("fb_email");
             birthday = (String) bundle.get("fb_age");
-            access = (AccessToken) bundle.get("access");
 
             sendPlayerInfo();
 
@@ -183,14 +193,6 @@ public class MainActivity extends AppCompatActivity {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-
-
-            new PreferenceManager.OnActivityDestroyListener() {
-                @Override
-                public void onActivityDestroy() {
-                    MainActivity.getInstance().finish();
-                }
-            };
         }
 
 
@@ -219,12 +221,12 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        final float scale = getResources().getDisplayMetrics().density;
-        int dpWidthInPx  = (int) (21 * scale);
-        int dpHeightInPx = (int) (21 * scale);
 
-        if(bundle == null) {
 
+        if(bundle == null && bundle2 == null) {
+            final float scale = getResources().getDisplayMetrics().density;
+            int dpWidthInPx  = (int) (21 * scale);
+            int dpHeightInPx = (int) (21 * scale);
             logout.removeAllViews();
             ImageView login = new ImageView(getApplication());
             login.setImageResource(R.drawable.logout);
@@ -242,7 +244,7 @@ public class MainActivity extends AppCompatActivity {
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(bundle != null) {
+                if(bundle != null || bundle2 != null) {
                     Intent transport = new Intent(MainActivity.this, ViewProfile.class);
                     Bundle bundle = new Bundle();
                     bundle.putString("fb_id", userId);
@@ -261,16 +263,17 @@ public class MainActivity extends AppCompatActivity {
 
 
                 LoginManager.getInstance().logOut();
-                Intent intent = new Intent(MainActivity.this, Lounch.class);
+                Intent intent = new Intent(MainActivity.this, Launch.class);
                 startActivity(intent);
+                finish();
                 dlDrawer.closeDrawers();
-                finish();}
+                }
         });
 
         myGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (bundle != null) {
+                if (bundle != null || bundle2 != null) {
                     mViewPager.setCurrentItem(0);
                     ((AllGamesFragment) mSectionsPagerAdapter.getItem(0)).admin(getApplicationContext(), userId);
                     dlDrawer.closeDrawers();
@@ -314,7 +317,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (bundle == null) {
+                if (bundle == null && bundle2 == null) {
 
                     DialogFragment dialogFragment = new DialogFragment();
                     dialogFragment.show(getFragmentManager(), "string");
@@ -327,9 +330,12 @@ public class MainActivity extends AppCompatActivity {
 
         menuItems = getData();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            expandableListView.setIndicatorBoundsRelative(730, 0);
-        }
+        final float scale = getResources().getDisplayMetrics().density;
+        int width  = (int) (250 * scale);
+        int height = (int) (0 * scale);
+
+            expandableListView.setIndicatorBoundsRelative(width, height);
+
         CustomExpAdapter adapter = new CustomExpAdapter(this, menuItems);
         expandableListView.setAdapter(adapter);
 
@@ -456,7 +462,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onQueryTextSubmit(String query) {
                 mViewPager.setCurrentItem(0);
                 ((AllGamesFragment) mSectionsPagerAdapter.getItem(0)).updateData(getApplicationContext(), query);
-                return true;
+                return false;
             }
         };
         searchView.setOnQueryTextListener(queryTextListener);
@@ -535,7 +541,6 @@ public class MainActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int id) {
                                 moveTaskToBack(true);
                                 LoginManager.getInstance().logOut();
-                                finish();
                                 android.os.Process.killProcess(android.os.Process.myPid());
                                 System.exit(1);
                             }
@@ -554,5 +559,77 @@ public class MainActivity extends AppCompatActivity {
     public static MainActivity getInstance(){
         return   mainActivity;
     }
+    private void getProfileInfo(String url) {
 
+        JsonObjectRequest myRequest = new JsonObjectRequest(Request.Method.GET
+                , url
+                , null
+                , new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONArray jsonArray = null;
+                try {
+                    jsonArray = response.getJSONArray("data");
+
+
+                    for (int i = 0; i < jsonArray.length(); i++) {
+
+                        JSONObject curObj = jsonArray.getJSONObject(i);
+
+
+                        userId = curObj.getString("user_id");
+                        name = curObj.getString("name");
+                        birthday = curObj.getString("age");
+                        email = curObj.getString("email");
+
+                    }
+
+                    fb_name = (TextView) findViewById(R.id.fb_name);
+                    fb_mail = (TextView) findViewById(R.id.fb_mail);
+                    fb_age = (TextView) findViewById(R.id.fb_age);
+                    fb_image = (CircleImageView) findViewById(R.id.fb_image);
+
+                    fb_name.setText(name);
+                    fb_mail.setText(email);
+                    final float scale = getResources().getDisplayMetrics().density;
+                    int width  = (int) (200 * scale);
+                    int height = (int) (200 * scale);
+
+                    imgUrl = "https://graph.facebook.com/" + userId + "/picture?height=200";
+                    Picasso.with(MainActivity.this)
+                            .load(imgUrl)
+                            .resize(width, height)
+                            .centerCrop()
+                            .into(fb_image);
+
+                    SimpleDateFormat sf = new SimpleDateFormat("dd/MM/yyyy");
+                    try {
+                        Date dat = sf.parse(birthday);
+                        Calendar birthDate = Calendar.getInstance();
+                        birthDate.setTimeInMillis(dat.getTime());
+                        fb_age.setText("(" + String.valueOf(getAge(birthDate, Calendar.getInstance())) + ")");
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println(error+"   nnn");
+
+            }
+        });
+
+        requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(myRequest);
+
+    }
 }

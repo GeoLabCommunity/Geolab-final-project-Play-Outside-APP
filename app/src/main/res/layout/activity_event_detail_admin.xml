@@ -12,11 +12,16 @@
         android:background="?attr/colorPrimary"
         app:layout_scrollFlags="scroll|enterAlways"
         app:popupTheme="@style/AppTheme.PopupOverlay">
-
+        <ImageView
+            android:layout_marginRight="20dp"
+            android:id="@+id/arrow"
+            android:src="@drawable/arrow"
+            android:layout_width="20dp"
+            android:layout_height="wrap_content" />
 
         <TextView
             android:textColor="@color/white"
-            android:textSize="18dp"
+            android:textSize="15dp"
             android:gravity="center"
             android:text="Edit or delete your game"
             android:layout_width="wrap_content"
@@ -35,15 +40,15 @@
                 android:id="@+id/admin_delete_id"
                 android:layout_marginRight="16dp"
                 android:layout_gravity="center"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:src="@drawable/deletew" />
 
             <ImageView
                 android:id="@+id/admin_edit_id"
                 android:layout_gravity="center"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:src="@drawable/editw"
                 />
 

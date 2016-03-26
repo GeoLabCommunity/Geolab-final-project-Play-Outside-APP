@@ -20,6 +20,7 @@ import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
@@ -28,13 +29,11 @@ import org.json.JSONObject;
 
 import java.util.Arrays;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import geolab.playoutside.MainActivity;
 import geolab.playoutside.R;
-import geolab.playoutside.fb_login.FbLogin;
 import geolab.playoutside.gcm.RegistrationIntentService;
 
-public class Lounch extends AppCompatActivity {
+public class Launch extends AppCompatActivity {
 
     private Button skip;
     private Button facebook;
@@ -52,6 +51,7 @@ public class Lounch extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_lounch);
 
         launchActivity = this;
@@ -60,33 +60,40 @@ public class Lounch extends AppCompatActivity {
         skip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent mainIntent = new Intent(Lounch.this, MainActivity.class);
+                Intent mainIntent = new Intent(Launch.this, MainActivity.class);
                 startActivity(mainIntent);
-                Lounch.this.finish();
+                Launch.this.finish();
 
             }
         });
 
-        FacebookSdk.sdkInitialize(getApplicationContext());
-        callbackManager = CallbackManager.Factory.create();
+        if(Profile.getCurrentProfile() != null){
+
+            Toast.makeText(getApplicationContext(), "You are already logged in", Toast.LENGTH_SHORT).show();
 
 
-        facebook = (Button) findViewById(R.id.facebook);
-        facebook.setOnClickListener(new View.OnClickListener() {
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    // TODO: Your application init goes here.
+                    Intent transport = new Intent(Launch.this, MainActivity.class);
+                    Bundle bundle = new Bundle();
+                    transport.putExtra("profile_extra", bundle);
+                    startActivity(transport);
+                }
+            }, 800);}
+
+
+
+
+
+
+        LoginButton loginButton = (LoginButton) findViewById(R.id.connectWithFbButton);
+        loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-//                if(Profile.getCurrentProfile().getId() != null){
-//
-//                final Handler handler = new Handler();
-//                handler.postDelayed(new Runnable() {
-//                    public void run() {
-//                        // TODO: Your application init goes here.
-//                        Intent mInHome = new Intent(Lounch.this, MainActivity.class);
-//                        Lounch.this.startActivity(mInHome);
-//                        Lounch.this.finish();
-//                    }
-//                }, 1000);}
+
 
                 loginToFB();
             }
@@ -118,7 +125,6 @@ public class Lounch extends AppCompatActivity {
                                         if (checkPlayServices()) {
 
 
-
                                             // Start IntentService to register this application with GCM.
                                             Intent intent = new Intent(getApplicationContext(), RegistrationIntentService.class);
 //
@@ -140,15 +146,16 @@ public class Lounch extends AppCompatActivity {
                         request.setParameters(parameters);
                         request.executeAsync();
                     }
+
                     @Override
                     public void onCancel() {
-                        Toast.makeText(Lounch.this, "onCancel", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Launch.this, "onCancel", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onError(FacebookException exception) {
                         Log.d("FacebookException", exception.getMessage());
-                        Toast.makeText(Lounch.this,exception.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Launch.this, exception.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -158,12 +165,13 @@ public class Lounch extends AppCompatActivity {
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
     private void fb_intent_info() {
-        Intent intent = new Intent(Lounch.this, MainActivity.class);
-        intent.putExtra("fb_name", str_firstName);
-        intent.putExtra("fb_id", user_id);
-        intent.putExtra("fb_email", email_json);
-        intent.putExtra("fb_age", birth_day);
-        intent.putExtra("access",accessToken);
+        Intent intent = new Intent(Launch.this, MainActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("fb_name", str_firstName);
+        bundle.putString("fb_id", user_id);
+        bundle.putString("fb_email", email_json);
+        bundle.putString("fb_age", birth_day);
+        intent.putExtra("from_fb_login",bundle);
         startActivity(intent);
     }
     private boolean checkPlayServices() {

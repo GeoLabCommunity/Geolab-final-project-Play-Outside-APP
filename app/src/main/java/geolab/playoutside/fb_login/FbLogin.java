@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -12,7 +11,6 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
@@ -27,7 +25,6 @@ import java.util.Arrays;
 
 import geolab.playoutside.MainActivity;
 import geolab.playoutside.gcm.RegistrationIntentService;
-import geolab.playoutside.view.Lounch;
 
 /**
  * Created by GeoLab on 2/17/16.

@@ -1,11 +1,14 @@
 package geolab.playoutside.fragments;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,11 +28,13 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.WeakHashMap;
 
 import geolab.playoutside.R;
 import geolab.playoutside.adapters.AdminAdapter;
 import geolab.playoutside.adapters.MyStickyAdapter;
 import geolab.playoutside.model.MyEvent;
+import se.emilsjolander.stickylistheaders.ExpandableStickyListHeadersListView;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 /**
@@ -37,8 +42,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
  */
 public class AllGamesFragment extends android.support.v4.app.Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
-    StickyListHeadersListView list;
-    private ArrayList<MyEvent> myEvents;
+    private ArrayList<MyEvent> myEvents = new ArrayList<>();
     private JsonArrayRequest jsonObjectRequest;
 //    private RequestQueue requestQueue;
     private static String GET_JSON_INFO = "http://geolab.club/geolabwork/ika/getdata.php";
@@ -47,6 +51,9 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
     private int categoryId;
     private String stringSearch;
     private String tabTitle;
+
+    private ExpandableStickyListHeadersListView list;
+    WeakHashMap<View,Integer> mOriginalViewHeightPool = new WeakHashMap<View, Integer>();
 
     private RequestQueue requestQueue;
 
@@ -69,7 +76,7 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
         swipeRefreshLayout.setRefreshing(true);
 
 
-        list = (StickyListHeadersListView) v.findViewById(R.id.list);
+        list = (ExpandableStickyListHeadersListView) v.findViewById(R.id.list);
 
         swipeRefreshLayout.post(new Runnable() {
                                     @Override
@@ -90,6 +97,7 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
 
     public void updateData(Context ctx,String searchString){
         check();
+
         requestQueue = Volley.newRequestQueue(ctx);
 
         getJSONInfo(GET_JSON_INFO1 + "?search=" + searchString);
@@ -134,8 +142,12 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
 
                 JSONArray jsonArray = null;
                 try {
+
                     jsonArray = response.getJSONArray("data");
-                    System.out.println(jsonArray+"9999");
+                    if(jsonArray==null){
+
+                    }else {
+
 
 
                     ArrayList<MyEvent> myEvents = new ArrayList<>();
@@ -194,13 +206,23 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
                         myEvents.add(myEvent);
                     }
 
-                    System.out.println("jjj   " + myEvents);
                     MyStickyAdapter adapter = new MyStickyAdapter(getActivity(), myEvents);
+                    list.setAnimExecutor(new AnimationExecutor());
 
                     list.setAdapter(adapter);
+                    list.setOnHeaderClickListener(new StickyListHeadersListView.OnHeaderClickListener() {
+                        @Override
+                        public void onHeaderClick(StickyListHeadersListView l, View header, int itemPosition, long headerId, boolean currentlySticky) {
+                            if (list.isHeaderCollapsed(headerId)) {
+                                list.expand(headerId);
+                            } else {
+                                list.collapse(headerId);
+                            }
+                        }
+                    });
                     list.setOnItemClickListener(adapter.listener);
      //               list.setOnItemLongClickListener(adapter.longClickListener);
-                } catch (JSONException e) {
+                }} catch (JSONException e) {
                     e.printStackTrace();
                 }
 
@@ -209,8 +231,12 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                System.out.println(error+"   nnn");
+                MyStickyAdapter adapter = new MyStickyAdapter(getActivity(), myEvents);
 
+                Toast toast = Toast.makeText(getContext(), "Nothing Found", Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+                list.setAdapter(adapter);
             }
         });
         requestQueue.add(myRequest);
@@ -323,10 +349,21 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
                         myEvents.add(myEvent);
                     }
 
-                    System.out.println("jjj   " + myEvents);
                     AdminAdapter adminAdapter = new AdminAdapter(getActivity(), myEvents);
+                    list.setAnimExecutor(new AnimationExecutor());
 
                     list.setAdapter(adminAdapter);
+
+                    list.setOnHeaderClickListener(new StickyListHeadersListView.OnHeaderClickListener() {
+                        @Override
+                        public void onHeaderClick(StickyListHeadersListView l, View header, int itemPosition, long headerId, boolean currentlySticky) {
+                            if (list.isHeaderCollapsed(headerId)) {
+                                list.expand(headerId);
+                            } else {
+                                list.collapse(headerId);
+                            }
+                        }
+                    });
                     list.setOnItemClickListener(adminAdapter.listener);
 
                     list.setOnItemLongClickListener(adminAdapter.longClickListener);
@@ -339,12 +376,73 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                System.out.println(error+"   nnn");
+                MyStickyAdapter adapter = new MyStickyAdapter(getActivity(), myEvents);
 
+                Toast toast = Toast.makeText(getContext(), "Nothing Found", Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+                list.setAdapter(adapter);
             }
         });
         requestQueue.add(myRequest);
         swipeRefreshLayout.setRefreshing(false);
+    }
+    class AnimationExecutor implements ExpandableStickyListHeadersListView.IAnimationExecutor {
+
+        @Override
+        public void executeAnim(final View target, final int animType) {
+            if(ExpandableStickyListHeadersListView.ANIMATION_EXPAND==animType&&target.getVisibility()==View.VISIBLE){
+                return;
+            }
+            if(ExpandableStickyListHeadersListView.ANIMATION_COLLAPSE==animType&&target.getVisibility()!=View.VISIBLE){
+                return;
+            }
+            if(mOriginalViewHeightPool.get(target)==null){
+                mOriginalViewHeightPool.put(target,target.getHeight());
+            }
+            final int viewHeight = mOriginalViewHeightPool.get(target);
+            float animStartY = animType == ExpandableStickyListHeadersListView.ANIMATION_EXPAND ? 0f : viewHeight;
+            float animEndY = animType == ExpandableStickyListHeadersListView.ANIMATION_EXPAND ? viewHeight : 0f;
+            final ViewGroup.LayoutParams lp = target.getLayoutParams();
+            ValueAnimator animator = ValueAnimator.ofFloat(animStartY, animEndY);
+            animator.setDuration(200);
+            target.setVisibility(View.VISIBLE);
+            animator.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animator) {
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animator) {
+                    if (animType == ExpandableStickyListHeadersListView.ANIMATION_EXPAND) {
+                        target.setVisibility(View.VISIBLE);
+                    } else {
+                        target.setVisibility(View.GONE);
+                    }
+                    target.getLayoutParams().height = viewHeight;
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animator) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animator) {
+
+                }
+            });
+            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                    lp.height = ((Float) valueAnimator.getAnimatedValue()).intValue();
+                    target.setLayoutParams(lp);
+                    target.requestLayout();
+                }
+            });
+            animator.start();
+
+        }
     }
 
 }

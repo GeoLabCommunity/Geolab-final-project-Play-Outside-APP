@@ -1,16 +1,10 @@
 package geolab.playoutside.view;
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.renderscript.Sampler;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -18,26 +12,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.facebook.Profile;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -46,14 +30,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,9 +45,6 @@ import geolab.playoutside.Add_Event_Activity;
 import geolab.playoutside.MainActivity;
 import geolab.playoutside.R;
 import geolab.playoutside.ViewProfile;
-import geolab.playoutside.adapters.MyStickyAdapter;
-import geolab.playoutside.fragments.AllGamesFragment;
-import geolab.playoutside.gcm.RegistrationIntentService;
 import geolab.playoutside.model.MyEvent;
 
 public class EventDetailActivity extends AppCompatActivity {
@@ -84,6 +60,11 @@ public class EventDetailActivity extends AppCompatActivity {
     private String eventId_intent;
     private String place_intent;
     private List<String> profile;
+
+    private String day;
+    private String month;
+    private String year;
+    private String everything;
 
     private boolean checkprofile = false;
 
@@ -103,6 +84,7 @@ public class EventDetailActivity extends AppCompatActivity {
     private String imgUrl;
 
     private int circleCounter;
+    private ImageView arrow;
 
 
     @Bind(R.id.detail_title_text_id)
@@ -157,9 +139,12 @@ public class EventDetailActivity extends AppCompatActivity {
             eventId_intent = String.valueOf(myEvent.getEventId());
             description_intent = myEvent.getDescription();
             title_intent = myEvent.getTitle();
-            time_intent = myEvent.getTitle();
             time_intent = myEvent.getTime();
             date_intent = myEvent.getDate();
+            year = date_intent.split("-")[0]; // "Before"
+            month = date_intent.split("-")[1];
+            day = date_intent.split("-")[2]; // "After"
+            everything = day+"/"+month+"/"+year;
             count_intent = myEvent.getPlayerCount();
             place_intent = myEvent.getPlace();
             profile = myEvent.getEvents();
@@ -255,6 +240,19 @@ public class EventDetailActivity extends AppCompatActivity {
 
         toolbar_detail = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar_detail);
+        getSupportActionBar().setTitle("");
+
+        arrow = (ImageView) findViewById(R.id.arrow);
+        arrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent transport = new Intent(EventDetailActivity.this, MainActivity.class);
+                Bundle bundle = new Bundle();
+                transport.putExtra("profile_extra", bundle);
+                startActivity(transport);
+            }
+        });
+
 
 
 
@@ -280,13 +278,13 @@ public class EventDetailActivity extends AppCompatActivity {
         map.getUiSettings().setZoomControlsEnabled(true);
 
 
-        getSupportActionBar().setTitle("Event Details");
+
 
 
         title.setText(title_intent);
         time.setText(time_intent);
         description.setText(description_intent);
-        date.setText(date_intent);
+        date.setText(everything);
         place.setText(place_intent);
         count.setText(String.valueOf(profile.size()));
 
@@ -305,12 +303,17 @@ public class EventDetailActivity extends AppCompatActivity {
         final ArrayList<CircleImageView> circleImageViewlist = new ArrayList< >();
         for (int i = 0; i < profile.size(); i++) {
 
+            final float scale = getResources().getDisplayMetrics().density;
+            int width  = (int) (62 * scale);
+            int height = (int) (62 * scale);
+
+
             final CircleImageView circleImageView = new CircleImageView(getApplication());
             circleImageView.setId(i);
-            imgUrl = "https://graph.facebook.com/" + profile.get(i) + "/picture?height=400";
+            imgUrl = "https://graph.facebook.com/" + profile.get(i) + "/picture?height=200";
             Picasso.with(EventDetailActivity.this)
                     .load(imgUrl)
-                    .resize(200, 200)
+                    .resize(width, height)
                     .centerCrop()
                     .into(circleImageView);
             circleImageViewlist.add(circleImageView);
@@ -360,8 +363,14 @@ public class EventDetailActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         Toast.makeText(EventDetailActivity.this, response, Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(EventDetailActivity.this, MainActivity.class);
-                        startActivity(intent);
+                        final Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            public void run() {
+                                // TODO: Your application init goes here.
+                                Intent transport = new Intent(EventDetailActivity.this, MainActivity.class);
+                                startActivity(transport);
+                            }
+                        }, 500);
                     }
                 },
                 new Response.ErrorListener() {
@@ -377,7 +386,7 @@ public class EventDetailActivity extends AppCompatActivity {
                                     @Override
                                     public void onClick(SweetAlertDialog sDialog) {
                                         MainActivity.getInstance().finish();
-                                        Intent intent = new Intent(EventDetailActivity.this, Lounch.class);
+                                        Intent intent = new Intent(EventDetailActivity.this, Launch.class);
                                         startActivity(intent);
 
 

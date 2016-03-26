@@ -4,12 +4,14 @@ package geolab.playoutside.fragment_categories;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import geolab.playoutside.Add_Event_Activity;
 import geolab.playoutside.R;
@@ -64,6 +66,9 @@ public class SubCategoryIcon extends Fragment {
                     button.getBackground().clearColorFilter();
 
                     subCategoryTag = (String) button.getTag();
+                    Toast toast = Toast.makeText(getContext(),subCategoryTag, Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.CENTER, 0, 0);
+                    toast.show();
                     ((Add_Event_Activity)getActivity()).setSubCategoryData(subCategoryTag);
 
                 }

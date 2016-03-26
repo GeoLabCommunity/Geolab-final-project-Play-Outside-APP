@@ -1,7 +1,5 @@
 package geolab.playoutside;
 
-import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,44 +12,25 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.facebook.AccessToken;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.facebook.Profile;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -64,32 +43,13 @@ import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import geolab.playoutside.db.Category_db;
 import geolab.playoutside.fragment_categories.SubCategoryIcon;
-import geolab.playoutside.model.ApplicationController;
-import geolab.playoutside.model.MyEvent;
-import geolab.playoutside.view.Lounch;
-import hotchemi.stringpicker.StringPicker;
 import hotchemi.stringpicker.StringPickerDialog;
-
-import static geolab.playoutside.R.color.tab_color;
 
 public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyCallback, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, View.OnClickListener,StringPickerDialog.OnClickListener{
     private LinearLayout timeclick;
@@ -125,6 +85,7 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
     private String subcategoryData = null;
 
     private RequestQueue mRequestQueue;
+    private  ImageView arrow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,7 +95,19 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
         toolbar = (Toolbar) findViewById(R.id.detail_toolbar_id);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setTitle("Add New Event");
+        getSupportActionBar().setTitle("");
+
+        arrow = (ImageView) findViewById(R.id.arrow_add);
+        arrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent transport = new Intent(Add_Event_Activity.this, MainActivity.class);
+                Bundle bundle = new Bundle();
+                transport.putExtra("profile_extra", bundle);
+                startActivity(transport);
+            }
+        });
+
 
         final Bundle bundle = getIntent().getExtras();
 
@@ -445,6 +418,7 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
                     public void onResponse(String response) {
                         Toast.makeText(Add_Event_Activity.this, response, Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(Add_Event_Activity.this, MainActivity.class);
+
                         startActivity(intent);
                     }
                 },

@@ -22,6 +22,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.squareup.picasso.Picasso;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -30,6 +32,7 @@ import java.util.Map;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
+import geolab.playoutside.AllPlayers;
 import geolab.playoutside.R;
 import geolab.playoutside.ViewProfile;
 import geolab.playoutside.db.Category_db;
@@ -51,8 +54,12 @@ public class AllPlayerAdapter extends BaseAdapter implements StickyListHeadersAd
     public AllPlayerAdapter(Context context, ArrayList<AllPlayersModel> list) {
         inflater = LayoutInflater.from(context);
         allPlayersModelArrayList = list;
+
         this.context = context;
+
     }
+
+
 
     @Override
     public int getCount() {
@@ -91,11 +98,21 @@ public class AllPlayerAdapter extends BaseAdapter implements StickyListHeadersAd
         }
 
         holder.nameItem.setText(allPlayersModelArrayList.get(position).getName());
-        holder.ageItem.setText(allPlayersModelArrayList.get(position).getBirthday());
+        SimpleDateFormat sf = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            Date dat = sf.parse(allPlayersModelArrayList.get(position).getBirthday());
+            Calendar birthDate = Calendar.getInstance();
+            birthDate.setTimeInMillis(dat.getTime());
+            holder.ageItem.setText("(" + String.valueOf(getAge(birthDate, Calendar.getInstance())) + ")");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+       // holder.ageItem.setText(allPlayersModelArrayList.get(position).getBirthday());
         holder.mailItem.setText(allPlayersModelArrayList.get(position).getMail());
         holder.reitingItem.setText(allPlayersModelArrayList.get(position).getReiting());
 
         String imgUrl = "https://graph.facebook.com/" + (allPlayersModelArrayList.get(position).getFb_id()) + "/picture?height=400";
+
         Picasso.with(context)
                 .load(imgUrl)
                 .resize(62, 62)
@@ -118,14 +135,14 @@ public class AllPlayerAdapter extends BaseAdapter implements StickyListHeadersAd
             holder = (HeaderViewHolder) convertView.getTag();
         }
         //set header timeHolder as first char in name
-        String headerText = "" + allPlayersModelArrayList.get(position).getName();
+        String headerText = "" + allPlayersModelArrayList.get(position).getName().subSequence(0, 1).charAt(0);
         holder.headerDateHolder.setText(headerText);
         return convertView;
     }
 
     @Override
     public long getHeaderId(int position) {
-        return position;
+        return allPlayersModelArrayList.get(position).getName().subSequence(0, 1).charAt(0);
     }
 
 
@@ -173,6 +190,18 @@ public class AllPlayerAdapter extends BaseAdapter implements StickyListHeadersAd
         TextView nameItem, ageItem, mailItem, reitingItem;
         CircleImageView profileItem;
 
+    }
+    private int getAge(Calendar birthDate, Calendar currentDate) {
+        int age = currentDate.get(Calendar.YEAR) - birthDate.get(Calendar.YEAR);
+
+        if (currentDate.get(Calendar.MONTH) < birthDate.get(Calendar.MONTH)) {
+            age--;
+        } else if (currentDate.get(Calendar.MONTH) == birthDate.get(Calendar.MONTH)
+                && currentDate.get(Calendar.DAY_OF_MONTH) < birthDate.get(Calendar.DAY_OF_MONTH)) {
+            age--;
+        }
+
+        return age;
     }
 
 }

@@ -74,18 +74,12 @@ public class Search extends AppCompatActivity implements SwipeRefreshLayout.OnRe
     private void getJSONInfo(String url) {
 
 
-        JSONObject categoryObj = new JSONObject();
-        try {
-            categoryObj.put("category", "TABLE");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
 
 
         JsonObjectRequest myRequest = new JsonObjectRequest(Request.Method.GET
                 , url
-                , categoryObj
+                , null
                 , new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {

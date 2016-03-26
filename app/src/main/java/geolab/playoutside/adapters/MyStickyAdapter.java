@@ -1,8 +1,10 @@
 package geolab.playoutside.adapters;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -24,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -42,6 +45,11 @@ public class MyStickyAdapter extends BaseAdapter implements StickyListHeadersAda
     private ArrayList<MyEvent> eventsList;
     private LayoutInflater inflater;
     private Context context;
+    private String day;
+    private String month;
+    private String year;
+    private String everything;
+
 
 
     public MyStickyAdapter(Context context, ArrayList<MyEvent> list) {
@@ -111,7 +119,11 @@ public class MyStickyAdapter extends BaseAdapter implements StickyListHeadersAda
         }
         //set header timeHolder as first char in name
         String headerText = "" + eventsList.get(position).getDate();
-        holder.headerDateHolder.setText(headerText);
+         year = headerText.split("-")[0]; // "Before"
+         month = headerText.split("-")[1];
+         day = headerText.split("-")[2]; // "After"
+        everything = day+"/"+month+"/"+year;
+        holder.headerDateHolder.setText(everything);
         return convertView;
     }
 
@@ -136,6 +148,7 @@ public class MyStickyAdapter extends BaseAdapter implements StickyListHeadersAda
 
 
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public long getHeaderId(int position) {
         //return the first character of the country as ID because this is what headers are based upon
@@ -143,7 +156,12 @@ public class MyStickyAdapter extends BaseAdapter implements StickyListHeadersAda
         if(eventsList.get(position).getDate() == null || eventsList.get(position).getDate().isEmpty())
             return 1;
         else {
-            Date dat = new Date(eventsList.get(position).getDate());
+            String headerText = "" + eventsList.get(position).getDate();
+            year = headerText.split("-")[0]; // "Before"
+            month = headerText.split("-")[1];
+            day = headerText.split("-")[2]; // "After"
+            everything = day+"/"+month+"/"+year;
+            Date dat = new Date(everything);
             Calendar c = Calendar.getInstance();
             c.setTime(dat);
 

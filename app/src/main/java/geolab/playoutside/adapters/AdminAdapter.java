@@ -44,6 +44,10 @@ public class AdminAdapter extends BaseAdapter implements StickyListHeadersAdapte
     private Context context;
     private String URL = "http://geolab.club/iraklilataria/ika/delete.php";
     private AdminAdapter myAdapter;
+    private String day;
+    private String month;
+    private String year;
+    private String everything;
 
     public AdminAdapter(Context context, ArrayList<MyEvent> list) {
         inflater = LayoutInflater.from(context);
@@ -166,9 +170,11 @@ public class AdminAdapter extends BaseAdapter implements StickyListHeadersAdapte
         } else {
             holder = (HeaderViewHolder) convertView.getTag();
         }
-        //set header timeHolder as first char in name
         String headerText = "" + eventsList.get(position).getDate();
-        holder.headerDateHolder.setText(headerText);
+        String year = headerText.split("-")[0]; // "Before"
+        String month = headerText.split("-")[1];
+        String day = headerText.split("-")[2]; // "After"
+        holder.headerDateHolder.setText(day+"/"+month+"/"+year);
         return convertView;
     }
 
@@ -254,11 +260,15 @@ public class AdminAdapter extends BaseAdapter implements StickyListHeadersAdapte
     @Override
     public long getHeaderId(int position) {
         //return the first character of the country as ID because this is what headers are based upon
-
         if(eventsList.get(position).getDate() == null || eventsList.get(position).getDate().isEmpty())
             return 1;
         else {
-            Date dat = new Date(eventsList.get(position).getDate());
+            String headerText = "" + eventsList.get(position).getDate();
+            year = headerText.split("-")[0]; // "Before"
+            month = headerText.split("-")[1];
+            day = headerText.split("-")[2]; // "After"
+            everything = day+"/"+month+"/"+year;
+            Date dat = new Date(everything);
             Calendar c = Calendar.getInstance();
             c.setTime(dat);
 
