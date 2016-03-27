@@ -20,6 +20,9 @@ android {
 }
 repositories {
     jcenter()
+    maven {
+        url "https://jitpack.io"
+    }
 }
 
 dependencies {
@@ -46,4 +49,5 @@ dependencies {
     compile 'com.github.hotchemi:stringpicker:0.0.2'
     compile 'cn.pedant.sweetalert:library:1.2'
     compile 'joda-time:joda-time:2.4'
+    compile 'com.github.recruit-lifestyle:WaveSwipeRefreshLayout:1.6'
 }

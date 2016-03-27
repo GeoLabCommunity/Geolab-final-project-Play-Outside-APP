@@ -3,9 +3,12 @@ package geolab.playoutside.fragments;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,19 +34,20 @@ import java.util.WeakHashMap;
 import geolab.playoutside.R;
 import geolab.playoutside.adapters.MyStickyAdapter;
 import geolab.playoutside.model.MyEvent;
+import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 import se.emilsjolander.stickylistheaders.ExpandableStickyListHeadersListView;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 /**
  * Created by GeoLab on 1/11/16.
  */
-public class Category extends android.support.v4.app.Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class Category extends android.support.v4.app.Fragment implements WaveSwipeRefreshLayout.OnRefreshListener {
 
     private ArrayList<MyEvent> myEvents = new ArrayList<>();
     private JsonArrayRequest jsonObjectRequest;
     private RequestQueue requestQueue;
     private static String GET_JSON_INFO = "http://geolab.club/geolabwork/ika/filter.php";
-    private SwipeRefreshLayout swipeRefreshLayout;
+    private WaveSwipeRefreshLayout swipeRefreshLayout;
     private int categoryId;
     private String stringSearch;
     private String tabTitle;
@@ -69,9 +73,11 @@ public class Category extends android.support.v4.app.Fragment implements SwipeRe
 
 
         list = (ExpandableStickyListHeadersListView) v.findViewById(R.id.list);
-        swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swiperefresh);
-        check();
+        swipeRefreshLayout = (WaveSwipeRefreshLayout) v.findViewById(R.id.swiperefresh);
+        swipeRefreshLayout.setColorSchemeColors(Color.WHITE, Color.WHITE);
         swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setWaveColor(Color.argb(100,20,150,40));
+        check();
         swipeRefreshLayout.post(new Runnable() {
                                     @Override
                                     public void run() {
@@ -217,12 +223,6 @@ public class Category extends android.support.v4.app.Fragment implements SwipeRe
         swipeRefreshLayout.setRefreshing(false);
     }
 
-    @Override
-    public void onRefresh() {
-        check();
-        getJSONInfo(GET_JSON_INFO);
-    }
-
     public void check() {
         ConnectivityManager connMgr = (ConnectivityManager) getActivity()
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -297,5 +297,41 @@ public class Category extends android.support.v4.app.Fragment implements SwipeRe
             animator.start();
 
         }
+    }
+    private class Task extends AsyncTask<Void, Void, String[]> {
+
+
+        @Override
+        protected String[] doInBackground(Void... params) {
+            return new String[0];
+        }
+
+        @Override protected void onPostExecute(String[] result) {
+            // Call setRefreshing(false) when the list has been refreshed.
+            swipeRefreshLayout.setRefreshing(false);
+            super.onPostExecute(result);
+        }
+
+
+    }
+    private void refresh(){
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getJSONInfo(GET_JSON_INFO+"?category="+tabTitle);
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        }, 1300);
+    }
+
+    @Override
+    public void onResume() {
+        //mWaveSwipeRefreshLayout.setRefreshing(true);
+        refresh();
+        super.onResume();
+    }
+    @Override
+    public void onRefresh() {
+        refresh();
     }
 }

@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -42,14 +43,15 @@ import geolab.playoutside.adapters.MyStickyAdapter;
 import geolab.playoutside.fragments.AllGamesFragment;
 import geolab.playoutside.model.AllPlayersModel;
 import geolab.playoutside.model.MyEvent;
+import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 import se.emilsjolander.stickylistheaders.ExpandableStickyListHeadersListView;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
-public class AllPlayers extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener{
+public class AllPlayers extends AppCompatActivity implements WaveSwipeRefreshLayout.OnRefreshListener{
 
    // private StickyListHeadersListView list;
-    private SwipeRefreshLayout swipeRefreshLayout;
+    private WaveSwipeRefreshLayout swipeRefreshLayout;
     private RequestQueue requestQueue;
     private static String getAllPlayer = "http://geolab.club/geolabwork/ika/allplayer.php";
     private ArrayList<AllPlayersModel> allPlayersModelArrayList = new ArrayList<>();
@@ -84,9 +86,10 @@ public class AllPlayers extends AppCompatActivity implements SwipeRefreshLayout.
         });
 
 
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
-        swipeRefreshLayout.setOnRefreshListener(AllPlayers.this);
-        swipeRefreshLayout.setRefreshing(true);
+        swipeRefreshLayout = (WaveSwipeRefreshLayout) findViewById(R.id.swiperefresh);
+        swipeRefreshLayout.setColorSchemeColors(Color.WHITE, Color.WHITE);
+        swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setWaveColor(Color.argb(100,20,150,40));
 
         list = (ExpandableStickyListHeadersListView) findViewById(R.id.list);
 
@@ -212,10 +215,6 @@ public class AllPlayers extends AppCompatActivity implements SwipeRefreshLayout.
         swipeRefreshLayout.setRefreshing(false);
     }
 
-    @Override
-    public void onRefresh() {
-        getAllPlayer(getAllPlayer);
-    }
 
     public void check() {
         ConnectivityManager connMgr = (ConnectivityManager) getApplication()
@@ -293,6 +292,26 @@ public class AllPlayers extends AppCompatActivity implements SwipeRefreshLayout.
             animator.start();
 
         }
+    }
+    private void refresh(){
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getAllPlayer(getAllPlayer);
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        }, 1300);
+    }
+
+    @Override
+    public void onResume() {
+        //mWaveSwipeRefreshLayout.setRefreshing(true);
+        refresh();
+        super.onResume();
+    }
+    @Override
+    public void onRefresh() {
+        refresh();
     }
 
 }

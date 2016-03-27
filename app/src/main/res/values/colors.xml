@@ -12,6 +12,7 @@
     <color name="grey_transparent">#66fff2f2</color>
     <color name="white_transparent">#a8ffffff</color>
     <color name="login_logout">#c7ac2d2d</color>
+    <color name="swipe">#cd66bb6a</color>
 
 
 </resources>

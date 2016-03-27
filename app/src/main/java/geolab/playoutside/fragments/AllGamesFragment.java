@@ -3,11 +3,15 @@ package geolab.playoutside.fragments;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,20 +38,21 @@ import geolab.playoutside.R;
 import geolab.playoutside.adapters.AdminAdapter;
 import geolab.playoutside.adapters.MyStickyAdapter;
 import geolab.playoutside.model.MyEvent;
+import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 import se.emilsjolander.stickylistheaders.ExpandableStickyListHeadersListView;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 /**
  * Created by GeoLab on 1/11/16.
  */
-public class AllGamesFragment extends android.support.v4.app.Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class AllGamesFragment extends android.support.v4.app.Fragment implements WaveSwipeRefreshLayout.OnRefreshListener {
 
     private ArrayList<MyEvent> myEvents = new ArrayList<>();
     private JsonArrayRequest jsonObjectRequest;
 //    private RequestQueue requestQueue;
     private static String GET_JSON_INFO = "http://geolab.club/geolabwork/ika/getdata.php";
     private static String GET_JSON_INFO1 = "http://geolab.club/geolabwork/ika/search.php";
-    private SwipeRefreshLayout swipeRefreshLayout;
+    private WaveSwipeRefreshLayout swipeRefreshLayout;
     private int categoryId;
     private String stringSearch;
     private String tabTitle;
@@ -70,10 +75,21 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
 
 
         View v = inflater.inflate(R.layout.content_fragment, container, false);
-        swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swiperefresh);
+        swipeRefreshLayout = (WaveSwipeRefreshLayout) v.findViewById(R.id.swiperefresh);
+        swipeRefreshLayout.setColorSchemeColors(Color.WHITE, Color.WHITE);
         swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setWaveColor(Color.argb(100,20,150,40));
+
+
         check();
-        swipeRefreshLayout.setRefreshing(true);
+//        swipeRefreshLayout.setOnRefreshListener(new WaveSwipeRefreshLayout.OnRefreshListener() {
+//            @Override public void onRefresh() {
+//                check();
+//                getJSONInfo(GET_JSON_INFO);
+//                new Task().execute();
+//            }
+//        });
+
 
 
         list = (ExpandableStickyListHeadersListView) v.findViewById(R.id.list);
@@ -81,7 +97,6 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
         swipeRefreshLayout.post(new Runnable() {
                                     @Override
                                     public void run() {
-
                                         swipeRefreshLayout.setRefreshing(true);
                                         check();
 
@@ -241,11 +256,6 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
         });
         requestQueue.add(myRequest);
         swipeRefreshLayout.setRefreshing(false);
-    }
-
-    @Override
-    public void onRefresh() {
-        getJSONInfo(GET_JSON_INFO);
     }
 
     public void check() {
@@ -443,6 +453,40 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
             animator.start();
 
         }
+    }
+    private class Task extends AsyncTask<Void, Void, String[]> {
+
+
+        @Override
+        protected String[] doInBackground(Void... params) {
+            return new String[0];
+        }
+
+        @Override protected void onPostExecute(String[] result) {
+            // Call setRefreshing(false) when the list has been refreshed.
+            swipeRefreshLayout.setRefreshing(false);
+            super.onPostExecute(result);
+        }
+    }
+    private void refresh(){
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getJSONInfo(GET_JSON_INFO);
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        }, 1300);
+    }
+
+    @Override
+    public void onResume() {
+        //mWaveSwipeRefreshLayout.setRefreshing(true);
+        refresh();
+        super.onResume();
+    }
+    @Override
+    public void onRefresh() {
+        refresh();
     }
 
 }

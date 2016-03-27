@@ -3,11 +3,11 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/swiperefresh"
+    <jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:id="@+id/swiperefresh"
+        >
 
         <se.emilsjolander.stickylistheaders.ExpandableStickyListHeadersListView
             android:id="@+id/list"
@@ -18,6 +18,5 @@
             android:scrollbarStyle="outsideOverlay"
             android:fastScrollEnabled="true"
             android:overScrollMode="never"/>
-    </android.support.v4.widget.SwipeRefreshLayout>
-
+</jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout>
 </LinearLayout>

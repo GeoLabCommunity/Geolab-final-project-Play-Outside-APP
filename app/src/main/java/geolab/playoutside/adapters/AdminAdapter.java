@@ -204,7 +204,7 @@ public class AdminAdapter extends BaseAdapter implements StickyListHeadersAdapte
 
         final long days = Math.round(diff * 1f / TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
 
-        if (days==6){
+        if (days<0){
 
             new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
                     .setTitleText("Update data?")
