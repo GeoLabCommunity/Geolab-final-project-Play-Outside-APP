@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,12 +23,20 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.joda.time.DateTime;
+import org.joda.time.Duration;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import geolab.playoutside.R;
@@ -45,6 +54,8 @@ public class MyStickyAdapter extends BaseAdapter implements StickyListHeadersAda
     private ArrayList<MyEvent> eventsList;
     private LayoutInflater inflater;
     private Context context;
+    private String URL = "http://geolab.club/geolabwork/ika/delete.php";
+    private MyStickyAdapter myAdapter;
     private String day;
     private String month;
     private String year;
@@ -56,6 +67,7 @@ public class MyStickyAdapter extends BaseAdapter implements StickyListHeadersAda
         inflater = LayoutInflater.from(context);
         eventsList = list;
         this.context = context;
+        myAdapter = this;
     }
 
     @Override
@@ -107,12 +119,13 @@ public class MyStickyAdapter extends BaseAdapter implements StickyListHeadersAda
 
 
     @Override
-    public View getHeaderView(int position, View convertView, ViewGroup parent) {
+    public View getHeaderView(final int position, View convertView, ViewGroup parent) {
         HeaderViewHolder holder;
         if (convertView == null) {
             holder = new HeaderViewHolder();
             convertView = inflater.inflate(R.layout.header, parent, false);
             holder.headerDateHolder = (TextView) convertView.findViewById(R.id.header_text_id);
+            holder.daysleft = (TextView) convertView.findViewById(R.id.days_left_id);
             convertView.setTag(holder);
         } else {
             holder = (HeaderViewHolder) convertView.getTag();
@@ -123,6 +136,58 @@ public class MyStickyAdapter extends BaseAdapter implements StickyListHeadersAda
          month = headerText.split("-")[1];
          day = headerText.split("-")[2]; // "After"
         everything = day+"/"+month+"/"+year;
+
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy");
+        Date d = null;
+        try {
+            d = formatter.parse(everything);//catch exception
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        Calendar thatDay = Calendar.getInstance();
+        thatDay.setTime(d);
+
+
+
+        Calendar today = Calendar.getInstance();
+
+        long diff =thatDay.getTimeInMillis()- today.getTimeInMillis();
+
+       final long days = Math.round(diff * 1f / TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
+
+        if (days<0){
+            new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText("Update data?")
+                    .setContentText("Some Events are old, please confirm for update!")
+                    .setConfirmText("Update it !")
+                    .showCancelButton(false)
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+                            delete(URL+"?eventId="+eventsList.get(position).getEventId());
+                            eventsList.remove(position);
+                            myAdapter.notifyDataSetChanged();
+
+
+                        }
+                    })
+                    .show();
+//            Toast toast = Toast.makeText(context,"Some Events are old, please refresh for update!", Toast.LENGTH_LONG);
+//            toast.setGravity(Gravity.CENTER, 0, 0);
+//            toast.show();
+//            delete(URL+"?eventId="+eventsList.get(position).getEventId());
+//            eventsList.remove(position);
+//            myAdapter.notifyDataSetChanged();
+
+        }
+
+
+        holder.daysleft.setText("(" + String.valueOf(days) + ")  days left");
+
+
         holder.headerDateHolder.setText(everything);
         return convertView;
     }
@@ -151,7 +216,6 @@ public class MyStickyAdapter extends BaseAdapter implements StickyListHeadersAda
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public long getHeaderId(int position) {
-        //return the first character of the country as ID because this is what headers are based upon
 
         if(eventsList.get(position).getDate() == null || eventsList.get(position).getDate().isEmpty())
             return 1;
@@ -170,12 +234,41 @@ public class MyStickyAdapter extends BaseAdapter implements StickyListHeadersAda
     }
 
     class HeaderViewHolder {
-        TextView headerDateHolder;
+        TextView headerDateHolder,daysleft;
     }
 
     class ViewHolder {
         TextView timeHolder, titleHolder, descriptionHolder, placeHolder, playerHolder;
 
+    }
+    private void delete(String URL){
+
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                }){
+            @Override
+            protected Map<String,String> getParams(){
+                Map<String,String> params = new HashMap<>();
+
+                params.toString();
+                return params;
+            }
+
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        requestQueue.add(stringRequest);
     }
 
 }

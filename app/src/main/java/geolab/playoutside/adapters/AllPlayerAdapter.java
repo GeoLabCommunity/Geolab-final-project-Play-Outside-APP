@@ -128,7 +128,7 @@ public class AllPlayerAdapter extends BaseAdapter implements StickyListHeadersAd
         HeaderViewHolder holder;
         if (convertView == null) {
             holder = new HeaderViewHolder();
-            convertView = inflater.inflate(R.layout.header, parent, false);
+            convertView = inflater.inflate(R.layout.header_for_player, parent, false);
             holder.headerDateHolder = (TextView) convertView.findViewById(R.id.header_text_id);
             convertView.setTag(holder);
         } else {
@@ -166,21 +166,6 @@ public class AllPlayerAdapter extends BaseAdapter implements StickyListHeadersAd
     };
 
 
-
-//    @Override
-//    public long getHeaderId(int position) {
-//        //return the first character of the country as ID because this is what headers are based upon
-//
-//        if(allPlayersModelArrayList.get(position).getDate() == null || allPlayersModelArrayList.get(position).getDate().isEmpty())
-//            return 1;
-//        else {
-//            Date dat = new Date(allPlayersModelArrayList.get(position).getDate());
-//            Calendar c = Calendar.getInstance();
-//            c.setTime(dat);
-//
-//            return c.getTimeInMillis();
-//        }
-//    }
 
     class HeaderViewHolder {
         TextView headerDateHolder;

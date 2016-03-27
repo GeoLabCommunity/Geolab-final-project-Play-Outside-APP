@@ -13,18 +13,9 @@
         android:layout_marginLeft="16dp"
         android:id="@+id/header_text_id"
         android:gravity="center_vertical"
-        android:text="test"
-        android:textSize="15sp"
-        android:layout_width="wrap_content"
-        android:layout_height="28dp" />
-    <TextView
-        android:layout_marginLeft="16dp"
-        android:textColor="#fff"
-        android:id="@+id/days_left_id"
-        android:gravity="center_vertical"
-        android:text="test"
-        android:textSize="15sp"
         android:textStyle="italic"
+        android:text="test"
+        android:textSize="15sp"
         android:layout_width="wrap_content"
         android:layout_height="28dp" />
 
