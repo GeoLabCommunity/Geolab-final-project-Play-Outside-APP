@@ -14,7 +14,7 @@
         android:id="@+id/header_text_id"
         android:gravity="center_vertical"
         android:text="test"
-        android:textSize="15sp"
+        android:textSize="12sp"
         android:layout_width="wrap_content"
         android:layout_height="28dp" />
     <TextView
@@ -23,7 +23,7 @@
         android:id="@+id/days_left_id"
         android:gravity="center_vertical"
         android:text="test"
-        android:textSize="15sp"
+        android:textSize="12sp"
         android:textStyle="italic"
         android:layout_width="wrap_content"
         android:layout_height="28dp" />
