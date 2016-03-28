@@ -1,7 +1,10 @@
 package geolab.playoutside.view;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -57,49 +60,59 @@ public class Launch extends AppCompatActivity {
         launchActivity = this;
 
         skip = (Button) findViewById(R.id.skip);
+
+
         skip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent mainIntent = new Intent(Launch.this, MainActivity.class);
-                startActivity(mainIntent);
-                Launch.this.finish();
+                isNetworkAvailable();
+                if (isNetworkAvailable() == true) {
+                    Intent mainIntent = new Intent(Launch.this, MainActivity.class);
+                    startActivity(mainIntent);
+                    Launch.this.finish();
+
+                } else {
+                    Toast.makeText(Launch.this, "Internet Connection Is Required", Toast.LENGTH_LONG).show();
+
+                }
+
 
             }
         });
 
-        if(Profile.getCurrentProfile() != null){
+        if (isNetworkAvailable() == true) {
+            if (Profile.getCurrentProfile() != null) {
 
-            Toast.makeText(getApplicationContext(), "You are already logged in", Toast.LENGTH_SHORT).show();
-
-
-            final Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                public void run() {
-                    // TODO: Your application init goes here.
-                    Intent transport = new Intent(Launch.this, MainActivity.class);
-                    Bundle bundle = new Bundle();
-                    transport.putExtra("profile_extra", bundle);
-                    startActivity(transport);
-                }
-            }, 800);}
+                Toast.makeText(getApplicationContext(), "You are already logged in", Toast.LENGTH_SHORT).show();
 
 
-
-
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        // TODO: Your application init goes here.
+                        Intent transport = new Intent(Launch.this, MainActivity.class);
+                        Bundle bundle = new Bundle();
+                        transport.putExtra("profile_extra", bundle);
+                        startActivity(transport);
+                    }
+                }, 800);
+            }
+        }else{
+            Toast.makeText(Launch.this, "Internet Connection Is Required", Toast.LENGTH_LONG).show();
+        }
 
 
         LoginButton loginButton = (LoginButton) findViewById(R.id.connectWithFbButton);
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            loginButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
 
-
-                loginToFB();
-            }
-        });
-    }
-    public void loginToFB() {
+                    loginToFB();
+                }
+            });
+        }
+        public void loginToFB() {
         accessToken = AccessToken.getCurrentAccessToken();
         System.out.println(accessToken);
         callbackManager = CallbackManager.Factory.create();
@@ -149,13 +162,13 @@ public class Launch extends AppCompatActivity {
 
                     @Override
                     public void onCancel() {
-                        Toast.makeText(Launch.this, "onCancel", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Launch.this, "Canceled", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onError(FacebookException exception) {
                         Log.d("FacebookException", exception.getMessage());
-                        Toast.makeText(Launch.this, exception.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Launch.this, "Internet Connection Is Required", Toast.LENGTH_LONG).show();
                     }
                 });
     }
@@ -171,7 +184,7 @@ public class Launch extends AppCompatActivity {
         bundle.putString("fb_id", user_id);
         bundle.putString("fb_email", email_json);
         bundle.putString("fb_age", birth_day);
-        intent.putExtra("from_fb_login",bundle);
+        intent.putExtra("from_fb_login", bundle);
         startActivity(intent);
     }
     private boolean checkPlayServices() {
@@ -189,5 +202,15 @@ public class Launch extends AppCompatActivity {
         }
         return true;
     }
+    public Boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
 
+            return true;
+
+        } else {
+            return false;
+        }
+    }
 }

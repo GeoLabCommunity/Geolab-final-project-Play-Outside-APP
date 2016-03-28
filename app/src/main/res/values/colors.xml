@@ -13,6 +13,7 @@
     <color name="white_transparent">#a8ffffff</color>
     <color name="login_logout">#c7ac2d2d</color>
     <color name="swipe">#cd66bb6a</color>
+    <color name="player_info">#dff5f5f5</color>
 
 
 </resources>
