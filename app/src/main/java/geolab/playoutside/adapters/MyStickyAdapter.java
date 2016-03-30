@@ -130,11 +130,11 @@ public class MyStickyAdapter extends BaseAdapter implements StickyListHeadersAda
         } else {
             holder = (HeaderViewHolder) convertView.getTag();
         }
-        //set header timeHolder as first char in name
+
         String headerText = "" + eventsList.get(position).getDate();
-         year = headerText.split("-")[0]; // "Before"
+         year = headerText.split("-")[0];
          month = headerText.split("-")[1];
-         day = headerText.split("-")[2]; // "After"
+         day = headerText.split("-")[2];
         everything = day+"/"+month+"/"+year;
 
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy");
@@ -156,34 +156,7 @@ public class MyStickyAdapter extends BaseAdapter implements StickyListHeadersAda
 
         long diff =thatDay.getTimeInMillis()- today.getTimeInMillis();
 
-       final long days = Math.round(diff * 1f / TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
-
-        if (days<0){
-            new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
-                    .setTitleText("Update data?")
-                    .setContentText("Some Events are old, please confirm for update!")
-                    .setConfirmText("Update it !")
-                    .showCancelButton(false)
-                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sDialog) {
-                            delete(URL+"?eventId="+eventsList.get(position).getEventId());
-                            eventsList.remove(position);
-                            myAdapter.notifyDataSetChanged();
-
-
-                        }
-                    })
-                    .show();
-//            Toast toast = Toast.makeText(context,"Some Events are old, please refresh for update!", Toast.LENGTH_LONG);
-//            toast.setGravity(Gravity.CENTER, 0, 0);
-//            toast.show();
-//            delete(URL+"?eventId="+eventsList.get(position).getEventId());
-//            eventsList.remove(position);
-//            myAdapter.notifyDataSetChanged();
-
-        }
-
+        final long days = Math.round(diff * 1f / TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS)+0.5);
 
         holder.daysleft.setText("(" + String.valueOf(days) + ")  days left");
 
@@ -270,5 +243,6 @@ public class MyStickyAdapter extends BaseAdapter implements StickyListHeadersAda
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         requestQueue.add(stringRequest);
     }
+
 
 }

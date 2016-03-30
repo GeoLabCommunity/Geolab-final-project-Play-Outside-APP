@@ -31,7 +31,8 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/product"
-        android:theme="@style/MyMaterialTheme">
+        android:theme="@style/MyMaterialTheme"
+        android:largeHeap="true">
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/app_id" />

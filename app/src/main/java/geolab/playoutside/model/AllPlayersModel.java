@@ -7,6 +7,9 @@ import java.io.Serializable;
  */
 public class AllPlayersModel implements Serializable {
     private String fb_id, name, mail, birthday, reiting;
+  //  CommentsModel commentsModel;
+
+
 
     public AllPlayersModel(String fb_id, String name, String mail, String birthday, String reiting) {
         this.fb_id = fb_id;
@@ -14,7 +17,19 @@ public class AllPlayersModel implements Serializable {
         this.mail = mail;
         this.birthday = birthday;
         this.reiting = reiting;
+       // this.commentsModel = commentsModel;
+
+
     }
+
+//
+//    public CommentsModel getCommentsModel() {
+//        return commentsModel;
+//    }
+//
+//    public void setCommentsModel(CommentsModel commentsModel) {
+//        this.commentsModel = commentsModel;
+//    }
 
     public String getFb_id() {
         return fb_id;

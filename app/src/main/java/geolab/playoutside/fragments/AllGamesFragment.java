@@ -30,9 +30,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.WeakHashMap;
+import java.util.concurrent.TimeUnit;
 
 import geolab.playoutside.R;
 import geolab.playoutside.adapters.AdminAdapter;
@@ -56,6 +61,7 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
     private int categoryId;
     private String stringSearch;
     private String tabTitle;
+    private  long days;
 
     private ExpandableStickyListHeadersListView list;
     WeakHashMap<View,Integer> mOriginalViewHeightPool = new WeakHashMap<View, Integer>();
@@ -215,10 +221,13 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
                             default:
                                 categoryId=0;
                         }
+                        checkDate(date);
+
+                        if(days>=0){
 
 
                         MyEvent myEvent = new MyEvent(eventId, user_id, time, date, subcategory, description, location, count, latitude, longitude, categoryId,event_players);
-                        myEvents.add(myEvent);
+                        myEvents.add(myEvent);}
                     }
 
                     MyStickyAdapter adapter = new MyStickyAdapter(getActivity(), myEvents);
@@ -325,40 +334,42 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
                             event_players.add(array.get(j).toString());
                         }
 
-                        switch(subcategory) {
+                        switch (subcategory) {
                             case "Football":
-                                categoryId=0;
+                                categoryId = 0;
                                 break;
                             case "Basketball":
-                                categoryId=1;
+                                categoryId = 1;
                                 break;
                             case "Rugby":
-                                categoryId=2;
+                                categoryId = 2;
                                 break;
                             case "Volleyball":
-                                categoryId=3;
+                                categoryId = 3;
                                 break;
                             case "Joker":
-                                categoryId=4;
+                                categoryId = 4;
                                 break;
                             case "Poker":
-                                categoryId=5;
+                                categoryId = 5;
                                 break;
                             case "Ping-pong":
-                                categoryId=6;
+                                categoryId = 6;
                                 break;
                             case "Badminton":
-                                categoryId=7;
+                                categoryId = 7;
                                 break;
                             default:
-                                categoryId=0;
+                                categoryId = 0;
                         }
+                        checkDate(date);
 
+                        if (days < -1) {
 
-                        MyEvent myEvent = new MyEvent(eventId, user_id, time, date, subcategory, description, location, count, latitude, longitude, categoryId,event_players);
-                        myEvents.add(myEvent);
+                            MyEvent myEvent = new MyEvent(eventId, user_id, time, date, subcategory, description, location, count, latitude, longitude, categoryId, event_players);
+                            myEvents.add(myEvent);
+                        }
                     }
-
                     AdminAdapter adminAdapter = new AdminAdapter(getActivity(), myEvents);
                     list.setAnimExecutor(new AnimationExecutor());
 
@@ -487,6 +498,33 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
     @Override
     public void onRefresh() {
         refresh();
+    }
+
+    public void checkDate(String date){
+       String year = date.split("-")[0];
+       String month = date.split("-")[1];
+        String  day = date.split("-")[2];
+        String everything = day+"/"+month+"/"+year;
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy");
+        Date d = null;
+        try {
+            d = formatter.parse(everything);//catch exception
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        Calendar thatDay = Calendar.getInstance();
+        thatDay.setTime(d);
+
+
+
+        Calendar today = Calendar.getInstance();
+
+        long diff = thatDay.getTimeInMillis() - today.getTimeInMillis();
+
+        days = Math.round(diff * 1f / TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS)+0.5);
     }
 
 }

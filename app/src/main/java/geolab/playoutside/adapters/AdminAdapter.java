@@ -202,43 +202,7 @@ public class AdminAdapter extends BaseAdapter implements StickyListHeadersAdapte
 
         long diff =thatDay.getTimeInMillis()- today.getTimeInMillis();
 
-        final long days = Math.round(diff * 1f / TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
-
-        if (days<0){
-
-            new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
-                    .setTitleText("Update data?")
-                    .setContentText("Some Events are old, please confirm for update!")
-                    .setConfirmText("Update it !")
-                    .showCancelButton(false)
-                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sDialog) {
-                            delete(URL+"?eventId="+eventsList.get(position).getEventId());
-                            sDialog.setTitleText("Updated!")
-                                    .setContentText("Old events are deleted")
-                                    .setConfirmText("OK")
-                                    .showCancelButton(false)
-                                    .setCancelClickListener(null)
-                                    .setConfirmClickListener(null)
-                                    .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-
-                            eventsList.remove(position);
-                            myAdapter.notifyDataSetChanged();
-
-                        }
-
-                    })
-                    .show();
-
-//            Toast toast = Toast.makeText(context,"Some Events are old, please refresh for update!", Toast.LENGTH_LONG);
-//            toast.setGravity(Gravity.CENTER, 0, 0);
-//            toast.show();
-//            delete(URL+"?eventId="+eventsList.get(position).getEventId());
-//            eventsList.remove(position);
-//            myAdapter.notifyDataSetChanged();
-
-        }
+        final long days = Math.round(diff * 1f / TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS)+0.5);
 
 
         holder.daysleft.setText("(" + String.valueOf(days) + ")  days left");

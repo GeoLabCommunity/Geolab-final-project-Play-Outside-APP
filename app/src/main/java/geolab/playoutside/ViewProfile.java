@@ -5,7 +5,11 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -20,6 +24,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.facebook.FacebookSdk;
 import com.facebook.Profile;
 import com.squareup.picasso.Picasso;
 
@@ -39,12 +44,15 @@ import java.util.Map;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
+import geolab.playoutside.adapters.CommentsAdapter;
 import geolab.playoutside.adapters.MyStickyAdapter;
+import geolab.playoutside.db.Data;
 import geolab.playoutside.model.AllPlayersModel;
+import geolab.playoutside.model.CommentsModel;
 import geolab.playoutside.model.MyEvent;
 import geolab.playoutside.view.EventDetailActivity;
 
-public class ViewProfile extends AppCompatActivity implements RatingBar.OnRatingBarChangeListener {
+public class ViewProfile extends AppCompatActivity {
     private String fb_id;
     private String nameJsn;
     private String ageJsn;
@@ -79,11 +87,18 @@ public class ViewProfile extends AppCompatActivity implements RatingBar.OnRating
     private Toolbar toolbar;
     private ImageView arrow;
 
+    private RecyclerView.LayoutManager layoutManager;
+    private  RecyclerView recyclerView;
+
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
+
 
 
 
@@ -162,8 +177,6 @@ public class ViewProfile extends AppCompatActivity implements RatingBar.OnRating
             }
 
             else {
-
-
                 getProfileInfo(profileUrl + "event_id=" + eventId_intent + "&fb_id=" + fb_id);
                 setContentView(R.layout.activity_view_profile);
             }
@@ -171,13 +184,20 @@ public class ViewProfile extends AppCompatActivity implements RatingBar.OnRating
         }
 
         FindViewById();
-//        getRatingBar = (RatingBar) findViewById(R.id.getRating_id);
-//        setRatingBar = (RatingBar) findViewById(R.id.setRating_id);
-//        countText = (TextView) findViewById(R.id.countText_id);
+          getRatingBar = (RatingBar) findViewById(R.id.getRating_id);
+
+        getRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                sendRateToServer(rating+"");
+            }
+        });
 
 
-//        setRatingBar.setRating(curRate);
-//        getRatingBar.setOnRatingBarChangeListener(this);
+//
+
+
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
@@ -188,13 +208,32 @@ public class ViewProfile extends AppCompatActivity implements RatingBar.OnRating
             @Override
             public void onClick(View v) {
                 Intent transport = new Intent(ViewProfile.this, AllPlayers.class);
-                Bundle bundle = new Bundle();
-                transport.putExtra("profile_extra", bundle);
                 startActivity(transport);
+                finish();
             }
         });
 
 
+
+        recyclerView = (RecyclerView) findViewById(R.id.reclist);
+        recyclerView.setHasFixedSize(true);
+
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        ArrayList <CommentsModel> barcaModels = new ArrayList<>();
+
+        for (int i = 0; i < Data.comments.length; i++) {
+            CommentsModel model = new CommentsModel(Data.profileaddress[i],Data.dateTime[i],Data.comments[i]);
+
+            barcaModels.add(model);
+
+        }
+
+        CommentsAdapter adapter = new CommentsAdapter(this,barcaModels);
+
+        recyclerView.setAdapter(adapter);
 
 
 
@@ -407,22 +446,50 @@ public class ViewProfile extends AppCompatActivity implements RatingBar.OnRating
         requestQueue.add(myRequest);
     }
 
-
-    public void onRatingChanged(RatingBar rateBar, float rating,
-                                boolean fromUser) {
-        DecimalFormat decimalFormat = new DecimalFormat("#.#");
-        curRate = Float.valueOf(decimalFormat.format((curRate * count + rating)
-                / ++count));
-        Toast.makeText(ViewProfile.this,
-                "New Rating: " + curRate, Toast.LENGTH_SHORT).show();
-        setRatingBar.setRating(curRate);
-        countText.setText(count + " Ratings");
-    }
     public void FindViewById(){
         imageProfile = (CircleImageView) findViewById(R.id.profile_image);
         name = (TextView) findViewById(R.id.profile_name);
         age = (TextView) findViewById(R.id.profile_age);
         email = (TextView) findViewById(R.id.profile_email);
+    }
+
+    private void sendRateToServer(final String vote){
+
+
+
+        final String URL = "http://geolab.club/geolabwork/ika/insertrate.php";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Toast.makeText(ViewProfile.this,response,Toast.LENGTH_LONG).show();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // System.out.println("error " +error.toString());
+                        Toast.makeText(ViewProfile.this,"error " +error.toString(),Toast.LENGTH_LONG).show();
+                    }
+                }){
+            @Override
+            protected Map<String,String> getParams(){
+                Map<String,String> params = new HashMap<>();
+                // params.put("eventId",eventId);
+                params.put("rated_player_id",fb_id);
+                params.put("give_rate_player_id",Profile.getCurrentProfile().getId());
+                params.put("rate",vote);
+
+
+                params.toString();
+                return params;
+            }
+
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
     }
 
 }
