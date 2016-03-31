@@ -166,12 +166,13 @@ public class AllPlayers extends AppCompatActivity implements WaveSwipeRefreshLay
                         String name = curObj.getString("name");
                         String mail = curObj.getString("email");
                         String age = curObj.getString("age");
-                        String reiting = curObj.getString("reit_number");
+                        String rate = curObj.getString("rate");
+                        String count_people = curObj.getString("count_people");
 
 
 
 
-                        AllPlayersModel allPlayersModel = new AllPlayersModel(user_id, name, mail, age, reiting);
+                        AllPlayersModel allPlayersModel = new AllPlayersModel(user_id, name, mail, age, rate, count_people);
                         allPlayersModels.add(allPlayersModel);
                     }
 

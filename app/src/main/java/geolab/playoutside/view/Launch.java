@@ -155,7 +155,7 @@ public class Launch extends AppCompatActivity {
                             }
                         });
                         Bundle parameters = new Bundle();
-                        parameters.putString("fields", "id,name,birthday,gender,email");
+                        parameters.putString("fields", "id,name,birthday,email");
                         request.setParameters(parameters);
                         request.executeAsync();
                     }

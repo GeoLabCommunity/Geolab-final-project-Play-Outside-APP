@@ -309,7 +309,6 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
                 JSONArray jsonArray = null;
                 try {
                     jsonArray = response.getJSONArray("data");
-                    System.out.println(jsonArray.length()+"9999");
 
 
                     ArrayList<MyEvent> myEvents = new ArrayList<>();
@@ -364,7 +363,7 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
                         }
                         checkDate(date);
 
-                        if (days < -1) {
+                        if (days >= 0) {
 
                             MyEvent myEvent = new MyEvent(eventId, user_id, time, date, subcategory, description, location, count, latitude, longitude, categoryId, event_players);
                             myEvents.add(myEvent);

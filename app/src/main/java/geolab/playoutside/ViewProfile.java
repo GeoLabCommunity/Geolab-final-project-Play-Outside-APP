@@ -51,6 +51,7 @@ import geolab.playoutside.model.AllPlayersModel;
 import geolab.playoutside.model.CommentsModel;
 import geolab.playoutside.model.MyEvent;
 import geolab.playoutside.view.EventDetailActivity;
+import geolab.playoutside.view.Launch;
 
 public class ViewProfile extends AppCompatActivity {
     private String fb_id;
@@ -58,6 +59,7 @@ public class ViewProfile extends AppCompatActivity {
     private String ageJsn;
     private String emailJsn;
     private String reiting;
+    private String count_people;
 
     private Boolean check;
 
@@ -74,6 +76,9 @@ public class ViewProfile extends AppCompatActivity {
     private TextView name;
     private TextView age;
     private TextView email;
+    private TextView rate;
+    private TextView countView;
+    private RatingBar rateBarView;
 
     private ImageView accept;
     private ImageView reject;
@@ -113,6 +118,8 @@ public class ViewProfile extends AppCompatActivity {
             fb_id = (allPlayersModel.getFb_id());
             reiting = (allPlayersModel.getReiting());
             emailJsn = (allPlayersModel.getMail());
+            count_people = (allPlayersModel.getCount_people());
+
 
             FindViewById();
 
@@ -136,11 +143,15 @@ public class ViewProfile extends AppCompatActivity {
                     .resize(width, height)
                     .centerCrop()
                     .into(imageProfile);
-            setRatingBar = (RatingBar) findViewById(R.id.setRating_id);
-            setRatingBar.setRating(Float.parseFloat(reiting));
-
-
-
+            rate.setText(reiting);
+            rateBarView.setRating(Float.parseFloat(reiting));
+            countView.setText(count_people);
+            getRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+                @Override
+                public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                    sendRateToServer(rating + "");
+                }
+            });
         }
 
         else if(bundle != null){
@@ -150,9 +161,17 @@ public class ViewProfile extends AppCompatActivity {
             fb_id = bundle.getString("fb_id");
             if(check != false){
                 setContentView(R.layout.activity_view_profile_checked);
-                getProfileInfo(profileUrl+"event_id="+eventId_intent+"&fb_id="+fb_id);
+                FindViewById();
+                getProfileInfo(profileUrl + "event_id=" + eventId_intent + "&fb_id=" + fb_id);
                 accept = (ImageView) findViewById(R.id.profile_accept);
                 reject = (ImageView) findViewById(R.id.profile_reject) ;
+
+                getRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+                    @Override
+                    public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                        sendRateToServer(rating + "");
+                    }
+                });
 
 
                 accept.setOnClickListener(new View.OnClickListener() {
@@ -184,14 +203,17 @@ public class ViewProfile extends AppCompatActivity {
         }
 
         FindViewById();
-          getRatingBar = (RatingBar) findViewById(R.id.getRating_id);
 
-        getRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+          getRatingBar = (RatingBar) findViewById(R.id.getRating_id);
+        getRatingBar.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                sendRateToServer(rating+"");
+            public void onClick(View v) {
+                Toast.makeText(ViewProfile.this,"You must login for rate this player",Toast.LENGTH_LONG).show();
             }
         });
+
+
+
 
 
 //
@@ -261,6 +283,8 @@ public class ViewProfile extends AppCompatActivity {
                         nameJsn = curObj.getString("name");
                         ageJsn = curObj.getString("age");
                         emailJsn = curObj.getString("email");
+                        reiting = curObj.getString("rate");
+                        count_people = curObj.getString("count_people");
 
                     }
 
@@ -276,6 +300,9 @@ public class ViewProfile extends AppCompatActivity {
 
                     name.setText(nameJsn);
                     email.setText(emailJsn);
+                    rateBarView.setRating(Float.parseFloat(reiting));
+                    rate.setText(reiting);
+                    countView.setText(count_people);
 
                     SimpleDateFormat sf = new SimpleDateFormat("dd/MM/yyyy");
                     try {
@@ -451,6 +478,10 @@ public class ViewProfile extends AppCompatActivity {
         name = (TextView) findViewById(R.id.profile_name);
         age = (TextView) findViewById(R.id.profile_age);
         email = (TextView) findViewById(R.id.profile_email);
+        rate = (TextView) findViewById(R.id.profile_rate);
+        rateBarView = (RatingBar) findViewById(R.id.profile_rateBar);
+        countView = (TextView) findViewById(R.id.profile_count);
+        getRatingBar = (RatingBar) findViewById(R.id.getRating_id);
     }
 
     private void sendRateToServer(final String vote){
@@ -469,8 +500,30 @@ public class ViewProfile extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // System.out.println("error " +error.toString());
-                        Toast.makeText(ViewProfile.this,"error " +error.toString(),Toast.LENGTH_LONG).show();
+                        new SweetAlertDialog(ViewProfile.this, SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("Rate this player?")
+                                .setContentText("for rate this player You need to login")
+                                .setCancelText("No,cancel")
+                                .setConfirmText("Yes, Login")
+                                .showCancelButton(true)
+                                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sDialog) {
+
+                                        sDialog.dismiss();
+                                    }
+                                })
+                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sDialog) {
+                                        MainActivity.getInstance().finish();
+                                        Intent intent = new Intent(ViewProfile.this, Launch.class);
+                                        startActivity(intent);
+
+                                    }
+
+                                })
+                                .show();
                     }
                 }){
             @Override
