@@ -1,17 +1,24 @@
 package geolab.playoutside;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -47,13 +54,16 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import geolab.playoutside.adapters.CommentsAdapter;
 import geolab.playoutside.adapters.MyStickyAdapter;
 import geolab.playoutside.db.Data;
+import geolab.playoutside.fragments.DialogFragment;
 import geolab.playoutside.model.AllPlayersModel;
 import geolab.playoutside.model.CommentsModel;
 import geolab.playoutside.model.MyEvent;
 import geolab.playoutside.view.EventDetailActivity;
 import geolab.playoutside.view.Launch;
+import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
+import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
-public class ViewProfile extends AppCompatActivity {
+public class ViewProfile extends AppCompatActivity implements WaveSwipeRefreshLayout.OnRefreshListener{
     private String fb_id;
     private String nameJsn;
     private String ageJsn;
@@ -62,6 +72,10 @@ public class ViewProfile extends AppCompatActivity {
     private String count_people;
 
     private Boolean check;
+    private Boolean online = false;
+
+    private WaveSwipeRefreshLayout swipeRefreshLayout;
+
 
     private int categoryId;
     private String eventId_intent;
@@ -71,6 +85,7 @@ public class ViewProfile extends AppCompatActivity {
     private String acceptUrl = "http://geolab.club/geolabwork/ika/accept.php";
 
     private String profileUrl ="http://geolab.club/geolabwork/ika/viewprofile.php?";
+    private String getComment = "http://geolab.club/geolabwork/ika/getcomment.php?fb_id=";
     private RequestQueue requestQueue;
     private CircleImageView imageProfile;
     private TextView name;
@@ -79,6 +94,7 @@ public class ViewProfile extends AppCompatActivity {
     private TextView rate;
     private TextView countView;
     private RatingBar rateBarView;
+    private FloatingActionButton fab;
 
     private ImageView accept;
     private ImageView reject;
@@ -107,11 +123,13 @@ public class ViewProfile extends AppCompatActivity {
 
 
 
-        Bundle bundle = getIntent().getBundleExtra("Extra");
+        final Bundle bundle = getIntent().getBundleExtra("Extra");
         Bundle bundle2 = getIntent().getBundleExtra("fromadapter");
         if(bundle2 != null){
             setContentView(R.layout.activity_view_profile);
             final AllPlayersModel allPlayersModel = (AllPlayersModel) bundle2.get("playerinfo");
+
+            online = bundle2.getBoolean("online");
 
             nameJsn = (allPlayersModel.getName());
             ageJsn = (allPlayersModel.getBirthday());
@@ -152,6 +170,13 @@ public class ViewProfile extends AppCompatActivity {
                     sendRateToServer(rating + "");
                 }
             });
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showInputDialog();
+
+                }
+            });
         }
 
         else if(bundle != null){
@@ -172,6 +197,7 @@ public class ViewProfile extends AppCompatActivity {
                         sendRateToServer(rating + "");
                     }
                 });
+
 
 
                 accept.setOnClickListener(new View.OnClickListener() {
@@ -198,20 +224,27 @@ public class ViewProfile extends AppCompatActivity {
             else {
                 getProfileInfo(profileUrl + "event_id=" + eventId_intent + "&fb_id=" + fb_id);
                 setContentView(R.layout.activity_view_profile);
+                FindViewById();
+                fab.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        showInputDialog();
+
+                    }
+                });
             }
 
         }
 
         FindViewById();
 
-          getRatingBar = (RatingBar) findViewById(R.id.getRating_id);
-        getRatingBar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(ViewProfile.this,"You must login for rate this player",Toast.LENGTH_LONG).show();
-            }
-        });
-
+//        getRatingBar = (RatingBar) findViewById(R.id.getRating_id);
+//        getRatingBar.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(ViewProfile.this,"You must login for rate this player",Toast.LENGTH_LONG).show();
+//            }
+//        });
 
 
 
@@ -237,27 +270,30 @@ public class ViewProfile extends AppCompatActivity {
 
 
 
+
+
         recyclerView = (RecyclerView) findViewById(R.id.reclist);
         recyclerView.setHasFixedSize(true);
 
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+        swipeRefreshLayout = (WaveSwipeRefreshLayout) findViewById(R.id.swiperefresh1);
+        swipeRefreshLayout.setColorSchemeColors(Color.WHITE, Color.WHITE);
+        swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setWaveColor(Color.argb(100,20,150,40));
+        swipeRefreshLayout.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        swipeRefreshLayout.setRefreshing(true);
 
-        ArrayList <CommentsModel> barcaModels = new ArrayList<>();
+                                        getComments(getComment+fb_id);
 
-        for (int i = 0; i < Data.comments.length; i++) {
-            CommentsModel model = new CommentsModel(Data.profileaddress[i],Data.dateTime[i],Data.comments[i]);
+                                    }
+                                }
+        );
 
-            barcaModels.add(model);
-
-        }
-
-        CommentsAdapter adapter = new CommentsAdapter(this,barcaModels);
-
-        recyclerView.setAdapter(adapter);
-
-
+        getComments(getComment+fb_id);
 
     }
     private void getProfileInfo(String url) {
@@ -392,8 +428,6 @@ public class ViewProfile extends AppCompatActivity {
                 JSONArray jsonArray = null;
                 try {
                     jsonArray = response.getJSONArray("data");
-                    System.out.println(jsonArray+"hhhh");
-
                     for (int i = 0; i < jsonArray.length(); i++) {
 
                         JSONObject curObj = jsonArray.getJSONObject(i);
@@ -482,6 +516,7 @@ public class ViewProfile extends AppCompatActivity {
         rateBarView = (RatingBar) findViewById(R.id.profile_rateBar);
         countView = (TextView) findViewById(R.id.profile_count);
         getRatingBar = (RatingBar) findViewById(R.id.getRating_id);
+        fab = (FloatingActionButton) findViewById(R.id.fab_profile);
     }
 
     private void sendRateToServer(final String vote){
@@ -544,5 +579,180 @@ public class ViewProfile extends AppCompatActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
     }
+    protected void showInputDialog() {
 
+        // get prompts.xml view
+        LayoutInflater layoutInflater = LayoutInflater.from(ViewProfile.this);
+        View promptView = layoutInflater.inflate(R.layout.input_comment_dialog, null);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ViewProfile.this);
+        alertDialogBuilder.setView(promptView);
+
+        final EditText editText = (EditText) promptView.findViewById(R.id.edittext);
+        // setup a dialog window
+        alertDialogBuilder.setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        sendCommentToServer(String.valueOf(editText.getText()));
+                    }
+                })
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        // create an alert dialog
+        AlertDialog alert = alertDialogBuilder.create();
+        alert.show();
+    }
+
+    private void sendCommentToServer(final String comment){
+
+
+
+        final String URL = "http://geolab.club/geolabwork/ika/insertcomment.php";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Toast.makeText(ViewProfile.this,response,Toast.LENGTH_LONG).show();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        new SweetAlertDialog(ViewProfile.this, SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("Comment this player?")
+                                .setContentText("for comment this player You need to login")
+                                .setCancelText("No,cancel")
+                                .setConfirmText("Yes, Login")
+                                .showCancelButton(true)
+                                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sDialog) {
+
+                                        sDialog.dismiss();
+                                    }
+                                })
+                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sDialog) {
+                                        MainActivity.getInstance().finish();
+                                        Intent intent = new Intent(ViewProfile.this, Launch.class);
+                                        startActivity(intent);
+
+                                    }
+
+                                })
+                                .show();
+
+                    }
+                }){
+            @Override
+            protected Map<String,String> getParams(){
+                Map<String,String> params = new HashMap<>();
+                params.put("user_id",fb_id);
+                params.put("commented_user_id",Profile.getCurrentProfile().getId());
+                params.put("comment",comment);
+
+
+                params.toString();
+                return params;
+            }
+
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+    }
+    private void getComments(String url) {
+
+        JsonObjectRequest myRequest = new JsonObjectRequest(Request.Method.GET
+                , url
+                , null
+                , new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONArray jsonArray = null;
+                try {
+
+                    jsonArray = response.getJSONArray("data");
+                    if(jsonArray==null){
+
+                    }else {
+
+
+
+                        ArrayList<CommentsModel> commentsModels = new ArrayList<>();
+                        for (int i = 0; i < jsonArray.length(); i++) {
+
+                            JSONObject curObj = jsonArray.getJSONObject(i);
+
+
+                            String user_id = curObj.getString("commented_user_id");
+                            String comment = curObj.getString("comment");
+                            String datetime = curObj.getString("datetime");
+
+
+
+
+                                CommentsModel commentsModel = new CommentsModel(user_id,datetime,comment);
+                                commentsModels.add(commentsModel);
+                        }
+                        swipeRefreshLayout.setRefreshing(true);
+
+
+
+                        CommentsAdapter adapter = new CommentsAdapter(ViewProfile.this, commentsModels);
+
+                        adapter.notifyDataSetChanged();
+
+
+                        recyclerView.setAdapter(adapter);
+
+
+
+
+
+
+                    }} catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println(error+"ragac");
+            }
+        });
+        requestQueue = Volley.newRequestQueue(ViewProfile.this);
+
+        requestQueue.add(myRequest);
+        swipeRefreshLayout.setRefreshing(false);
+    }
+    private void refresh(){
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getComments(getComment+fb_id);
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        }, 1300);
+    }
+
+    @Override
+    public void onResume() {
+        //mWaveSwipeRefreshLayout.setRefreshing(true);
+        refresh();
+        super.onResume();
+    }
+    @Override
+    public void onRefresh() {
+        refresh();
+    }
 }

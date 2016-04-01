@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.LocationManager;
 import android.provider.Settings;
 import android.support.design.widget.TabLayout;
@@ -16,6 +18,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -45,6 +48,8 @@ import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import geolab.playoutside.db.Category_db;
@@ -52,16 +57,15 @@ import geolab.playoutside.fragment_categories.SubCategoryIcon;
 import geolab.playoutside.fragments.AllGamesFragment;
 import hotchemi.stringpicker.StringPickerDialog;
 
-public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyCallback, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, View.OnClickListener,StringPickerDialog.OnClickListener{
+public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyCallback, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, View.OnClickListener{
     private LinearLayout timeclick;
     private LinearLayout dateclick;
     private TextView timeenter;
     private TextView dateenter;
+    private TextView getplaceView;
     private String date;
     private String time;
-    private String getmember;
     private String getplace;
-    private SwipeNumberPicker placeview;
     private String latitude;
     private String longitude;
     private String getdescription;
@@ -76,12 +80,6 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
 
     private EditText description;
 
-
-    private RelativeLayout countMember;
-    private RelativeLayout location;
-
-    private static final String TAG = StringPickerDialog.class.getSimpleName();
-    private TextView mTextView;
 
     private String subcategoryData = null;
 
@@ -146,55 +144,16 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
         });
 
 
-
-        countMember = (RelativeLayout) findViewById(R.id.count_member);
-        countMember.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-        final SwipeNumberPicker custom = (SwipeNumberPicker) findViewById(R.id.snp_custom);
-        custom.setOnValueChangeListener(new OnValueChangeListener() {
-            @Override
-            public boolean onValueChange(SwipeNumberPicker view, int oldValue, int newValue) {
-                getmember=(String.valueOf(newValue));
-//                        TextView text = (TextView) findViewById(R.id.count_member_text);
-//                        text.setText(String.valueOf(newValue));
-                return true;
-            }
-        });
-
-
-        mTextView = (TextView) findViewById(R.id.location_text);
-        location = (RelativeLayout) findViewById(R.id.location);
-        location.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putStringArray(getString(R.string.string_picker_dialog_values), getStringArray());
-                StringPickerDialog dialog = new StringPickerDialog();
-                dialog.setArguments(bundle);
-                dialog.show(getSupportFragmentManager(), TAG);
-            }
-        });
-
-
         timeclick = (LinearLayout) findViewById(R.id.detail_time_click);
         dateclick = (LinearLayout) findViewById(R.id.detail_date_click);
         timeenter = (TextView) findViewById(R.id.detail_time_text_id);
         dateenter = (TextView) findViewById(R.id.detail_date_text_id);
-
+        getplaceView = (TextView) findViewById(R.id.detail_getplace);
 
 
         ((MapFragment) getFragmentManager().findFragmentById(R.id.map))
 
-
-
-
                 .getMapAsync(this);
-
-
 
         dateclick.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -228,6 +187,8 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
 
             }
         });
+
+
 
         //shevamowmot location manageri
         checkGPSStatus();
@@ -288,13 +249,7 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
 
             return;
         }
-        map.setMyLocationEnabled(true);
-//        Marker marker = map.addMarker(new MarkerOptions()
-//                .position(point)
-//                .title("title")
-//                .snippet("small description")
-//                .draggable(true)
-//        );
+
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(point, 13));
         map.animateCamera(CameraUpdateFactory.zoomTo(13), 1500, null);
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
@@ -304,6 +259,7 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
             @Override
             public void onMapClick(LatLng point) {
                 // TODO Auto-generated method stub
+                getCompleteAddressString(point.latitude,point.longitude);
                 map.clear();
                 System.out.println(point.latitude + " " + point.longitude);
                 latitude = String.valueOf(point.latitude);
@@ -329,11 +285,8 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
     }
     private void getInfoFromActivity() {
         description = (EditText) findViewById(R.id.detail_description_text_id);
-
-        placeview= (SwipeNumberPicker) findViewById(R.id.snp_custom);
-        mTextView = (TextView) findViewById(R.id.location_text);
-        this.getmember =  String.valueOf(placeview.getText().toString());
-        this.getplace = String.valueOf(mTextView.getText().toString());
+        getplaceView = (TextView) findViewById(R.id.detail_getplace);
+        this.getplace = String.valueOf(getplaceView.getText());
         this.getdescription = String.valueOf(description.getText());
 
     }
@@ -354,10 +307,6 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
         return;
     }
 
-    @Override
-    public void onClick(String value) {
-        mTextView.setText("< " +value + " >");
-    }
 
     private class MyPagerAdapter extends FragmentPagerAdapter {
 
@@ -440,7 +389,6 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
                 params.put("date",date);
                 params.put("time",time);
                 params.put("description",getdescription);
-                params.put("count",getmember);
                 params.put("location",getplace);
                 params.put("latitude",latitude);
                 params.put("longitude",longitude);
@@ -453,11 +401,6 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
-    }
-    private String[] getStringArray() {
-        return new String[] {"Gldani","Nadzaladevi","Vaja-Pshavela","Samgori","Isani","VarkeTili","Digomi",
-                "Saburtalo","Vake","Rustaveli","Muxiani","Temqa","Wereteli"
-                };
     }
     private void update(){
 
@@ -492,7 +435,6 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
                 params.put("date",date);
                 params.put("time",time);
                 params.put("description",getdescription);
-                params.put("count",getmember);
                 params.put("location",getplace);
                 params.put("latitude",latitude);
                 params.put("longitude",longitude);
@@ -505,5 +447,28 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
+    }
+    private String getCompleteAddressString(double LATITUDE, double LONGITUDE) {
+        String strAdd = "";
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(LATITUDE, LONGITUDE, 1);
+            if (addresses != null) {
+                Address returnedAddress = addresses.get(0);
+                StringBuilder strReturnedAddress = new StringBuilder("");
+
+                for (int i = 0; i < returnedAddress.getMaxAddressLineIndex(); i++) {
+                    strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("  ");
+                }
+                strAdd = strReturnedAddress.toString();
+               getplaceView.setText(strReturnedAddress.toString());
+            } else {
+                getplaceView.setText("Cannot get Address!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            getplaceView.setText("Cannot get Address!");
+        }
+        return strAdd;
     }
 }

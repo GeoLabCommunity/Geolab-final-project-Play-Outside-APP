@@ -43,5 +43,14 @@
 
     <include layout="@layout/content_view_profile" />
 
+    <android.support.design.widget.FloatingActionButton
+        app:backgroundTint="@color/colorPrimary"
+        android:id="@+id/fab_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="16dp"
+        android:src="@drawable/editw" />
+
 
 </android.support.design.widget.CoordinatorLayout>

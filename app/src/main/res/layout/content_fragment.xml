@@ -15,8 +15,6 @@
             android:layout_height="match_parent"
             android:clipToPadding="false"
             android:drawSelectorOnTop="true"
-            android:scrollbarStyle="outsideOverlay"
-            android:fastScrollEnabled="true"
             android:overScrollMode="never"/>
 </jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout>
 </LinearLayout>

@@ -111,11 +111,11 @@ public class AllPlayerAdapter extends BaseAdapter implements StickyListHeadersAd
         holder.mailItem.setText(allPlayersModelArrayList.get(position).getMail());
         holder.reitingItem.setText(allPlayersModelArrayList.get(position).getReiting());
 
-        String imgUrl = "https://graph.facebook.com/" + (allPlayersModelArrayList.get(position).getFb_id()) + "/picture?height=400";
+        String imgUrl = "https://graph.facebook.com/" + (allPlayersModelArrayList.get(position).getFb_id()) + "/picture?height=300";
 
         Picasso.with(context)
                 .load(imgUrl)
-                .resize(62, 62)
+                .resize(300, 300)
                 .centerCrop()
                 .into(holder.profileItem);
 
@@ -155,6 +155,7 @@ public class AllPlayerAdapter extends BaseAdapter implements StickyListHeadersAd
             Intent viewprofile = new Intent(context, ViewProfile.class);
             Bundle bundle = new Bundle();
             bundle.putSerializable("playerinfo",allPlayersModel);
+            bundle.putBoolean("online",true);
             viewprofile.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
             viewprofile.putExtra("fromadapter",bundle);

@@ -101,8 +101,7 @@ public class EventDetailActivity extends AppCompatActivity {
     protected TextView count;
     @Bind(R.id.detail_join_game)
     protected Button joinGame;
-    @Bind(R.id.detail_join_image)
-    protected CircleImageView joinImage;
+
 
     private ImageView edit;
     private ImageView delete;

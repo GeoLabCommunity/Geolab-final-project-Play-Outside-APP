@@ -72,6 +72,8 @@ public class AllPlayers extends AppCompatActivity implements WaveSwipeRefreshLay
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("");
+
 
 
         arrow = (ImageView) findViewById(R.id.arrow);

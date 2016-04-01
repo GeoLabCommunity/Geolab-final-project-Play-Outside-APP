@@ -28,6 +28,11 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Holder
     private String time;
     private String date;
     private String timeDate;
+    private String day;
+    private String month;
+    private String year;
+    private String everything;
+
     public CommentsAdapter(ViewProfile context, ArrayList<CommentsModel> commentsModelArrayList) {
         this.commentsModelArrayList = commentsModelArrayList;
         this.context = context;
@@ -44,8 +49,12 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Holder
         timeDate=commentsModelArrayList.get(position).getDateTime();
         time = timeDate.split(" ")[1];
         date = timeDate.split(" ")[0];
+        year = date.split("-")[0]; // "Before"
+        month = date.split("-")[1];
+        day = date.split("-")[2]; // "After"
+        everything = day+"/"+month+"/"+year;
 
-        holder.dateView.setText(date);
+        holder.dateView.setText(everything);
         holder.timeView.setText(time);
         holder.commentView.setText(commentsModelArrayList.get(position).getComment());
 

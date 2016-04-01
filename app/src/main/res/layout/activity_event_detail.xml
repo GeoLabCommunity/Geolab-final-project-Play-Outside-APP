@@ -70,34 +70,27 @@ android:layout_below="@+id/detail_toolbar"
         android:layout_height="0.5dp"></View>
    
     <LinearLayout
-        android:layout_marginLeft="16dp"
+        android:layout_marginLeft="13dp"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="55dp">
         <ImageView
             android:layout_gravity="center"
             android:src="@drawable/loc"
-            android:layout_width="10dp"
-            android:layout_height="14dp" />
+            android:layout_width="16dp"
+            android:layout_height="16dp" />
         <LinearLayout
             android:gravity="center_vertical"
-            android:layout_marginLeft="16dp"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         <TextView
-        android:id="@+id/detail_place_text_id"
-        android:text="location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+            android:text="location"
+            android:layout_marginLeft="13dp"
+            android:id="@+id/detail_place_text_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:textSize="12dp"/>
-            <TextView
-                android:textColor="@color/com_facebook_button_background_color_disabled"
-                android:id="@+id/detail_place_text_via_map"
-                android:text="sruli misamarti qucha adgili"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="10dp"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -115,7 +108,7 @@ android:layout_below="@+id/detail_toolbar"
     
     <ImageView
         android:src="@drawable/cal"
-        android:layout_width="17dp"
+        android:layout_width="16dp"
         android:layout_height="16dp" />
 
     <TextView
@@ -142,15 +135,14 @@ android:layout_below="@+id/detail_toolbar"
     android:layout_height="55dp">
     
     <ImageView
-        android:layout_marginLeft="3dp"
         android:src="@drawable/time"
-        android:layout_width="13dp"
-        android:layout_height="14dp" />
+        android:layout_width="16dp"
+        android:layout_height="16dp" />
    
     <TextView
         android:textSize="12dp"
         android:textColor="#ED5831"
-        android:layout_marginLeft="11dp"
+        android:layout_marginLeft="13dp"
         android:id="@+id/detail_time_text_id"
         android:text="time"
         android:layout_width="wrap_content"
@@ -162,7 +154,7 @@ android:layout_below="@+id/detail_toolbar"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"></View>
     <LinearLayout
-        android:layout_marginLeft="16dp"
+        android:layout_marginLeft="13dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:layout_width="match_parent"
@@ -170,11 +162,11 @@ android:layout_below="@+id/detail_toolbar"
 
         <ImageView
             android:src="@drawable/dett"
-            android:layout_width="wrap_content"
+            android:layout_width="16dp"
             android:layout_height="16dp" />
         <TextView
             android:textSize="12dp"
-            android:layout_marginLeft="8dp"
+            android:layout_marginLeft="13dp"
             android:id="@+id/detail_description_text_id"
             android:text="description"
             android:layout_width="wrap_content"
@@ -190,8 +182,8 @@ android:layout_below="@+id/detail_toolbar"
    
 
 <LinearLayout
-    android:layout_marginRight="16dp"
-    android:layout_marginLeft="16dp"
+    android:layout_marginRight="13dp"
+    android:layout_marginLeft="13dp"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="90dp">
@@ -202,14 +194,14 @@ android:layout_below="@+id/detail_toolbar"
         android:layout_height="25dp">
     <ImageView
         android:layout_gravity="center_vertical"
-        android:src="@drawable/people"
-        android:layout_width="15dp"
+        android:src="@drawable/shape"
+        android:layout_width="16dp"
         android:layout_height="16dp" />
 
     <TextView
         android:layout_gravity="center_vertical"
         android:textSize="12dp"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="13dp"
         android:id="@+id/detail_player_count_text_id"
         android:text="playerCount count"
         android:layout_width="wrap_content"

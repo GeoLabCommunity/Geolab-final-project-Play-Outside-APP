@@ -6,7 +6,7 @@
     <jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/swiperefresh"
+        android:id="@+id/swiperefresh1"
         >
 
         <android.support.v7.widget.RecyclerView

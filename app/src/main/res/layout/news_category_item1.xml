@@ -82,7 +82,7 @@
 
         <ImageView
 
-            android:src="@drawable/people"
+            android:src="@drawable/shape"
             android:gravity="center"
             android:layout_width="15dp"
             android:layout_height="match_parent" />
