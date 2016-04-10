@@ -24,7 +24,7 @@
             android:layout_marginLeft="16dp"
             android:id="@+id/time_text_id1"
             android:text="16:00"
-            android:background="@drawable/_football"
+            android:background="@drawable/b_footsvg"
             android:gravity="center"
             android:textColor="#fafafa"
             android:textSize="11sp"

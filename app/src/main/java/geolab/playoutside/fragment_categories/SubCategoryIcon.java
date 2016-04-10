@@ -26,6 +26,7 @@ public class SubCategoryIcon extends Fragment {
     private int[] iconArray;
     private String [] tagArray;
     private static String subCategoryTag = null;
+    private String category;
 
     public SubCategoryIcon() {
         // Required empty public constructor
@@ -42,12 +43,13 @@ public class SubCategoryIcon extends Fragment {
           buttonCount=getArguments().getInt("buttonCounter");
           iconArray = getArguments().getIntArray("iconarray");
           tagArray = getArguments().getStringArray("tagarray");
+          category = getArguments().getString("category");
 
         for (int i = 0; i < buttonCount; i++) {
             final ImageButton button = new ImageButton(getActivity().getApplicationContext());
             button.setLayoutParams(new ViewGroup.LayoutParams(150,150));
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            lp.setMargins(30, 0, 30, 0);
+            lp.setMargins(20, 0, 18, 0);
             button.setLayoutParams(lp);
             //System.out.println(iconArray[i]);
 
@@ -69,7 +71,7 @@ public class SubCategoryIcon extends Fragment {
                     Toast toast = Toast.makeText(getContext(),subCategoryTag, Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.CENTER, 0, 0);
                     toast.show();
-                    ((Add_Event_Activity)getActivity()).setSubCategoryData(subCategoryTag);
+                    ((Add_Event_Activity)getActivity()).setSubCategoryData(subCategoryTag,category);
 
                 }
             });
@@ -81,13 +83,14 @@ public class SubCategoryIcon extends Fragment {
         return view;
 
     }
-    public static SubCategoryIcon newInstance(int buttonCounter, int[] iconArray, String[] tagArray) {
+    public static SubCategoryIcon newInstance(int buttonCounter, int[] iconArray, String[] tagArray, String category) {
 
         SubCategoryIcon f = new SubCategoryIcon();
         Bundle b = new Bundle();
         b.putInt("buttonCounter", buttonCounter);
         b.putIntArray("iconarray", iconArray);
         b.putStringArray("tagarray", tagArray);
+        b.putString("category", category);
 
 
 

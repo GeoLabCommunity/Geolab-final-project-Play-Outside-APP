@@ -3,20 +3,20 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="150dp">
+    android:layout_height="170dp">
 
     <LinearLayout
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         android:id="@+id/profile"
-        android:layout_marginBottom="10dp"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
     <ImageView
         android:layout_gravity="fill_vertical"
-        android:layout_marginRight="20dp"
+        android:layout_marginRight="16dp"
         android:src="@drawable/profilexxx"
         android:layout_width="21dp"
         android:layout_height="21dp" />
@@ -28,13 +28,14 @@
 </LinearLayout>
     <LinearLayout
         android:id="@+id/myGame"
-        android:layout_marginBottom="10dp"
+        android:paddingBottom="10dp"
+
         android:layout_marginLeft="16dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
         <ImageView
-            android:layout_marginRight="20dp"
+            android:layout_marginRight="16dp"
             android:src="@drawable/myevent"
             android:layout_width="21dp"
             android:layout_height="21dp" />
@@ -49,13 +50,13 @@
     </LinearLayout>
     <LinearLayout
         android:id="@+id/allplayers"
-        android:layout_marginBottom="10dp"
         android:layout_marginLeft="16dp"
+        android:paddingBottom="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
         <ImageView
-            android:layout_marginRight="20dp"
+            android:layout_marginRight="16dp"
             android:src="@drawable/allplayers"
             android:layout_width="21dp"
             android:layout_height="21dp" />
@@ -65,21 +66,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-
-
     </LinearLayout>
     <LinearLayout
         android:id="@+id/logout"
-        android:layout_marginBottom="10dp"
+        android:paddingBottom="10dp"
         android:layout_marginLeft="16dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
         <ImageView
-            android:layout_marginRight="20dp"
+            android:layout_marginRight="16dp"
             android:src="@drawable/logoutxxx"
-            android:layout_width="23dp"
-            android:layout_height="20dp" />
+            android:layout_width="22dp"
+            android:layout_height="21dp" />
         <TextView
             android:layout_gravity="center"
             android:text="Logout"
@@ -93,12 +92,14 @@
         android:layout_height="1dp"
         android:background="#e4e4e4"/>
     <TextView
-        android:layout_marginTop="30dp"
-
-        android:text="Category"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="10dp"
+        android:textSize="16dp"
+        android:textStyle="italic"
+        android:text="All Categories"
 
         android:layout_width="match_parent"
-        android:layout_height="42dp" />
+        android:layout_height="wrap_content" />
 
 
 </LinearLayout>

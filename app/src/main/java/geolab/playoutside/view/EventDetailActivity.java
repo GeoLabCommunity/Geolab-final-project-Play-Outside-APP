@@ -1,14 +1,27 @@
 package geolab.playoutside.view;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
+import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +43,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -71,7 +85,6 @@ public class EventDetailActivity extends AppCompatActivity {
     private RequestQueue requestQueue;
 
 
-
     private CallbackManager callbackManager;
     private AccessToken accessToken;
     private String user_id;
@@ -86,9 +99,14 @@ public class EventDetailActivity extends AppCompatActivity {
     private int circleCounter;
     private ImageView arrow;
 
+    private LinearLayout share;
+    private LinearLayout sharebutton;
+
 
     @Bind(R.id.detail_title_text_id)
     protected TextView title;
+    @Bind(R.id.detail_author_id)
+    protected CircleImageView authorView;
     @Bind(R.id.detail_date_text_id)
     protected TextView date;
     @Bind(R.id.detail_time_text_id)
@@ -103,12 +121,16 @@ public class EventDetailActivity extends AppCompatActivity {
     protected Button joinGame;
 
 
+    @Bind(R.id.deal_web_view_holder)
+    protected HorizontalScrollView sView;
+
+// Hide the Scollbar
+
     private ImageView edit;
     private ImageView delete;
     private String URL = "http://geolab.club/geolabwork/ika/delete.php";
 
     private String currentUrl = "http://geolab.club/geolabwork/ika/currentevent.php?";
-
 
 
     Toolbar toolbar_detail;
@@ -129,7 +151,7 @@ public class EventDetailActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getBundleExtra("fromadapter");
 
 
-        if(bundle != null) {
+        if (bundle != null) {
             final MyEvent myEvent = (MyEvent) bundle.get("event");
 
             latitude = (myEvent.getLatitude());
@@ -143,7 +165,7 @@ public class EventDetailActivity extends AppCompatActivity {
             year = date_intent.split("-")[0]; // "Before"
             month = date_intent.split("-")[1];
             day = date_intent.split("-")[2]; // "After"
-            everything = day+"/"+month+"/"+year;
+            everything = day + "/" + month + "/" + year;
             count_intent = myEvent.getPlayerCount();
             place_intent = myEvent.getPlace();
             profile = myEvent.getEvents();
@@ -151,12 +173,12 @@ public class EventDetailActivity extends AppCompatActivity {
         }
 
 
-        boolean bundle3 = getIntent().getBooleanExtra("check",true);
+        boolean bundle3 = getIntent().getBooleanExtra("check", true);
 
-        if(bundle3 == true){
+        if (bundle3 == true) {
             setContentView(R.layout.activity_event_detail_admin);
 
-            edit= (ImageView) findViewById(R.id.admin_edit_id);
+            edit = (ImageView) findViewById(R.id.admin_edit_id);
             delete = (ImageView) findViewById(R.id.admin_delete_id);
 
             delete.setOnClickListener(new View.OnClickListener() {
@@ -192,7 +214,7 @@ public class EventDetailActivity extends AppCompatActivity {
                             .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                                 @Override
                                 public void onClick(SweetAlertDialog sDialog) {
-                                    delete(URL+"?eventId="+eventId_intent);
+                                    delete(URL + "?eventId=" + eventId_intent);
 
                                     Intent intent = new Intent(EventDetailActivity.this, MainActivity.class);
                                     startActivity(intent);
@@ -217,7 +239,7 @@ public class EventDetailActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     Intent addactivity = new Intent(EventDetailActivity.this, Add_Event_Activity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putString("event",eventId_intent);
+                    bundle.putString("event", eventId_intent);
                     addactivity.putExtras(bundle);
 
                     startActivity(addactivity);
@@ -225,16 +247,22 @@ public class EventDetailActivity extends AppCompatActivity {
             });
 
 
-        }else{
+        } else {
             setContentView(R.layout.activity_event_detail);
+            share = (LinearLayout) findViewById(R.id.share_content);
+            sharebutton = (LinearLayout) findViewById(R.id.shareButton);
+            sharebutton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    shareResultToFacebook();
+                }
+            });
         }
 
         ButterKnife.bind(this);
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
-
-
 
 
         toolbar_detail = (Toolbar) findViewById(R.id.detail_toolbar);
@@ -253,9 +281,7 @@ public class EventDetailActivity extends AppCompatActivity {
         });
 
 
-
-
-
+        sView.setHorizontalScrollBarEnabled(false);
 
 
         Double lat = Double.parseDouble(latitude);
@@ -266,9 +292,23 @@ public class EventDetailActivity extends AppCompatActivity {
         LatLng location = new LatLng(lon, lat);
 
         Marker marker = map.addMarker(new MarkerOptions()
-                .position(location)
+                        .position(location)
         );
         // Move the camera instantly to hamburg with a zoom of 15.
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            return;
+        }
+        map.setMyLocationEnabled(true);
+        map.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+            @Override
+            public boolean onMyLocationButtonClick() {
+                checkGPSStatus();
+
+                return false;
+            }
+        });
+
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15));
 
         // Zoom in, animating the camera.
@@ -277,8 +317,28 @@ public class EventDetailActivity extends AppCompatActivity {
         map.getUiSettings().setZoomControlsEnabled(true);
 
 
+        final float scale = getResources().getDisplayMetrics().density;
+        int width  = (int) (62 * scale);
+        int height = (int) (62 * scale);
+        imgUrl = "https://graph.facebook.com/" + getId + "/picture?height=200";
+        Picasso.with(EventDetailActivity.this)
+                .load(imgUrl)
+                .resize(width, height)
+                .centerCrop()
+                .into(authorView);
 
-
+        authorView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent transport = new Intent(EventDetailActivity.this, ViewProfile.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("event_id", eventId_intent);
+                bundle.putString("fb_id", getId);
+                bundle.putBoolean("check", checkprofile);
+                transport.putExtra("Extra", bundle);
+                startActivity(transport);
+            }
+        });
 
         title.setText(title_intent);
         time.setText(time_intent);
@@ -302,9 +362,7 @@ public class EventDetailActivity extends AppCompatActivity {
         final ArrayList<CircleImageView> circleImageViewlist = new ArrayList< >();
         for (int i = 0; i < profile.size(); i++) {
 
-            final float scale = getResources().getDisplayMetrics().density;
-            int width  = (int) (62 * scale);
-            int height = (int) (62 * scale);
+
 
 
             final CircleImageView circleImageView = new CircleImageView(getApplication());
@@ -453,5 +511,96 @@ public class EventDetailActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
+    private void checkGPSStatus() {
 
+        boolean gps_enabled = false;
+        boolean network_enabled = false;
+
+        try {
+            LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            gps_enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            network_enabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        } catch (Exception ex) {
+        }
+
+        if (!gps_enabled && !network_enabled) {
+
+            new SweetAlertDialog(EventDetailActivity.this, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText("GPS server not active!")
+                    .setContentText("For activation GPS please confirm")
+                    .setCancelText("No,cancel")
+                    .setConfirmText("Yes, confirm!")
+                    .showCancelButton(true)
+                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+                            sDialog.dismiss();
+                        }
+                    })
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+
+                            Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivity(myIntent);
+                            sDialog.dismiss();
+                        }
+
+                    })
+                    .show();
+        }
+    }
+    private void shareResultToFacebook() {
+        try {
+
+            Bitmap bitmap = getBitmapFromView(share);
+
+            Intent shareIntent = new Intent();
+            shareIntent.setAction(Intent.ACTION_SEND);
+            shareIntent.putExtra(Intent.EXTRA_STREAM, getImageUri(this, bitmap));
+            shareIntent.setType("image/jpeg");
+            startActivity(Intent.createChooser(shareIntent, "Share"));
+
+        } catch (Exception e) {
+            e.getMessage();
+        }
+    }
+
+
+    private Bitmap getBitmapFromView(LinearLayout view) {
+        try {
+
+            view.setDrawingCacheEnabled(true);
+            view.buildDrawingCache(true);
+
+
+            view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
+
+            Bitmap returnedBitmap = Bitmap.createBitmap(view.getDrawingCache());
+
+            //Define a bitmap with the same size as the view
+            view.setDrawingCacheEnabled(true);
+
+            return returnedBitmap;
+        } catch (Exception e) {
+            e.getCause();
+        }
+        return null;
+    }
+
+
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        try {
+
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+            String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(),
+                    inImage, "", "");
+            return Uri.parse(path);
+        } catch (Exception e) {
+            e.getMessage();
+            Log.d("blablabla", "getImageUri " + e.getMessage());
+        }
+        return null;
+    }
 }

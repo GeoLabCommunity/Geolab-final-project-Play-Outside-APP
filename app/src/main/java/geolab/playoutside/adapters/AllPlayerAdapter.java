@@ -1,6 +1,7 @@
 package geolab.playoutside.adapters;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -154,14 +155,13 @@ public class AllPlayerAdapter extends BaseAdapter implements StickyListHeadersAd
 
             Intent viewprofile = new Intent(context, ViewProfile.class);
             Bundle bundle = new Bundle();
-            bundle.putSerializable("playerinfo",allPlayersModel);
-            bundle.putBoolean("online",true);
+            bundle.putSerializable("playerinfo", allPlayersModel);
+            bundle.putBoolean("online", true);
             viewprofile.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-            viewprofile.putExtra("fromadapter",bundle);
+            viewprofile.putExtra("fromadapter", bundle);
 
             context.startActivity(viewprofile);
-
         }
 
     };

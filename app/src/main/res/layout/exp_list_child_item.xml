@@ -2,12 +2,10 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
-    android:paddingBottom="10dp"
-    android:paddingTop="10dp"
-
+    android:paddingBottom="3dp"
+    android:paddingTop="3dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-
     <ImageView
         android:layout_marginLeft="50dp"
         android:id="@+id/sub_menu_icon_id"
@@ -16,8 +14,9 @@
 
 
     <TextView
-
-        android:layout_marginLeft="12dp"
+        android:layout_marginLeft="16dp"
+        android:textStyle="italic"
+        android:textSize="14dp"
         android:id="@+id/sub_menu_text_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

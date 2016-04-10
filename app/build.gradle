@@ -29,6 +29,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     provided 'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2'
+
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.facebook.android:facebook-android-sdk:4.8.2'
     compile 'com.squareup.picasso:picasso:2.5.2'
@@ -50,4 +51,5 @@ dependencies {
     compile 'cn.pedant.sweetalert:library:1.2'
     compile 'joda-time:joda-time:2.4'
     compile 'com.github.recruit-lifestyle:WaveSwipeRefreshLayout:1.6'
+
 }

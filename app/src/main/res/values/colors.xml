@@ -9,11 +9,12 @@
     <color name="tab_color">#4D824D</color>
     <color name="selected_tab_color">#fff</color>
     <color name="white">#fff</color>
-    <color name="grey_transparent">#66fff2f2</color>
+    <color name="grey_transparent">#71ffffff</color>
     <color name="white_transparent">#a8ffffff</color>
     <color name="login_logout">#c7ac2d2d</color>
     <color name="swipe">#cd66bb6a</color>
     <color name="player_info">#dff5f5f5</color>
+    <color name="white_trans">#ffffff</color>
 
 
 </resources>

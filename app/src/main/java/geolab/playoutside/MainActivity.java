@@ -56,6 +56,7 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 import geolab.playoutside.adapters.CustomExpAdapter;
 import geolab.playoutside.fragments.AllGamesFragment;
@@ -227,11 +228,11 @@ public class MainActivity extends AppCompatActivity {
 
         if(bundle == null && bundle2 == null) {
             final float scale = getResources().getDisplayMetrics().density;
-            int dpWidthInPx  = (int) (21 * scale);
-            int dpHeightInPx = (int) (21 * scale);
+            int dpWidthInPx  = (int) (20 * scale);
+            int dpHeightInPx = (int) (20 * scale);
             logout.removeAllViews();
             ImageView login = new ImageView(getApplication());
-            login.setImageResource(R.drawable.logout);
+            login.setImageResource(R.drawable.out);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(dpWidthInPx, dpHeightInPx);
             login.setLayoutParams(layoutParams);
 
@@ -365,31 +366,42 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<ExpMenuItem> getData() {
 
         ArrayList<ExpMenuItem> items = new ArrayList<>();
-        ArrayList<SubMenu> subMenus1 = new ArrayList<>();
 
-        subMenus1.add(new SubMenu("football", R.drawable.foot));
-        subMenus1.add(new SubMenu("basketball", R.drawable.bass));
-        subMenus1.add(new SubMenu("rugby", R.drawable.rug));
-        subMenus1.add(new SubMenu("volleyball", R.drawable.vol));
+        ArrayList<SubMenu> subMenus1 = new ArrayList<>();
+        subMenus1.add(new SubMenu("football", R.drawable.b_footsvg));
+        subMenus1.add(new SubMenu("basketball", R.drawable.b_basckatsvg));
+        subMenus1.add(new SubMenu("rugby", R.drawable.b_rugbysvg));
+        subMenus1.add(new SubMenu("volleyball", R.drawable.b_vollsvg));
+        subMenus1.add(new SubMenu("baseball", R.drawable.b_basesvg));
+        subMenus1.add(new SubMenu("golf", R.drawable.b_golfsvg));
 
         ArrayList<SubMenu> subMenus2 = new ArrayList<>();
-
-        subMenus2.add(new SubMenu("joker", R.drawable.jok));
-        subMenus2.add(new SubMenu("poker", R.drawable.pok));
-
+        subMenus2.add(new SubMenu("joker", R.drawable.joker));
+        subMenus2.add(new SubMenu("poker", R.drawable.poker));
+        subMenus2.add(new SubMenu("seka", R.drawable.seka));
+        subMenus2.add(new SubMenu("bura", R.drawable.bura));
+        subMenus2.add(new SubMenu("blackjack", R.drawable.blackjack));
 
         ArrayList<SubMenu> subMenus3 = new ArrayList<>();
-
-        subMenus3.add(new SubMenu("ping-pong", R.drawable.pingp));
+        subMenus3.add(new SubMenu("ping-pong", R.drawable.t_pingpong));
+        subMenus3.add(new SubMenu("backgammon", R.drawable.t_backgammon));
+        subMenus3.add(new SubMenu("checkers", R.drawable.t_checkers));
+        subMenus3.add(new SubMenu("chess", R.drawable.t_chess));
+        subMenus3.add(new SubMenu("domino", R.drawable.t_domino));
+        subMenus3.add(new SubMenu("billiard", R.drawable.t_billiard));
 
         ArrayList<SubMenu> subMenus4 = new ArrayList<>();
+        subMenus4.add(new SubMenu("badminton", R.drawable.a_badminton));
+        subMenus4.add(new SubMenu("tennis", R.drawable.a_tennis));
+        subMenus4.add(new SubMenu("dartboard", R.drawable.a_dartboard));
+        subMenus4.add(new SubMenu("frisbee", R.drawable.a_frisbee));
+        subMenus4.add(new SubMenu("bowling", R.drawable.a_bowling));
 
-        subMenus4.add(new SubMenu("badminton", R.drawable.bad));
 
-        items.add(new ExpMenuItem("BALL", subMenus1, R.drawable.ball));
-        items.add(new ExpMenuItem("CARD", subMenus2, R.drawable.card));
-        items.add(new ExpMenuItem("TABLE", subMenus3, R.drawable.ping));
-        items.add(new ExpMenuItem("ACTION", subMenus4, R.drawable.badm));
+        items.add(new ExpMenuItem("BALL", subMenus1, R.drawable.b_vollsvg));
+        items.add(new ExpMenuItem("CARD", subMenus2, R.drawable.seka));
+        items.add(new ExpMenuItem("TABLE", subMenus3, R.drawable.t_domino));
+        items.add(new ExpMenuItem("ACTION", subMenus4, R.drawable.a_dartboard));
 
         return items;
     }
@@ -533,30 +545,32 @@ public class MainActivity extends AppCompatActivity {
     }
     @Override
     public void onBackPressed() {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setTitle("Exit Application?");
-        alertDialogBuilder
-                .setMessage("Click yes to exit!")
-                .setCancelable(false)
-                .setPositiveButton("Yes",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                moveTaskToBack(true);
-                                LoginManager.getInstance().logOut();
-                                android.os.Process.killProcess(android.os.Process.myPid());
-                                System.exit(1);
-                            }
-                        })
 
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
 
-                        dialog.cancel();
+        new SweetAlertDialog(MainActivity.this, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText("Exit Application?")
+                .setContentText("Click yes to exit!")
+                .setCancelText("No,cancel")
+                .setConfirmText("Yes, exit!")
+                .showCancelButton(true)
+                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        sDialog.dismiss();
                     }
-                });
+                })
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
 
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
+                        moveTaskToBack(true);
+                        android.os.Process.killProcess(android.os.Process.myPid());
+                        System.exit(1);
+                        sDialog.dismiss();
+                    }
+
+                })
+                .show();
     }
     public static MainActivity getInstance(){
         return   mainActivity;

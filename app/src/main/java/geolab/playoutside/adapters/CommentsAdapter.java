@@ -1,6 +1,9 @@
 package geolab.playoutside.adapters;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,8 +70,14 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Holder
         holder.profileImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               String ika = commentsModelArrayList.get(position).getProfileImage();
-                Toast.makeText(context, "daechira"+ika, Toast.LENGTH_LONG).show();
+               String fb_id = commentsModelArrayList.get(position).getProfileImage();
+                Intent transport = new Intent(context, ViewProfile.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("fb_id", fb_id);
+                transport.putExtra("Extra", bundle);
+                context.startActivity(transport);
+                ((Activity)context).finish();
+
             }
         });
     }

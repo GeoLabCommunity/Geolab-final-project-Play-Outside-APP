@@ -24,10 +24,10 @@
             android:layout_marginLeft="16dp"
             android:id="@+id/time_text_id"
             android:text="16:00"
-            android:background="@drawable/_football"
+            android:background="@drawable/b_footsvg"
             android:gravity="center"
-            android:textColor="#fafafa"
-            android:textSize="11sp"
+            android:textColor="@color/white_trans"
+            android:textSize="13sp"
             android:layout_gravity="center"
             android:layout_width="41dp"
             android:layout_height="41dp" />

@@ -206,17 +206,59 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
                             case "Volleyball":
                                 categoryId=3;
                                 break;
-                            case "Joker":
+                            case "Baseball":
                                 categoryId=4;
                                 break;
-                            case "Poker":
+                            case "Golf":
                                 categoryId=5;
                                 break;
-                            case "Ping-pong":
+                            case "Joker":
                                 categoryId=6;
                                 break;
-                            case "Badminton":
+                            case "Poker":
                                 categoryId=7;
+                                break;
+                            case "Seka":
+                                categoryId=8;
+                                break;
+                            case "Bura":
+                                categoryId=9;
+                                break;
+                            case "Blackjack":
+                                categoryId=10;
+                                break;
+                            case "Ping-pong":
+                                categoryId=11;
+                                break;
+                            case "Backgammon":
+                                categoryId=12;
+                                break;
+                            case "Checkers":
+                                categoryId=13;
+                                break;
+                            case "Chess":
+                                categoryId=14;
+                                break;
+                            case "Domino":
+                                categoryId=15;
+                                break;
+                            case "Billiard":
+                                categoryId=16;
+                                break;
+                            case "Badminton":
+                                categoryId=17;
+                                break;
+                            case "Tennis":
+                                categoryId=18;
+                                break;
+                            case "Dartboard":
+                                categoryId=19;
+                                break;
+                            case "Frisbee":
+                                categoryId=20;
+                                break;
+                            case "Bowling":
+                                categoryId=21;
                                 break;
                             default:
                                 categoryId=0;
@@ -335,28 +377,70 @@ public class AllGamesFragment extends android.support.v4.app.Fragment implements
 
                         switch (subcategory) {
                             case "Football":
-                                categoryId = 0;
+                                categoryId=0;
                                 break;
                             case "Basketball":
-                                categoryId = 1;
+                                categoryId=1;
                                 break;
                             case "Rugby":
-                                categoryId = 2;
+                                categoryId=2;
                                 break;
                             case "Volleyball":
-                                categoryId = 3;
+                                categoryId=3;
+                                break;
+                            case "Baseball":
+                                categoryId=4;
+                                break;
+                            case "Golf":
+                                categoryId=5;
                                 break;
                             case "Joker":
-                                categoryId = 4;
+                                categoryId=6;
                                 break;
                             case "Poker":
-                                categoryId = 5;
+                                categoryId=7;
+                                break;
+                            case "Seka":
+                                categoryId=8;
+                                break;
+                            case "Bura":
+                                categoryId=9;
+                                break;
+                            case "Blackjack":
+                                categoryId=10;
                                 break;
                             case "Ping-pong":
-                                categoryId = 6;
+                                categoryId=11;
+                                break;
+                            case "Backgammon":
+                                categoryId=12;
+                                break;
+                            case "Checkers":
+                                categoryId=13;
+                                break;
+                            case "Chess":
+                                categoryId=14;
+                                break;
+                            case "Domino":
+                                categoryId=15;
+                                break;
+                            case "Billiard":
+                                categoryId=16;
                                 break;
                             case "Badminton":
-                                categoryId = 7;
+                                categoryId=17;
+                                break;
+                            case "Tennis":
+                                categoryId=18;
+                                break;
+                            case "Dartboard":
+                                categoryId=19;
+                                break;
+                            case "Frisbee":
+                                categoryId=20;
+                                break;
+                            case "Bowling":
+                                categoryId=21;
                                 break;
                             default:
                                 categoryId = 0;

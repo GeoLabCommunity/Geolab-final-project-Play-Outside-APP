@@ -16,7 +16,8 @@
         android:layout_height="20dp" />
 
     <TextView
-        android:layout_marginLeft="20dp"
+        android:textStyle="bold"
+        android:layout_marginLeft="16dp"
         android:id="@+id/parent_menu_text_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

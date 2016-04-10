@@ -53,7 +53,6 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 import geolab.playoutside.adapters.CommentsAdapter;
 import geolab.playoutside.adapters.MyStickyAdapter;
-import geolab.playoutside.db.Data;
 import geolab.playoutside.fragments.DialogFragment;
 import geolab.playoutside.model.AllPlayersModel;
 import geolab.playoutside.model.CommentsModel;
@@ -180,10 +179,17 @@ public class ViewProfile extends AppCompatActivity implements WaveSwipeRefreshLa
         }
 
         else if(bundle != null){
-
+            setContentView(R.layout.activity_view_profile);
+            FindViewById();
             check =bundle.getBoolean("check");
             eventId_intent = bundle.getString("event_id");
             fb_id = bundle.getString("fb_id");
+            getRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+                @Override
+                public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                    sendRateToServer(rating + "");
+                }
+            });
             if(check != false){
                 setContentView(R.layout.activity_view_profile_checked);
                 FindViewById();
@@ -191,12 +197,7 @@ public class ViewProfile extends AppCompatActivity implements WaveSwipeRefreshLa
                 accept = (ImageView) findViewById(R.id.profile_accept);
                 reject = (ImageView) findViewById(R.id.profile_reject) ;
 
-                getRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-                    @Override
-                    public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                        sendRateToServer(rating + "");
-                    }
-                });
+
 
 
 

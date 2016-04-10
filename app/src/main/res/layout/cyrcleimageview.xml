@@ -3,13 +3,17 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:gravity="center"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <HorizontalScrollView
+        android:id="@+id/deal_web_view_holder"
+        android:layout_gravity="center_vertical"
         android:layout_width="match_parent"
         android:layout_height="55dp">
         <LinearLayout
+            android:layout_gravity="center_vertical"
             android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
