@@ -47,9 +47,13 @@ public class SubCategoryIcon extends Fragment {
 
         for (int i = 0; i < buttonCount; i++) {
             final ImageButton button = new ImageButton(getActivity().getApplicationContext());
-            button.setLayoutParams(new ViewGroup.LayoutParams(150,150));
+            final float scale = getResources().getDisplayMetrics().density;
+            int dpWidthInPx  = (int) (150 * scale);
+            int margin  = (int) (6 * scale);
+
+            button.setLayoutParams(new ViewGroup.LayoutParams(dpWidthInPx,dpWidthInPx));
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            lp.setMargins(20, 0, 18, 0);
+            lp.setMargins(margin, 0, margin, 0);
             button.setLayoutParams(lp);
             //System.out.println(iconArray[i]);
 

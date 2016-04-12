@@ -52,9 +52,10 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Holder
         timeDate=commentsModelArrayList.get(position).getDateTime();
         time = timeDate.split(" ")[1];
         date = timeDate.split(" ")[0];
-        year = date.split("-")[0]; // "Before"
+
+        year = date.split("-")[0];
         month = date.split("-")[1];
-        day = date.split("-")[2]; // "After"
+        day = date.split("-")[2];
         everything = day+"/"+month+"/"+year;
 
         holder.dateView.setText(everything);

@@ -197,10 +197,6 @@ public class ViewProfile extends AppCompatActivity implements WaveSwipeRefreshLa
                 accept = (ImageView) findViewById(R.id.profile_accept);
                 reject = (ImageView) findViewById(R.id.profile_reject) ;
 
-
-
-
-
                 accept.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -239,18 +235,12 @@ public class ViewProfile extends AppCompatActivity implements WaveSwipeRefreshLa
 
         FindViewById();
 
-//        getRatingBar = (RatingBar) findViewById(R.id.getRating_id);
-//        getRatingBar.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(ViewProfile.this,"You must login for rate this player",Toast.LENGTH_LONG).show();
-//            }
-//        });
-
-
-
-
-//
+        getRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                sendRateToServer(rating + "");
+            }
+        });
 
 
 

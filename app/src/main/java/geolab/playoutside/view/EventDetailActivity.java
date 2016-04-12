@@ -178,6 +178,17 @@ public class EventDetailActivity extends AppCompatActivity {
         if (bundle3 == true) {
             setContentView(R.layout.activity_event_detail_admin);
 
+            arrow = (ImageView) findViewById(R.id.arrow);
+            arrow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent transport = new Intent(EventDetailActivity.this, MainActivity.class);
+                    Bundle bundle = new Bundle();
+                    transport.putExtra("profile_extra", bundle);
+                    startActivity(transport);
+                }
+            });
+
             edit = (ImageView) findViewById(R.id.admin_edit_id);
             delete = (ImageView) findViewById(R.id.admin_delete_id);
 
