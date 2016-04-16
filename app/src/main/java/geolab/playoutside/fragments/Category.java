@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -114,13 +115,10 @@ public class Category extends android.support.v4.app.Fragment implements WaveSwi
         return f;
     }
     public void updateSubcategoryData(String subcategory){
-        check();
         getJSONInfo(GET_JSON_INFO+"?category="+subcategory);
     }
 
     private void getJSONInfo(String url) {
-
-
 
         JsonObjectRequest myRequest = new JsonObjectRequest(Request.Method.GET
                 , url
@@ -128,12 +126,14 @@ public class Category extends android.support.v4.app.Fragment implements WaveSwi
                 , new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                System.out.println(response+"jres");
 
                 JSONArray jsonArray = null;
                 try {
                     jsonArray = response.getJSONArray("data");
 
                     if (jsonArray == null) {
+                        System.out.println("nothing found");
                     }else{
 
                         ArrayList<MyEvent> myEvents = new ArrayList<>();
@@ -266,8 +266,24 @@ public class Category extends android.support.v4.app.Fragment implements WaveSwi
             @Override
             public void onErrorResponse(VolleyError error) {
 
+                Toast toast = Toast.makeText(getContext(),"Nothing Found", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+                MyStickyAdapter adapter = new MyStickyAdapter(getActivity(), myEvents);
+                list.setAnimExecutor(new AnimationExecutor());
 
-
+                list.setAdapter(adapter);
+                list.setOnHeaderClickListener(new StickyListHeadersListView.OnHeaderClickListener() {
+                    @Override
+                    public void onHeaderClick(StickyListHeadersListView l, View header, int itemPosition, long headerId, boolean currentlySticky) {
+                        if (list.isHeaderCollapsed(headerId)) {
+                            list.expand(headerId);
+                        } else {
+                            list.collapse(headerId);
+                        }
+                    }
+                });
+                list.setOnItemClickListener(adapter.listener);
             }
         });
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());

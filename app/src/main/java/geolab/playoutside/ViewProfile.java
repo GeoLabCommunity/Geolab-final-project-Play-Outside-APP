@@ -212,12 +212,9 @@ public class ViewProfile extends AppCompatActivity implements WaveSwipeRefreshLa
                     public void onClick(View v) {
                         Toast.makeText(ViewProfile.this, "Rejected", Toast.LENGTH_LONG).show();
                         getCurrentEvent(currentUrl+"event_id="+eventId_intent);
-
                     }
                 });
-
             }
-
             else {
                 getProfileInfo(profileUrl + "event_id=" + eventId_intent + "&fb_id=" + fb_id);
                 setContentView(R.layout.activity_view_profile);
@@ -279,13 +276,10 @@ public class ViewProfile extends AppCompatActivity implements WaveSwipeRefreshLa
                                         swipeRefreshLayout.setRefreshing(true);
 
                                         getComments(getComment+fb_id);
-
                                     }
                                 }
         );
-
         getComments(getComment+fb_id);
-
     }
     private void getProfileInfo(String url) {
 
@@ -476,11 +470,7 @@ public class ViewProfile extends AppCompatActivity implements WaveSwipeRefreshLa
                         detailIntent.putExtra("fromadapter",bundle);
 
                         startActivity(detailIntent);
-
                     }
-
-
-
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -511,11 +501,7 @@ public class ViewProfile extends AppCompatActivity implements WaveSwipeRefreshLa
     }
 
     private void sendRateToServer(final String vote){
-
-
-
         final String URL = "http://geolab.club/geolabwork/ika/insertrate.php";
-
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override
@@ -545,9 +531,7 @@ public class ViewProfile extends AppCompatActivity implements WaveSwipeRefreshLa
                                         MainActivity.getInstance().finish();
                                         Intent intent = new Intent(ViewProfile.this, Launch.class);
                                         startActivity(intent);
-
                                     }
-
                                 })
                                 .show();
                     }
@@ -564,14 +548,11 @@ public class ViewProfile extends AppCompatActivity implements WaveSwipeRefreshLa
                 params.toString();
                 return params;
             }
-
         };
-
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
     }
     protected void showInputDialog() {
-
         // get prompts.xml view
         LayoutInflater layoutInflater = LayoutInflater.from(ViewProfile.this);
         View promptView = layoutInflater.inflate(R.layout.input_comment_dialog, null);
@@ -600,8 +581,6 @@ public class ViewProfile extends AppCompatActivity implements WaveSwipeRefreshLa
 
     private void sendCommentToServer(final String comment){
 
-
-
         final String URL = "http://geolab.club/geolabwork/ika/insertcomment.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
@@ -609,6 +588,7 @@ public class ViewProfile extends AppCompatActivity implements WaveSwipeRefreshLa
                     @Override
                     public void onResponse(String response) {
                         Toast.makeText(ViewProfile.this,response,Toast.LENGTH_LONG).show();
+                        getComments(getComment+fb_id);
                     }
                 },
                 new Response.ErrorListener() {
@@ -633,12 +613,9 @@ public class ViewProfile extends AppCompatActivity implements WaveSwipeRefreshLa
                                         MainActivity.getInstance().finish();
                                         Intent intent = new Intent(ViewProfile.this, Launch.class);
                                         startActivity(intent);
-
                                     }
-
                                 })
                                 .show();
-
                     }
                 }){
             @Override
@@ -647,12 +624,9 @@ public class ViewProfile extends AppCompatActivity implements WaveSwipeRefreshLa
                 params.put("user_id",fb_id);
                 params.put("commented_user_id",Profile.getCurrentProfile().getId());
                 params.put("comment",comment);
-
-
                 params.toString();
                 return params;
             }
-
         };
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
@@ -675,8 +649,6 @@ public class ViewProfile extends AppCompatActivity implements WaveSwipeRefreshLa
 
                     }else {
 
-
-
                         ArrayList<CommentsModel> commentsModels = new ArrayList<>();
                         for (int i = 0; i < jsonArray.length(); i++) {
 
@@ -687,27 +659,15 @@ public class ViewProfile extends AppCompatActivity implements WaveSwipeRefreshLa
                             String comment = curObj.getString("comment");
                             String datetime = curObj.getString("datetime");
 
-
-
-
                                 CommentsModel commentsModel = new CommentsModel(user_id,datetime,comment);
                                 commentsModels.add(commentsModel);
                         }
                         swipeRefreshLayout.setRefreshing(true);
-
-
-
                         CommentsAdapter adapter = new CommentsAdapter(ViewProfile.this, commentsModels);
 
                         adapter.notifyDataSetChanged();
 
-
                         recyclerView.setAdapter(adapter);
-
-
-
-
-
 
                     }} catch (JSONException e) {
                     e.printStackTrace();

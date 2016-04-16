@@ -357,7 +357,6 @@ public class MainActivity extends AppCompatActivity {
                 subcategory = subMenu.getMenuName();
 
                 ((Category) mSectionsPagerAdapter.getItem(groupPosition + 1)).updateSubcategoryData(subcategory);
-
                 return true;
             }
         });
