@@ -269,7 +269,7 @@ public class Category extends android.support.v4.app.Fragment implements WaveSwi
                 Toast toast = Toast.makeText(getContext(),"Nothing Found", Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
-                MyStickyAdapter adapter = new MyStickyAdapter(getActivity(), myEvents);
+                MyStickyAdapter adapter = new MyStickyAdapter(getActivity(),myEvents);
                 list.setAnimExecutor(new AnimationExecutor());
 
                 list.setAdapter(adapter);

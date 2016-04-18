@@ -84,6 +84,7 @@ public class ViewProfile extends AppCompatActivity implements WaveSwipeRefreshLa
     private String acceptUrl = "http://geolab.club/geolabwork/ika/accept.php";
 
     private String profileUrl ="http://geolab.club/geolabwork/ika/viewprofile.php?";
+
     private String getComment = "http://geolab.club/geolabwork/ika/getcomment.php?fb_id=";
     private RequestQueue requestQueue;
     private CircleImageView imageProfile;
@@ -587,7 +588,7 @@ public class ViewProfile extends AppCompatActivity implements WaveSwipeRefreshLa
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Toast.makeText(ViewProfile.this,response,Toast.LENGTH_LONG).show();
+                       // Toast.makeText(ViewProfile.this,response,Toast.LENGTH_LONG).show();
                         getComments(getComment+fb_id);
                     }
                 },

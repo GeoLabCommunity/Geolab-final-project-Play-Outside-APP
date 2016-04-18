@@ -68,6 +68,27 @@
 
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/chat"
+        android:layout_marginLeft="16dp"
+        android:paddingBottom="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_marginRight="16dp"
+            android:src="@drawable/chat"
+            android:layout_width="21dp"
+            android:layout_height="21dp" />
+        <TextView
+            android:textStyle="italic"
+            android:textColor="@color/tab_color"
+            android:layout_gravity="center"
+            android:text="Live CHAT"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+    <LinearLayout
         android:id="@+id/logout"
         android:paddingBottom="10dp"
         android:layout_marginLeft="16dp"

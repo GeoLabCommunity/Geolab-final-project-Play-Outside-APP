@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Add New Comment"
+        android:text="Add New Message"
         android:id="@+id/textView" />
 
     <EditText
@@ -21,6 +21,6 @@
         android:textSize="15dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="Your comment here.."
+        android:hint="Your message here..."
         android:padding="10dp" />
 </LinearLayout>

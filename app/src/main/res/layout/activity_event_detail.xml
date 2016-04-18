@@ -230,6 +230,7 @@ android:layout_below="@+id/detail_toolbar"
             android:layout_width="16dp"
             android:layout_height="16dp" />
         <TextView
+            android:isScrollContainer="true"
             android:textSize="12dp"
             android:layout_marginLeft="13dp"
             android:id="@+id/detail_description_text_id"

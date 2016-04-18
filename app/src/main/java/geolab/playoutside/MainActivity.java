@@ -102,6 +102,8 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout myGame;
     private LinearLayout logout;
     private LinearLayout allPlayer;
+    private LinearLayout chat;
+
     public static MainActivity mainActivity;
 
 
@@ -145,8 +147,8 @@ public class MainActivity extends AppCompatActivity {
             getProfileInfo(profileUrl + "fb_id=" + Profile.getCurrentProfile().getId());
             logout = (LinearLayout) findViewById(R.id.logout);
             final float scale = getResources().getDisplayMetrics().density;
-            int dpWidthInPx  = (int) (21 * scale);
-            int dpHeightInPx = (int) (21 * scale);
+            int dpWidthInPx  = (int) (19 * scale);
+            int dpHeightInPx = (int) (19 * scale);
             logout.removeAllViews();
             ImageView login = new ImageView(getApplication());
             login.setImageResource(R.drawable.logoutxxx);
@@ -213,6 +215,8 @@ public class MainActivity extends AppCompatActivity {
         myGame = (LinearLayout) findViewById(R.id.myGame);
         logout = (LinearLayout) findViewById(R.id.logout);
         allPlayer = (LinearLayout) findViewById(R.id.allplayers);
+        chat = (LinearLayout) findViewById(R.id.chat);
+
 
         allPlayer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -222,14 +226,23 @@ public class MainActivity extends AppCompatActivity {
                 dlDrawer.closeDrawers();
             }
         });
+        chat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, Chat.class);
+                startActivity(intent);
+                dlDrawer.closeDrawers();
+            }
+        });
+
 
 
 
 
         if(bundle == null && bundle2 == null) {
             final float scale = getResources().getDisplayMetrics().density;
-            int dpWidthInPx  = (int) (20 * scale);
-            int dpHeightInPx = (int) (20 * scale);
+            int dpWidthInPx  = (int) (19 * scale);
+            int dpHeightInPx = (int) (19 * scale);
             logout.removeAllViews();
             ImageView login = new ImageView(getApplication());
             login.setImageResource(R.drawable.out);
@@ -351,7 +364,7 @@ public class MainActivity extends AppCompatActivity {
 
                 parent.setItemChecked(index, true);
                 SubMenu subMenu = menuItems.get(groupPosition).getSubMenus().get(childPosition);
-                Toast.makeText(getApplicationContext(), subMenu.getMenuName(), Toast.LENGTH_SHORT).show();
+               // Toast.makeText(getApplicationContext(), subMenu.getMenuName(), Toast.LENGTH_SHORT).show();
                 mViewPager.setCurrentItem(groupPosition + 1);
                 dlDrawer.closeDrawers();
                 subcategory = subMenu.getMenuName();
