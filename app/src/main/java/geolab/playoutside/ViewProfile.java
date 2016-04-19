@@ -507,7 +507,9 @@ public class ViewProfile extends AppCompatActivity implements WaveSwipeRefreshLa
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+
                         Toast.makeText(ViewProfile.this,response,Toast.LENGTH_LONG).show();
+                        getProfileInfo(profileUrl + "event_id=" + eventId_intent + "&fb_id=" + fb_id);
                     }
                 },
                 new Response.ErrorListener() {

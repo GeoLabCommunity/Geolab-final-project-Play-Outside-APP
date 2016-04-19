@@ -16,6 +16,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
@@ -29,6 +30,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.facebook.AccessToken;
@@ -42,6 +44,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.text.NumberFormat;
@@ -59,7 +65,9 @@ import geolab.playoutside.Add_Event_Activity;
 import geolab.playoutside.MainActivity;
 import geolab.playoutside.R;
 import geolab.playoutside.ViewProfile;
+import geolab.playoutside.adapters.MyStickyAdapter;
 import geolab.playoutside.model.MyEvent;
+import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 public class EventDetailActivity extends AppCompatActivity {
 
@@ -131,6 +139,8 @@ public class EventDetailActivity extends AppCompatActivity {
     private String URL = "http://geolab.club/geolabwork/ika/delete.php";
 
     private String currentUrl = "http://geolab.club/geolabwork/ika/currentevent.php?";
+    private String cyrcleurl = "http://geolab.club/geolabwork/ika/getcyrcleimage.php?event_id=";
+
 
 
     Toolbar toolbar_detail;
@@ -158,6 +168,7 @@ public class EventDetailActivity extends AppCompatActivity {
             longitude = (myEvent.getLongitude());
             getId = myEvent.getId();
             eventId_intent = String.valueOf(myEvent.getEventId());
+         //   getJSONInfo(cyrcleurl+eventId_intent);
             description_intent = myEvent.getDescription();
             title_intent = myEvent.getTitle();
             time_intent = myEvent.getTime();
@@ -372,8 +383,6 @@ public class EventDetailActivity extends AppCompatActivity {
 
         final ArrayList<CircleImageView> circleImageViewlist = new ArrayList< >();
         for (int i = 0; i < profile.size(); i++) {
-
-
 
 
             final CircleImageView circleImageView = new CircleImageView(getApplication());
@@ -613,5 +622,49 @@ public class EventDetailActivity extends AppCompatActivity {
             Log.d("blablabla", "getImageUri " + e.getMessage());
         }
         return null;
+    }
+    private void getJSONInfo(String url) {
+
+
+
+        JsonObjectRequest myRequest = new JsonObjectRequest(Request.Method.GET
+                , url
+                , null
+                , new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONArray jsonArray = null;
+                try {
+
+                    jsonArray = response.getJSONArray("data");
+                    if(jsonArray==null){
+
+                    }else {
+
+
+                            for (int i = 0; i < jsonArray.length(); i++) {
+
+                            JSONObject curObj = jsonArray.getJSONObject(i);
+
+
+                                String cyrcle = curObj.getString("fb_id");
+
+                                profile.add(cyrcle);
+                            }
+
+                    }} catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println(error);
+            }
+        });
+        requestQueue = Volley.newRequestQueue(EventDetailActivity.this);
+        requestQueue.add(myRequest);
     }
 }

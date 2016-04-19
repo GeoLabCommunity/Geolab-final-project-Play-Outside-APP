@@ -55,7 +55,9 @@
 
 
     </android.support.v7.widget.Toolbar>
-
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
 <LinearLayout
 android:layout_below="@+id/detail_toolbar"
@@ -244,10 +246,6 @@ android:layout_below="@+id/detail_toolbar"
         android:background="#bbd9d9d9"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"></View>
-    
-   
-
-
 
     <LinearLayout
         android:layout_marginLeft="13dp"
@@ -301,6 +299,6 @@ android:layout_below="@+id/detail_toolbar"
 
 </LinearLayout>
 
-
+</ScrollView>
 
 </LinearLayout>

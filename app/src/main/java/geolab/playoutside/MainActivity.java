@@ -350,7 +350,7 @@ public class MainActivity extends AppCompatActivity {
         int width  = (int) (250 * scale);
         int height = (int) (0 * scale);
 
-            expandableListView.setIndicatorBoundsRelative(width, height);
+        expandableListView.setIndicatorBoundsRelative(width, height);
 
         CustomExpAdapter adapter = new CustomExpAdapter(this, menuItems);
         expandableListView.setAdapter(adapter);
