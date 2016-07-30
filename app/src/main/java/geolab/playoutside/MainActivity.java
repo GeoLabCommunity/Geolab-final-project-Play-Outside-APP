@@ -350,7 +350,9 @@ public class MainActivity extends AppCompatActivity {
         int width  = (int) (250 * scale);
         int height = (int) (0 * scale);
 
-        expandableListView.setIndicatorBoundsRelative(width, height);
+      if(Integer.valueOf(android.os.Build.VERSION.SDK)>18) {
+          expandableListView.setIndicatorBoundsRelative(width, height);
+      }
 
         CustomExpAdapter adapter = new CustomExpAdapter(this, menuItems);
         expandableListView.setAdapter(adapter);
@@ -660,4 +662,5 @@ public class MainActivity extends AppCompatActivity {
         requestQueue.add(myRequest);
 
     }
+
 }
