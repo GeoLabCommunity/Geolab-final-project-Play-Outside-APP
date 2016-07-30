@@ -1,5 +1,6 @@
 package geolab.playoutside;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,12 +9,14 @@ import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.LocationManager;
+import android.os.CountDownTimer;
 import android.provider.Settings;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +24,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -62,8 +66,7 @@ import geolab.playoutside.fragments.Category;
 import hotchemi.stringpicker.StringPickerDialog;
 
 public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyCallback, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, View.OnClickListener{
-    private LinearLayout timeclick;
-    private LinearLayout dateclick;
+
     private TextView timeenter;
     private TextView dateenter;
     private TextView getplaceView;
@@ -106,16 +109,7 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
 
 
 
-        arrow = (ImageView) findViewById(R.id.arrow_add);
-        arrow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent transport = new Intent(Add_Event_Activity.this, MainActivity.class);
-                Bundle bundle = new Bundle();
-                transport.putExtra("profile_extra", bundle);
-                startActivity(transport);
-            }
-        });
+
 
         ArrayList<Fragment> fragmentList = new ArrayList<>();
         ArrayList<String> titleList = new ArrayList<>();
@@ -141,6 +135,38 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
 
         tabLayout.setupWithViewPager(mViewPager);
         tabLayout.setSelectedTabIndicatorColor(Color.parseColor("#FFFFFF"));
+
+
+
+        // Here, thisActivity is the current activity
+        if (ContextCompat.checkSelfPermission(Add_Event_Activity.this,
+                Manifest.permission.READ_CONTACTS)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(Add_Event_Activity.this,
+                    Manifest.permission.READ_CONTACTS)) {
+
+                // Show an expanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+
+            } else {
+
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(Add_Event_Activity.this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        1);
+                ActivityCompat.requestPermissions(Add_Event_Activity.this,
+                        new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                        1);
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        }
 
 
 
@@ -174,18 +200,26 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
 //        });
 
 
-        timeclick = (LinearLayout) findViewById(R.id.detail_time_click);
-        dateclick = (LinearLayout) findViewById(R.id.detail_date_click);
         timeenter = (TextView) findViewById(R.id.detail_time_text_id);
         dateenter = (TextView) findViewById(R.id.detail_date_text_id);
         getplaceView = (TextView) findViewById(R.id.detail_getplace);
 
 
+
+
+         Button send= (Button) findViewById(R.id.detail_join_game);
+        send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendServerData();
+            }
+        });
+
         ((MapFragment) getFragmentManager().findFragmentById(R.id.map))
 
                 .getMapAsync(this);
 
-        dateclick.setOnClickListener(new View.OnClickListener() {
+        dateenter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Calendar now = Calendar.getInstance();
@@ -201,7 +235,7 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
             }
         });
 
-        timeclick.setOnClickListener(new View.OnClickListener() {
+        timeenter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -215,6 +249,19 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
                 tpd.show(getFragmentManager(), "Timepickerdialog");
 
 
+            }
+        });
+
+        arrow = (ImageView) findViewById(R.id.arrow_add);
+        arrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(Add_Event_Activity.this,"Please fill all fields",Toast.LENGTH_LONG).show();
+
+
+                Intent ika = new Intent(Add_Event_Activity.this, MainActivity.class);
+//
+                startActivity(ika);
             }
         });
 
@@ -334,17 +381,15 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
         getplaceView = (TextView) findViewById(R.id.detail_getplace);
         this.getplace = String.valueOf(getplaceView.getText());
         this.getdescription = String.valueOf(description.getText());
-
     }
 
 
-    public void sendServerData(View v) {
+    private void sendServerData() {
          if(eventId==null){
              addEvent();
          }else {
              update();
          }
-
     }
 
     @Override
@@ -412,18 +457,24 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<>();
                // params.put("eventId",eventId);
-                params.put("user_id",Profile.getCurrentProfile().getId());
-                params.put("category",category);
-                params.put("subcategory",subcategoryData);
-                params.put("date",date);
-                params.put("time",time);
-                params.put("description",getdescription);
-                params.put("location",getplace);
-                params.put("latitude",latitude);
-                params.put("longitude",longitude);
+                if(category.isEmpty() && subcategoryData.isEmpty() && getdescription.isEmpty() && date.isEmpty() && time.isEmpty() && getplace.isEmpty() && latitude.isEmpty() && longitude.isEmpty() ){
+                    Toast.makeText(Add_Event_Activity.this,"Please fill all fields",Toast.LENGTH_LONG).show();
+                }else {
 
-                params.toString();
-                return params;
+                    params.put("user_id", Profile.getCurrentProfile().getId());
+                    params.put("category", category);
+                    params.put("subcategory", subcategoryData);
+                    params.put("date", date);
+                    params.put("time", time);
+                    params.put("description", getdescription);
+                    params.put("location", getplace);
+                    params.put("latitude", latitude);
+                    params.put("longitude", longitude);
+                }
+
+                    params.toString();
+                    return params;
+
             }
 
         };
@@ -457,16 +508,20 @@ public class Add_Event_Activity extends AppCompatActivity implements OnMapReadyC
             @Override
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<>();
-                params.put("eventId",eventId);
-                params.put("user_id", Profile.getCurrentProfile().getId());
-                params.put("category",category);
-                params.put("subcategory",subcategoryData);
-                params.put("date",date);
-                params.put("time",time);
-                params.put("description",getdescription);
-                params.put("location",getplace);
-                params.put("latitude",latitude);
-                params.put("longitude",longitude);
+                if(eventId.isEmpty() && category.isEmpty() && subcategoryData.isEmpty() && getdescription.isEmpty() && date.isEmpty() && time.isEmpty() && getplace.isEmpty() && latitude.isEmpty() && longitude.isEmpty() ){
+                    Toast.makeText(Add_Event_Activity.this,"Please fill all fields",Toast.LENGTH_LONG).show();
+                }else {
+                    params.put("eventId",eventId);
+                    params.put("user_id", Profile.getCurrentProfile().getId());
+                    params.put("category", category);
+                    params.put("subcategory", subcategoryData);
+                    params.put("date", date);
+                    params.put("time", time);
+                    params.put("description", getdescription);
+                    params.put("location", getplace);
+                    params.put("latitude", latitude);
+                    params.put("longitude", longitude);
+                }
 
                 params.toString();
                 return params;

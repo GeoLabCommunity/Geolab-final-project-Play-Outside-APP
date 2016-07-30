@@ -131,7 +131,13 @@ public class Launch extends AppCompatActivity {
                                     try {
                                         user_id = jsonObject.getString("id");
                                         str_firstName = jsonObject.getString("name");
-                                        birth_day = jsonObject.getString("birthday");
+                                        if (jsonObject.getString("birthday").isEmpty()) {
+                                            Toast.makeText(Launch.this, "dabadebis weli carielia", Toast.LENGTH_LONG).show();
+
+                                        } else {
+                                            birth_day = jsonObject.getString("birthday");
+
+                                        }
                                         email_json = jsonObject.getString("email");
 
 

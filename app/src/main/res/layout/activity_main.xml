@@ -47,7 +47,6 @@
         android:layout_height="wrap_content"
         app:tabTextColor="@color/tab_color"
         app:tabSelectedTextColor="@color/selected_tab_color"
-        app:tabMode="scrollable"
         app:tabGravity="fill"/>
 
 
@@ -55,22 +54,30 @@
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.view.ViewPager
-        android:layout_marginBottom="43dp"
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+        <!--android:id="@+id/fab"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_margin="16dp"-->
+    <!--android:background="#FFAB40"/>-->
     <android.support.design.widget.FloatingActionButton
-        android:background="#FFAB40"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/fab"
+        android:layout_gravity="end|bottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
-        android:src="@drawable/plus1" />
+        android:src="@drawable/plus1"
+        app:borderWidth="0dp" />
 
-    </android.support.design.widget.CoordinatorLayout>
+
+</android.support.design.widget.CoordinatorLayout>
 
         <include
             layout="@layout/navigation"/>

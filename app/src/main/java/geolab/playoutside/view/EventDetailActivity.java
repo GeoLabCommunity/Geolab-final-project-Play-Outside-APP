@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -157,6 +158,36 @@ public class EventDetailActivity extends AppCompatActivity {
 //            getCurrentEvent(currentUrl+"event_id="+event_id);
 //
 //        }
+
+        // Here, thisActivity is the current activity
+        if (ContextCompat.checkSelfPermission(EventDetailActivity.this,
+                Manifest.permission.READ_CONTACTS)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(EventDetailActivity.this,
+                    Manifest.permission.READ_CONTACTS)) {
+
+                // Show an expanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+
+            } else {
+
+                // No explanation needed, we can request the permission.
+
+//                ActivityCompat.requestPermissions(Add_Event_Activity.this,
+//                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+//                        1);
+                ActivityCompat.requestPermissions(EventDetailActivity.this,
+                        new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                        1);
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        }
 
         Bundle bundle = getIntent().getBundleExtra("fromadapter");
 
@@ -316,6 +347,7 @@ public class EventDetailActivity extends AppCompatActivity {
         Marker marker = map.addMarker(new MarkerOptions()
                         .position(location)
         );
+
         // Move the camera instantly to hamburg with a zoom of 15.
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
@@ -667,4 +699,5 @@ public class EventDetailActivity extends AppCompatActivity {
         requestQueue = Volley.newRequestQueue(EventDetailActivity.this);
         requestQueue.add(myRequest);
     }
+
 }

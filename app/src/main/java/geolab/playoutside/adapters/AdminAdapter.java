@@ -15,10 +15,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -267,7 +270,7 @@ public class AdminAdapter extends BaseAdapter implements StickyListHeadersAdapte
                     .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
                         public void onClick(SweetAlertDialog sDialog) {
-                            delete(URL+"?eventId="+eventsList.get(position).getEventId());
+                            delete(URL + "?eventId=" + eventsList.get(position).getEventId());
                             sDialog.setTitleText("Deleted!")
                                     .setContentText("Your imaginary file has been deleted!")
                                     .setConfirmText("OK")
@@ -320,6 +323,7 @@ public class AdminAdapter extends BaseAdapter implements StickyListHeadersAdapte
 
     }
     private void delete(String URL){
+
 
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL,

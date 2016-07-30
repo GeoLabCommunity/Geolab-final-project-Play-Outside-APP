@@ -49,7 +49,6 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 public class AllPlayers extends AppCompatActivity implements WaveSwipeRefreshLayout.OnRefreshListener{
-
    // private StickyListHeadersListView list;
     private WaveSwipeRefreshLayout swipeRefreshLayout;
     private RequestQueue requestQueue;
