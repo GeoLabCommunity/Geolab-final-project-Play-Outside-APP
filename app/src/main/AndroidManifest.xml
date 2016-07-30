@@ -77,6 +77,15 @@
             android:name=".Add_Event_Activity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ViewProfile"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Chat"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".AllPlayers"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".MainActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
@@ -115,16 +124,16 @@
             </intent-filter>
         </service>
 
-        <activity
-            android:name=".ViewProfile"
-            android:label="@string/title_activity_view_profile"
-            android:theme="@style/MyMaterialTheme" />
-        <activity
-            android:name=".AllPlayers"
-            android:label="@string/title_activity_all_players"
-            android:theme="@style/MyMaterialTheme" />
-        <activity android:name=".Chat" >
-        </activity>
+        <!--<activity-->
+            <!--android:name=".ViewProfile"-->
+            <!--android:label="@string/title_activity_view_profile"-->
+            <!--android:theme="@style/MyMaterialTheme" />-->
+        <!--<activity-->
+            <!--android:name=".AllPlayers"-->
+            <!--android:label="@string/title_activity_all_players"-->
+            <!--android:theme="@style/MyMaterialTheme" />-->
+        <!--<activity android:name=".Chat" >-->
+        <!--</activity>-->
     </application>
 
 </manifest>
